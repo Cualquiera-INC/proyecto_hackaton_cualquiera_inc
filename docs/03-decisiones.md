@@ -42,7 +42,7 @@ Se habían propuesto en el encuentro 1 (3 microservicios + PostgreSQL). Se desca
 `instancia` y `version_app` en cada respuesta, el log de NGINX con el upstream y el tiempo, los healthchecks y los scripts `verificar_servicio.py` y `monitorear.py` como evidencia. En AWS: CloudWatch Logs y las métricas del ALB. Descartados: Prometheus y Grafana (fuera de alcance).
 
 ## D11 · Interfaz web de solo lectura en React + Vite 🟢 (PR #5, Silvia)
-Una interfaz para que operaciones consulte los pedidos y el estado sin leer JSON. Es solo lectura y no cambia la API. Su CI está en GitHub Actions. En AWS se serviría desde S3 detrás de CloudFront. **Pendiente decidir:** si se integra al stack oficial `despliegue/` (hoy solo existe `ayuda_opcional/Dockerfile.proxy`, y su compose no lo usa).
+Una interfaz para que operaciones consulte los pedidos y el estado sin leer JSON. Es solo lectura y no cambia la API. Su CI está en GitHub Actions. Integrada al stack oficial: la imagen del proxy (`despliegue/Dockerfile.proxy`) la construye dentro de Docker y la sirve en `/`. Por eso el JSON de bienvenida de la app (`/`) ya no se ve a través del proxy; la API sigue en `/pedidos` y `/health`. En AWS se serviría desde S3 detrás de CloudFront.
 
 ## Pendientes medidos (mejoras para el siguiente PR)
 

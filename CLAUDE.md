@@ -8,7 +8,7 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 
 ## Estado
 
-- **Local: hecho y probado.** El stack oficial es `despliegue/` (app1, app2, proxy NGINX y respaldo) y se opera con `scripts/desplegar.py`. Evidencias I01–I08 en `EVIDENCIAS.md`.
+- **Local: hecho y probado.** El stack oficial es `despliegue/` (app1, app2, proxy NGINX con la interfaz web y respaldo) y se opera con `scripts/desplegar.py`. Evidencias I01–I08 en `EVIDENCIAS.md`.
 - **AWS (plan gratuito para cuentas nuevas): en preparación.** Diseño: EC2 ×2 en dos zonas + ALB + S3 con versiones (`docs/02-arquitectura.md`). Todavía no se ha creado ningún recurso.
 - **Mejoras pendientes medidas:** quitar `http_503` de `proxy_next_upstream`, fijar `python:3.12-slim`, `server_tokens off` y endurecer los contenedores (`docs/03-decisiones.md`).
 - Descartado por ahora (D9): microservicios y PostgreSQL. No proponerlos de nuevo sin un motivo nuevo.
@@ -20,9 +20,9 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 - `scripts/`: `desplegar.py`, `datos.py`, `verificar_servicio.py`, `monitorear.py`, `ejecutar_local.py`.
 - `docs/`: 01 reto, 02 arquitectura, 03 decisiones, 04 seguridad y costos, 05 cómo funciona, 06 pitch.
 - `evidencias/`: el prefijo del archivo es el ID de la prueba (`I05c_…`). `EVIDENCIAS.md` es la única bitácora.
-- `frontend-nodo/`: interfaz web React + Vite de solo lectura (PR #5). Hoy solo se integra vía `ayuda_opcional/Dockerfile.proxy`; falta decidir si entra a `despliegue/` (D11).
-- `.github/workflows/`: CI del frontend y validación y construcción de los contenedores de `ayuda_opcional`.
-- `ayuda_opcional/` y `recursos-reto/`: material del reto como referencia (`ayuda_opcional` ya tiene cambios del equipo para la interfaz).
+- `frontend-nodo/`: interfaz web React + Vite de solo lectura. La construye `despliegue/Dockerfile.proxy` y el proxy la sirve en `/` (D11).
+- `.github/workflows/`: `frontend.yml` (lint + build) y `contenedores.yml` (construye la referencia y hace la prueba de punta a punta de `despliegue/`).
+- `ayuda_opcional/` y `recursos-reto/`: material original del reto, solo como referencia.
 
 ## Comandos
 

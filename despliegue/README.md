@@ -17,6 +17,7 @@ La configuración de `ayuda_opcional/` queda intacta como referencia.
 | nginx espera 1 s antes de reintentar en la otra instancia | `proxy_connect_timeout 300ms` y DNS cada 2 s |
 | El proxy no tiene healthcheck | Healthcheck propio en `/proxy-health` |
 | Se monta un solo archivo de datos | Se monta la carpeta `data/`, lo que permite reemplazar el archivo de forma atómica |
+| No hay interfaz web | La imagen del proxy (`Dockerfile.proxy`) construye `frontend-nodo/` y la sirve en `/`; la API sigue en `/pedidos` y `/health` |
 | Los respaldos son manuales | Servicio `respaldo` (aporte de la solución local de Oscar): `datos.py respaldar` cada 5 min, nunca respalda un JSON dañado |
 
 ## Cómo funciona un despliegue

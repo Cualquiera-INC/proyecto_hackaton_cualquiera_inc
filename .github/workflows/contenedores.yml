@@ -7,6 +7,8 @@ on:
       - "Dockerfile"
       - "pedidos.json"
       - "ayuda_opcional/**"
+      - "despliegue/**"
+      - "scripts/**"
       - "frontend-nodo/**"
       - ".github/workflows/contenedores.yml"
   pull_request:
@@ -15,10 +17,13 @@ on:
       - "Dockerfile"
       - "pedidos.json"
       - "ayuda_opcional/**"
+      - "despliegue/**"
+      - "scripts/**"
       - "frontend-nodo/**"
       - ".github/workflows/contenedores.yml"
 
 jobs:
+  # La configuración de referencia del reto sigue construyendo.
   compose-config:
     runs-on: ubuntu-latest
     steps:
@@ -35,3 +40,38 @@ jobs:
 
       - name: Construir imágenes
         run: docker compose -f ayuda_opcional/compose.yaml build
+
+  # Prueba de punta a punta del stack oficial en Linux, con los mismos
+  # comandos del README: si pasa, el despliegue es reproducible desde cero.
+  despliegue-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Preparar datos de trabajo
+        run: python3 scripts/datos.py preparar
+
+      - name: Primer despliegue (app1, app2, proxy con interfaz y respaldo)
+        run: python3 scripts/desplegar.py desplegar --version ci-${{ github.run_number }}-a
+
+      - name: Reparto entre las dos instancias
+        run: python3 scripts/verificar_servicio.py --esperadas app1,app2 --salida evidencias/ci_reparto.json
+
+      - name: Interfaz web servida por el proxy
+        run: curl -fsS http://127.0.0.1:8080/ | grep -q '<div id="root">'
+
+      - name: Actualización escalonada sin caída (monitor en paralelo)
+        run: |
+          python3 scripts/monitorear.py --segundos 40 --salida evidencias/ci_monitor.json &
+          sleep 2
+          python3 scripts/desplegar.py desplegar --version ci-${{ github.run_number }}-b
+          wait $!
+
+      - name: Registros (solo si algo falló)
+        if: failure()
+        run: docker compose -f despliegue/compose.yaml logs --tail 80
+
+      - name: Apagar
+        if: always()
+        run: docker compose -f despliegue/compose.yaml down

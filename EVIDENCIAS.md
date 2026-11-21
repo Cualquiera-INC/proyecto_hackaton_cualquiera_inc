@@ -33,6 +33,7 @@ Las evidencias están en `evidencias/` y el prefijo del archivo es el ID de la p
 | I05d | Elegir el punto de recuperación | Oscar | Cumple |
 | I06 | Repetición por otro integrante | Steban | Parcial |
 | I07 | Versión nueva sin caída + rollback manual | Steban | Cumple, 0 errores en 708 consultas |
+| I07b | Despliegue sin caída con la interfaz en el proxy | Juan Pablo | Cumple, 0 errores en 233 consultas |
 | I08 | Versión rota → rollback automático | Steban | Cumple (falta guardar evidencia) |
 | — | Respaldo automático | Oscar | Cumple |
 
@@ -127,6 +128,18 @@ Errores encontrados y ajustes:
 - En un primer intento el monitor terminó (60 s) antes de que empezara el despliegue (`evidencias/I07_intento_monitor_corto.json` solo registra v2). Se repitió con 180 s.
 - Otro intento falló porque el laboratorio de la ayuda opcional ocupaba el puerto 8080. Ahora el script lo detecta antes de empezar.
 - Repetida desde Linux (Alpine, Python 3.14, Compose v5.7, puerto 8082): correcta y con 0 errores. Esa repetición encontró que un despliegue lanzado justo después del inicial se cancelaba porque el healthcheck del proxy seguía en `starting`; se corrigió haciendo que la precondición espere hasta 30 s.
+
+## I07b — Despliegue sin caída con la interfaz web en el proxy
+Qué queremos comprobar: que integrar la interfaz web en el proxy no rompe el despliegue escalonado.
+Entorno: macOS con OrbStack, 21-11-2026. Stack `despliegue/` con el proxy `nodo-ruta-proxy:1.0.0` (NGINX + interfaz).
+Pasos: primer despliegue `v1-ui` y, con `monitorear.py --segundos 25` corriendo, `desplegar --version v2-ui`.
+Resultado observado:
+- Primer despliegue en 25 s, incluida la construcción de la interfaz dentro de Docker.
+- `/` → 200 `text/html` (interfaz); `/health` y `/pedidos` → 200 JSON alternando app1/app2; `/proxy-health` → 200. Los archivos JS se sirven como `application/javascript`.
+- Actualización v1-ui → v2-ui en 7,9 s: **233 consultas, 0 errores** (`SIN_CAIDA`); latencia máxima 20 ms.
+- `verificar_servicio.py --esperadas app1,app2`: CUMPLE. La interfaz mostró «Servicio disponible», la instancia, `datos-v1` y los 6 pedidos.
+
+**CUMPLE**. Evidencia: `evidencias/I07b_despliegue_con_interfaz.json`
 
 ## I08 — Versión rota y rollback automático
 Qué queremos comprobar: que si la versión nueva no arranca, el despliegue se revierte solo y el servicio nunca deja de responder.

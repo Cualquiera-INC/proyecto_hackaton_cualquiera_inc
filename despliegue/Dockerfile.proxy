@@ -1,0 +1,20 @@
+# Imagen del proxy: NGINX + la interfaz web (frontend-nodo) ya construida.
+# Se construye dentro de Docker para que nadie necesite Node instalado.
+# El contexto de construcción es la raíz del repositorio (ver despliegue/compose.yaml).
+# nginx.conf NO se copia: se monta desde despliegue/nginx.conf, para poder
+# ajustar el proxy sin reconstruir la imagen.
+
+# Etapa 1: construir la interfaz (solo se usa para generar dist/)
+FROM node:22-alpine AS frontend
+WORKDIR /src
+COPY frontend-nodo/package.json frontend-nodo/package-lock.json ./
+RUN npm ci
+COPY frontend-nodo/ ./
+# Mismo origen detrás del proxy: la interfaz llama a /pedidos y /health relativos.
+ENV VITE_API_URL=
+RUN npm run build
+
+# Etapa 2: imagen final, solo NGINX + archivos estáticos
+FROM nginx:1.28-alpine
+COPY --from=frontend /src/dist /usr/share/nginx/html
+EXPOSE 80

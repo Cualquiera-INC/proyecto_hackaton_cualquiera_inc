@@ -1,0 +1,2123 @@
+{
+  "url": "http://127.0.0.1:8080/pedidos",
+  "resultado": "SIN_CAIDA",
+  "consultas": 233,
+  "errores": 0,
+  "duracion_s": 25.1,
+  "respuestas_por_version": {
+    "v1-ui": 68,
+    "v2-ui": 165
+  },
+  "respuestas_por_instancia": {
+    "app1@v1-ui": 18,
+    "app2@v1-ui": 50,
+    "app1@v2-ui": 100,
+    "app2@v2-ui": 65
+  },
+  "latencia_ms": {
+    "max": 20.3,
+    "p95": 5.2,
+    "mediana": 4.2
+  },
+  "primer_error": null,
+  "ultimo_error": null,
+  "detalle": [
+    {
+      "consulta": 1,
+      "fecha": "2026-11-21T10:23:23.103",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 20.3
+    },
+    {
+      "consulta": 2,
+      "fecha": "2026-11-21T10:23:23.228",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.8
+    },
+    {
+      "consulta": 3,
+      "fecha": "2026-11-21T10:23:23.335",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.5
+    },
+    {
+      "consulta": 4,
+      "fecha": "2026-11-21T10:23:23.441",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 6.3
+    },
+    {
+      "consulta": 5,
+      "fecha": "2026-11-21T10:23:23.553",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.5
+    },
+    {
+      "consulta": 6,
+      "fecha": "2026-11-21T10:23:23.661",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.5
+    },
+    {
+      "consulta": 7,
+      "fecha": "2026-11-21T10:23:23.772",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 8,
+      "fecha": "2026-11-21T10:23:23.882",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 9,
+      "fecha": "2026-11-21T10:23:23.992",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.9
+    },
+    {
+      "consulta": 10,
+      "fecha": "2026-11-21T10:23:24.098",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.8
+    },
+    {
+      "consulta": 11,
+      "fecha": "2026-11-21T10:23:24.205",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.9
+    },
+    {
+      "consulta": 12,
+      "fecha": "2026-11-21T10:23:24.312",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.0
+    },
+    {
+      "consulta": 13,
+      "fecha": "2026-11-21T10:23:24.419",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.3
+    },
+    {
+      "consulta": 14,
+      "fecha": "2026-11-21T10:23:24.528",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.8
+    },
+    {
+      "consulta": 15,
+      "fecha": "2026-11-21T10:23:24.636",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 16,
+      "fecha": "2026-11-21T10:23:24.742",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.1
+    },
+    {
+      "consulta": 17,
+      "fecha": "2026-11-21T10:23:24.850",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.3
+    },
+    {
+      "consulta": 18,
+      "fecha": "2026-11-21T10:23:24.959",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.3
+    },
+    {
+      "consulta": 19,
+      "fecha": "2026-11-21T10:23:25.069",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.1
+    },
+    {
+      "consulta": 20,
+      "fecha": "2026-11-21T10:23:25.172",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.1
+    },
+    {
+      "consulta": 21,
+      "fecha": "2026-11-21T10:23:25.275",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.9
+    },
+    {
+      "consulta": 22,
+      "fecha": "2026-11-21T10:23:25.378",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.5
+    },
+    {
+      "consulta": 23,
+      "fecha": "2026-11-21T10:23:25.484",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.2
+    },
+    {
+      "consulta": 24,
+      "fecha": "2026-11-21T10:23:25.587",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.3
+    },
+    {
+      "consulta": 25,
+      "fecha": "2026-11-21T10:23:25.695",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.0
+    },
+    {
+      "consulta": 26,
+      "fecha": "2026-11-21T10:23:25.798",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.4
+    },
+    {
+      "consulta": 27,
+      "fecha": "2026-11-21T10:23:25.905",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.9
+    },
+    {
+      "consulta": 28,
+      "fecha": "2026-11-21T10:23:26.011",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.9
+    },
+    {
+      "consulta": 29,
+      "fecha": "2026-11-21T10:23:26.117",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.2
+    },
+    {
+      "consulta": 30,
+      "fecha": "2026-11-21T10:23:26.222",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.0
+    },
+    {
+      "consulta": 31,
+      "fecha": "2026-11-21T10:23:26.326",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.8
+    },
+    {
+      "consulta": 32,
+      "fecha": "2026-11-21T10:23:26.428",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.0
+    },
+    {
+      "consulta": 33,
+      "fecha": "2026-11-21T10:23:26.535",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.2
+    },
+    {
+      "consulta": 34,
+      "fecha": "2026-11-21T10:23:26.639",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.1
+    },
+    {
+      "consulta": 35,
+      "fecha": "2026-11-21T10:23:26.742",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.3
+    },
+    {
+      "consulta": 36,
+      "fecha": "2026-11-21T10:23:26.848",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.1
+    },
+    {
+      "consulta": 37,
+      "fecha": "2026-11-21T10:23:26.955",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.7
+    },
+    {
+      "consulta": 38,
+      "fecha": "2026-11-21T10:23:27.062",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.3
+    },
+    {
+      "consulta": 39,
+      "fecha": "2026-11-21T10:23:27.167",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.1
+    },
+    {
+      "consulta": 40,
+      "fecha": "2026-11-21T10:23:27.272",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.0
+    },
+    {
+      "consulta": 41,
+      "fecha": "2026-11-21T10:23:27.379",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.9
+    },
+    {
+      "consulta": 42,
+      "fecha": "2026-11-21T10:23:27.486",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.1
+    },
+    {
+      "consulta": 43,
+      "fecha": "2026-11-21T10:23:27.593",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.4
+    },
+    {
+      "consulta": 44,
+      "fecha": "2026-11-21T10:23:27.700",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.5
+    },
+    {
+      "consulta": 45,
+      "fecha": "2026-11-21T10:23:27.807",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 46,
+      "fecha": "2026-11-21T10:23:27.917",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 47,
+      "fecha": "2026-11-21T10:23:28.027",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.5
+    },
+    {
+      "consulta": 48,
+      "fecha": "2026-11-21T10:23:28.135",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 49,
+      "fecha": "2026-11-21T10:23:28.244",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.2
+    },
+    {
+      "consulta": 50,
+      "fecha": "2026-11-21T10:23:28.351",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.8
+    },
+    {
+      "consulta": 51,
+      "fecha": "2026-11-21T10:23:28.456",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.7
+    },
+    {
+      "consulta": 52,
+      "fecha": "2026-11-21T10:23:28.561",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.8
+    },
+    {
+      "consulta": 53,
+      "fecha": "2026-11-21T10:23:28.668",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.3
+    },
+    {
+      "consulta": 54,
+      "fecha": "2026-11-21T10:23:28.770",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.0
+    },
+    {
+      "consulta": 55,
+      "fecha": "2026-11-21T10:23:28.874",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 56,
+      "fecha": "2026-11-21T10:23:28.984",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 57,
+      "fecha": "2026-11-21T10:23:29.093",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 58,
+      "fecha": "2026-11-21T10:23:29.200",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.9
+    },
+    {
+      "consulta": 59,
+      "fecha": "2026-11-21T10:23:29.308",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.6
+    },
+    {
+      "consulta": 60,
+      "fecha": "2026-11-21T10:23:29.415",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.5
+    },
+    {
+      "consulta": 61,
+      "fecha": "2026-11-21T10:23:29.518",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.3
+    },
+    {
+      "consulta": 62,
+      "fecha": "2026-11-21T10:23:29.623",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.0
+    },
+    {
+      "consulta": 63,
+      "fecha": "2026-11-21T10:23:29.730",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.2
+    },
+    {
+      "consulta": 64,
+      "fecha": "2026-11-21T10:23:29.838",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.6
+    },
+    {
+      "consulta": 65,
+      "fecha": "2026-11-21T10:23:29.942",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.4
+    },
+    {
+      "consulta": 66,
+      "fecha": "2026-11-21T10:23:30.048",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.5
+    },
+    {
+      "consulta": 67,
+      "fecha": "2026-11-21T10:23:30.154",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.6
+    },
+    {
+      "consulta": 68,
+      "fecha": "2026-11-21T10:23:30.262",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v1-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.4
+    },
+    {
+      "consulta": 69,
+      "fecha": "2026-11-21T10:23:30.365",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.6
+    },
+    {
+      "consulta": 70,
+      "fecha": "2026-11-21T10:23:30.470",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.0
+    },
+    {
+      "consulta": 71,
+      "fecha": "2026-11-21T10:23:30.574",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.1
+    },
+    {
+      "consulta": 72,
+      "fecha": "2026-11-21T10:23:30.679",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.0
+    },
+    {
+      "consulta": 73,
+      "fecha": "2026-11-21T10:23:30.782",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.9
+    },
+    {
+      "consulta": 74,
+      "fecha": "2026-11-21T10:23:30.887",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.7
+    },
+    {
+      "consulta": 75,
+      "fecha": "2026-11-21T10:23:30.994",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.9
+    },
+    {
+      "consulta": 76,
+      "fecha": "2026-11-21T10:23:31.100",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.4
+    },
+    {
+      "consulta": 77,
+      "fecha": "2026-11-21T10:23:31.207",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.3
+    },
+    {
+      "consulta": 78,
+      "fecha": "2026-11-21T10:23:31.312",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.0
+    },
+    {
+      "consulta": 79,
+      "fecha": "2026-11-21T10:23:31.420",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.5
+    },
+    {
+      "consulta": 80,
+      "fecha": "2026-11-21T10:23:31.530",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.8
+    },
+    {
+      "consulta": 81,
+      "fecha": "2026-11-21T10:23:31.634",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 82,
+      "fecha": "2026-11-21T10:23:31.744",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.6
+    },
+    {
+      "consulta": 83,
+      "fecha": "2026-11-21T10:23:31.849",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.0
+    },
+    {
+      "consulta": 84,
+      "fecha": "2026-11-21T10:23:31.956",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.7
+    },
+    {
+      "consulta": 85,
+      "fecha": "2026-11-21T10:23:32.063",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.0
+    },
+    {
+      "consulta": 86,
+      "fecha": "2026-11-21T10:23:32.170",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.3
+    },
+    {
+      "consulta": 87,
+      "fecha": "2026-11-21T10:23:32.277",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.2
+    },
+    {
+      "consulta": 88,
+      "fecha": "2026-11-21T10:23:32.385",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.6
+    },
+    {
+      "consulta": 89,
+      "fecha": "2026-11-21T10:23:32.493",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 90,
+      "fecha": "2026-11-21T10:23:32.603",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.3
+    },
+    {
+      "consulta": 91,
+      "fecha": "2026-11-21T10:23:32.711",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.5
+    },
+    {
+      "consulta": 92,
+      "fecha": "2026-11-21T10:23:32.820",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 93,
+      "fecha": "2026-11-21T10:23:32.927",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.4
+    },
+    {
+      "consulta": 94,
+      "fecha": "2026-11-21T10:23:33.037",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.5
+    },
+    {
+      "consulta": 95,
+      "fecha": "2026-11-21T10:23:33.144",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.3
+    },
+    {
+      "consulta": 96,
+      "fecha": "2026-11-21T10:23:33.252",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.4
+    },
+    {
+      "consulta": 97,
+      "fecha": "2026-11-21T10:23:33.359",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.7
+    },
+    {
+      "consulta": 98,
+      "fecha": "2026-11-21T10:23:33.467",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.2
+    },
+    {
+      "consulta": 99,
+      "fecha": "2026-11-21T10:23:33.575",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.0
+    },
+    {
+      "consulta": 100,
+      "fecha": "2026-11-21T10:23:33.683",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.5
+    },
+    {
+      "consulta": 101,
+      "fecha": "2026-11-21T10:23:33.791",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 1.7
+    },
+    {
+      "consulta": 102,
+      "fecha": "2026-11-21T10:23:33.898",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.1
+    },
+    {
+      "consulta": 103,
+      "fecha": "2026-11-21T10:23:34.006",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.9
+    },
+    {
+      "consulta": 104,
+      "fecha": "2026-11-21T10:23:34.109",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.8
+    },
+    {
+      "consulta": 105,
+      "fecha": "2026-11-21T10:23:34.217",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 106,
+      "fecha": "2026-11-21T10:23:34.323",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 107,
+      "fecha": "2026-11-21T10:23:34.429",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.0
+    },
+    {
+      "consulta": 108,
+      "fecha": "2026-11-21T10:23:34.537",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 109,
+      "fecha": "2026-11-21T10:23:34.642",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.2
+    },
+    {
+      "consulta": 110,
+      "fecha": "2026-11-21T10:23:34.749",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 111,
+      "fecha": "2026-11-21T10:23:34.859",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 112,
+      "fecha": "2026-11-21T10:23:34.968",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 113,
+      "fecha": "2026-11-21T10:23:35.076",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 114,
+      "fecha": "2026-11-21T10:23:35.186",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.6
+    },
+    {
+      "consulta": 115,
+      "fecha": "2026-11-21T10:23:35.294",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.4
+    },
+    {
+      "consulta": 116,
+      "fecha": "2026-11-21T10:23:35.405",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 117,
+      "fecha": "2026-11-21T10:23:35.515",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.5
+    },
+    {
+      "consulta": 118,
+      "fecha": "2026-11-21T10:23:35.624",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.3
+    },
+    {
+      "consulta": 119,
+      "fecha": "2026-11-21T10:23:35.733",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 120,
+      "fecha": "2026-11-21T10:23:35.844",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 121,
+      "fecha": "2026-11-21T10:23:35.953",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.0
+    },
+    {
+      "consulta": 122,
+      "fecha": "2026-11-21T10:23:36.063",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 123,
+      "fecha": "2026-11-21T10:23:36.171",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 124,
+      "fecha": "2026-11-21T10:23:36.281",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 125,
+      "fecha": "2026-11-21T10:23:36.391",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.9
+    },
+    {
+      "consulta": 126,
+      "fecha": "2026-11-21T10:23:36.500",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 127,
+      "fecha": "2026-11-21T10:23:36.610",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.0
+    },
+    {
+      "consulta": 128,
+      "fecha": "2026-11-21T10:23:36.719",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.2
+    },
+    {
+      "consulta": 129,
+      "fecha": "2026-11-21T10:23:36.825",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.5
+    },
+    {
+      "consulta": 130,
+      "fecha": "2026-11-21T10:23:36.934",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 131,
+      "fecha": "2026-11-21T10:23:37.044",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.4
+    },
+    {
+      "consulta": 132,
+      "fecha": "2026-11-21T10:23:37.151",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.9
+    },
+    {
+      "consulta": 133,
+      "fecha": "2026-11-21T10:23:37.254",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.4
+    },
+    {
+      "consulta": 134,
+      "fecha": "2026-11-21T10:23:37.358",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.5
+    },
+    {
+      "consulta": 135,
+      "fecha": "2026-11-21T10:23:37.466",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.4
+    },
+    {
+      "consulta": 136,
+      "fecha": "2026-11-21T10:23:37.575",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.5
+    },
+    {
+      "consulta": 137,
+      "fecha": "2026-11-21T10:23:37.685",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.0
+    },
+    {
+      "consulta": 138,
+      "fecha": "2026-11-21T10:23:37.795",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.3
+    },
+    {
+      "consulta": 139,
+      "fecha": "2026-11-21T10:23:37.903",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 140,
+      "fecha": "2026-11-21T10:23:38.011",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.9
+    },
+    {
+      "consulta": 141,
+      "fecha": "2026-11-21T10:23:38.115",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 142,
+      "fecha": "2026-11-21T10:23:38.225",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 143,
+      "fecha": "2026-11-21T10:23:38.335",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 144,
+      "fecha": "2026-11-21T10:23:38.445",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.5
+    },
+    {
+      "consulta": 145,
+      "fecha": "2026-11-21T10:23:38.551",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 146,
+      "fecha": "2026-11-21T10:23:38.661",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 147,
+      "fecha": "2026-11-21T10:23:38.771",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.7
+    },
+    {
+      "consulta": 148,
+      "fecha": "2026-11-21T10:23:38.879",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.2
+    },
+    {
+      "consulta": 149,
+      "fecha": "2026-11-21T10:23:38.987",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.9
+    },
+    {
+      "consulta": 150,
+      "fecha": "2026-11-21T10:23:39.095",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.9
+    },
+    {
+      "consulta": 151,
+      "fecha": "2026-11-21T10:23:39.203",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.4
+    },
+    {
+      "consulta": 152,
+      "fecha": "2026-11-21T10:23:39.313",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 153,
+      "fecha": "2026-11-21T10:23:39.419",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.0
+    },
+    {
+      "consulta": 154,
+      "fecha": "2026-11-21T10:23:39.530",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 155,
+      "fecha": "2026-11-21T10:23:39.639",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 156,
+      "fecha": "2026-11-21T10:23:39.747",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 157,
+      "fecha": "2026-11-21T10:23:39.857",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 158,
+      "fecha": "2026-11-21T10:23:39.967",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 159,
+      "fecha": "2026-11-21T10:23:40.076",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.7
+    },
+    {
+      "consulta": 160,
+      "fecha": "2026-11-21T10:23:40.185",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.2
+    },
+    {
+      "consulta": 161,
+      "fecha": "2026-11-21T10:23:40.292",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.1
+    },
+    {
+      "consulta": 162,
+      "fecha": "2026-11-21T10:23:40.401",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 163,
+      "fecha": "2026-11-21T10:23:40.511",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 164,
+      "fecha": "2026-11-21T10:23:40.617",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.5
+    },
+    {
+      "consulta": 165,
+      "fecha": "2026-11-21T10:23:40.727",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 166,
+      "fecha": "2026-11-21T10:23:40.837",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.0
+    },
+    {
+      "consulta": 167,
+      "fecha": "2026-11-21T10:23:40.945",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.2
+    },
+    {
+      "consulta": 168,
+      "fecha": "2026-11-21T10:23:41.055",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.1
+    },
+    {
+      "consulta": 169,
+      "fecha": "2026-11-21T10:23:41.164",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 170,
+      "fecha": "2026-11-21T10:23:41.274",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 171,
+      "fecha": "2026-11-21T10:23:41.384",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.0
+    },
+    {
+      "consulta": 172,
+      "fecha": "2026-11-21T10:23:41.491",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.1
+    },
+    {
+      "consulta": 173,
+      "fecha": "2026-11-21T10:23:41.599",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 174,
+      "fecha": "2026-11-21T10:23:41.710",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.0
+    },
+    {
+      "consulta": 175,
+      "fecha": "2026-11-21T10:23:41.820",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 176,
+      "fecha": "2026-11-21T10:23:41.929",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 177,
+      "fecha": "2026-11-21T10:23:42.039",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 178,
+      "fecha": "2026-11-21T10:23:42.149",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.5
+    },
+    {
+      "consulta": 179,
+      "fecha": "2026-11-21T10:23:42.256",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.5
+    },
+    {
+      "consulta": 180,
+      "fecha": "2026-11-21T10:23:42.364",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.5
+    },
+    {
+      "consulta": 181,
+      "fecha": "2026-11-21T10:23:42.471",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.5
+    },
+    {
+      "consulta": 182,
+      "fecha": "2026-11-21T10:23:42.574",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.0
+    },
+    {
+      "consulta": 183,
+      "fecha": "2026-11-21T10:23:42.681",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.3
+    },
+    {
+      "consulta": 184,
+      "fecha": "2026-11-21T10:23:42.789",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.5
+    },
+    {
+      "consulta": 185,
+      "fecha": "2026-11-21T10:23:42.899",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.3
+    },
+    {
+      "consulta": 186,
+      "fecha": "2026-11-21T10:23:43.004",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.3
+    },
+    {
+      "consulta": 187,
+      "fecha": "2026-11-21T10:23:43.113",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 188,
+      "fecha": "2026-11-21T10:23:43.223",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.0
+    },
+    {
+      "consulta": 189,
+      "fecha": "2026-11-21T10:23:43.328",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 190,
+      "fecha": "2026-11-21T10:23:43.438",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 191,
+      "fecha": "2026-11-21T10:23:43.548",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 192,
+      "fecha": "2026-11-21T10:23:43.658",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.1
+    },
+    {
+      "consulta": 193,
+      "fecha": "2026-11-21T10:23:43.767",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 194,
+      "fecha": "2026-11-21T10:23:43.872",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 195,
+      "fecha": "2026-11-21T10:23:43.982",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.6
+    },
+    {
+      "consulta": 196,
+      "fecha": "2026-11-21T10:23:44.090",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.0
+    },
+    {
+      "consulta": 197,
+      "fecha": "2026-11-21T10:23:44.197",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.0
+    },
+    {
+      "consulta": 198,
+      "fecha": "2026-11-21T10:23:44.304",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.6
+    },
+    {
+      "consulta": 199,
+      "fecha": "2026-11-21T10:23:44.412",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.4
+    },
+    {
+      "consulta": 200,
+      "fecha": "2026-11-21T10:23:44.521",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 201,
+      "fecha": "2026-11-21T10:23:44.629",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 202,
+      "fecha": "2026-11-21T10:23:44.739",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 203,
+      "fecha": "2026-11-21T10:23:44.849",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.8
+    },
+    {
+      "consulta": 204,
+      "fecha": "2026-11-21T10:23:44.954",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 205,
+      "fecha": "2026-11-21T10:23:45.064",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 206,
+      "fecha": "2026-11-21T10:23:45.172",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 207,
+      "fecha": "2026-11-21T10:23:45.283",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 208,
+      "fecha": "2026-11-21T10:23:45.392",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.5
+    },
+    {
+      "consulta": 209,
+      "fecha": "2026-11-21T10:23:45.502",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 210,
+      "fecha": "2026-11-21T10:23:45.611",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 211,
+      "fecha": "2026-11-21T10:23:45.721",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 212,
+      "fecha": "2026-11-21T10:23:45.827",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.8
+    },
+    {
+      "consulta": 213,
+      "fecha": "2026-11-21T10:23:45.934",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.3
+    },
+    {
+      "consulta": 214,
+      "fecha": "2026-11-21T10:23:46.043",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.5
+    },
+    {
+      "consulta": 215,
+      "fecha": "2026-11-21T10:23:46.152",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.9
+    },
+    {
+      "consulta": 216,
+      "fecha": "2026-11-21T10:23:46.258",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.4
+    },
+    {
+      "consulta": 217,
+      "fecha": "2026-11-21T10:23:46.367",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.5
+    },
+    {
+      "consulta": 218,
+      "fecha": "2026-11-21T10:23:46.478",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.9
+    },
+    {
+      "consulta": 219,
+      "fecha": "2026-11-21T10:23:46.585",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 220,
+      "fecha": "2026-11-21T10:23:46.694",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.5
+    },
+    {
+      "consulta": 221,
+      "fecha": "2026-11-21T10:23:46.803",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 222,
+      "fecha": "2026-11-21T10:23:46.909",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.8
+    },
+    {
+      "consulta": 223,
+      "fecha": "2026-11-21T10:23:47.018",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.4
+    },
+    {
+      "consulta": 224,
+      "fecha": "2026-11-21T10:23:47.127",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 225,
+      "fecha": "2026-11-21T10:23:47.236",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.1
+    },
+    {
+      "consulta": 226,
+      "fecha": "2026-11-21T10:23:47.344",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.7
+    },
+    {
+      "consulta": 227,
+      "fecha": "2026-11-21T10:23:47.453",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.2
+    },
+    {
+      "consulta": 228,
+      "fecha": "2026-11-21T10:23:47.560",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.7
+    },
+    {
+      "consulta": 229,
+      "fecha": "2026-11-21T10:23:47.663",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.9
+    },
+    {
+      "consulta": 230,
+      "fecha": "2026-11-21T10:23:47.771",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 2.4
+    },
+    {
+      "consulta": 231,
+      "fecha": "2026-11-21T10:23:47.878",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 3.5
+    },
+    {
+      "consulta": 232,
+      "fecha": "2026-11-21T10:23:47.987",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 4.6
+    },
+    {
+      "consulta": 233,
+      "fecha": "2026-11-21T10:23:48.096",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "v2-ui",
+      "version_datos": "datos-v1",
+      "milisegundos": 5.0
+    }
+  ]
+}

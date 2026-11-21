@@ -36,7 +36,7 @@ Ejemplo: ver `.env.example`.
 VITE_API_URL= npm run build
 ```
 
-`ayuda_opcional/Dockerfile.proxy` construye este front y NGINX sirve la SPA en `/` mientras balancea `/pedidos` y `/health` hacia `app1`/`app2`.
+`despliegue/Dockerfile.proxy` construye este front dentro de Docker y la imagen del proxy (`nodo-ruta-proxy`) sirve la SPA en `/`, mientras balancea `/pedidos` y `/health` hacia `app1`/`app2`. Se construye sola en el primer `python scripts/desplegar.py desplegar`. Si cambias el front, sube `PROXY_TAG` y reconstruye el proxy (ver los comentarios en `despliegue/compose.yaml`).
 
 ## CI
 
