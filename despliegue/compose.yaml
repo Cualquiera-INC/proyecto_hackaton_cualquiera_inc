@@ -69,3 +69,21 @@ services:
         condition: service_healthy
       app2:
         condition: service_healthy
+
+  # Respaldo automático cada 5 min (aporte de la solución local de Oscar).
+  # datos.py valida el JSON antes de copiar, así que nunca respalda un archivo
+  # corrupto. Usa una imagen de Python fija y no la de la app: solo necesita la
+  # biblioteca estándar y así no depende de la versión desplegada.
+  # desplegar.py lo levanta en el primer despliegue (compose up -d) y no lo
+  # toca en las actualizaciones escalonadas (--no-deps app1/app2).
+  # Pendiente: rotar respaldos antiguos (cada uno pesa ~1 KB).
+  respaldo:
+    image: python:3.12-slim
+    restart: unless-stopped
+    user: "10001"
+    working_dir: /proj
+    command: ["sh", "-c", "while true; do python scripts/datos.py respaldar; sleep 300; done"]
+    volumes:
+      - ../scripts:/proj/scripts:ro
+      - ../data:/proj/data:ro
+      - ../respaldos:/proj/respaldos

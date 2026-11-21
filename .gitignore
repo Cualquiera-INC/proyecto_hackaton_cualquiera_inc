@@ -7,3 +7,6 @@ respaldos/
 # Estado local del despliegue (lo genera scripts/desplegar.py)
 despliegue/.env
 despliegue/estado.json
+# Sistema operativo
+.DS_Store
+Thumbs.db
