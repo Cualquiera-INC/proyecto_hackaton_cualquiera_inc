@@ -1,0 +1,70 @@
+stop app1: 2026-11-21T13:43:39.407Z
+
+=== docker compose ps
+SERVICE    STATUS
+app2       Up 15 seconds (healthy)
+proxy      Up 9 seconds
+respaldo   Up 15 seconds
+
+=== docker compose logs --timestamps --tail 40 proxy app1 app2
+app1-1   | 2026-11-21T13:43:29.697650708Z Nodo Ruta: app1, puerto 8080
+app1-1   | 2026-11-21T13:43:34.574131214Z 127.0.0.1 - - [21/Nov/2026 13:43:34] "GET /health HTTP/1.1" 200 -
+app1-1   | 2026-11-21T13:43:39.218821988Z 172.18.0.5 - - [21/Nov/2026 13:43:39] "GET /pedidos HTTP/1.0" 200 -
+app1-1   | 2026-11-21T13:43:39.276899050Z 172.18.0.5 - - [21/Nov/2026 13:43:39] "GET /pedidos HTTP/1.0" 200 -
+app1-1   | 2026-11-21T13:43:39.307343166Z 172.18.0.5 - - [21/Nov/2026 13:43:39] "GET /pedidos HTTP/1.0" 200 -
+app1-1   | 2026-11-21T13:43:39.315280879Z 172.18.0.5 - - [21/Nov/2026 13:43:39] "GET /pedidos HTTP/1.0" 200 -
+proxy-1  | 2026-11-21T13:43:35.309062971Z /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+proxy-1  | 2026-11-21T13:43:35.309092086Z /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+proxy-1  | 2026-11-21T13:43:35.310488998Z /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+app1-1   | 2026-11-21T13:43:39.322551059Z 172.18.0.5 - - [21/Nov/2026 13:43:39] "GET /pedidos HTTP/1.0" 200 -
+app1-1   | 2026-11-21T13:43:39.869818871Z 127.0.0.1 - - [21/Nov/2026 13:43:39] "GET /health HTTP/1.1" 200 -
+proxy-1  | 2026-11-21T13:43:35.345564418Z 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+proxy-1  | 2026-11-21T13:43:35.398022581Z 10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+proxy-1  | 2026-11-21T13:43:35.398284782Z /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+proxy-1  | 2026-11-21T13:43:35.398970105Z /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+proxy-1  | 2026-11-21T13:43:35.402380356Z /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+proxy-1  | 2026-11-21T13:43:35.405026453Z /docker-entrypoint.sh: Configuration complete; ready for start up
+proxy-1  | 2026-11-21T13:43:39.214167704Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:39.219173748Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.3:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:39.247642644Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:39.277180812Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.3:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:39.292260248Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:39.307603444Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.3:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:39.311664725Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:39.315496213Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.3:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:39.319064997Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:39.322731377Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.3:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:43.138941801Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:44.155624851Z 2026/11/21 13:43:44 [warn] 30#30: *24 upstream server temporarily disabled while connecting to upstream, client: 172.18.0.1, server: , request: "GET /pedidos HTTP/1.1", upstream: "http://172.18.0.3:8080/pedidos", host: "127.0.0.1:8080"
+proxy-1  | 2026-11-21T13:43:44.155645320Z 2026/11/21 13:43:44 [error] 30#30: *24 upstream timed out (110: Operation timed out) while connecting to upstream, client: 172.18.0.1, server: , request: "GET /pedidos HTTP/1.1", upstream: "http://172.18.0.3:8080/pedidos", host: "127.0.0.1:8080"
+proxy-1  | 2026-11-21T13:43:44.158327727Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.3:8080, 172.18.0.4:8080 upstream_status=504, 200
+proxy-1  | 2026-11-21T13:43:44.162788785Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:44.177968317Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:44.194389975Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:44.198644097Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:44.202690347Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:44.224884923Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:44.239532567Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+proxy-1  | 2026-11-21T13:43:44.243883268Z 172.18.0.1 "GET /pedidos HTTP/1.1" 200 upstream=172.18.0.4:8080 upstream_status=200
+app2-1   | 2026-11-21T13:43:29.824871367Z Nodo Ruta: app2, puerto 8080
+app2-1   | 2026-11-21T13:43:34.733561463Z 127.0.0.1 - - [21/Nov/2026 13:43:34] "GET /health HTTP/1.1" 200 -
+app2-1   | 2026-11-21T13:43:39.213731671Z 172.18.0.5 - - [21/Nov/2026 13:43:39] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:39.247354286Z 172.18.0.5 - - [21/Nov/2026 13:43:39] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:39.292073618Z 172.18.0.5 - - [21/Nov/2026 13:43:39] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:39.311434371Z 172.18.0.5 - - [21/Nov/2026 13:43:39] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:39.318828194Z 172.18.0.5 - - [21/Nov/2026 13:43:39] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:40.007993025Z 127.0.0.1 - - [21/Nov/2026 13:43:40] "GET /health HTTP/1.1" 200 -
+app2-1   | 2026-11-21T13:43:43.138440563Z 172.18.0.5 - - [21/Nov/2026 13:43:43] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:44.157945419Z 172.18.0.5 - - [21/Nov/2026 13:43:44] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:44.162534237Z 172.18.0.5 - - [21/Nov/2026 13:43:44] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:44.177693963Z 172.18.0.5 - - [21/Nov/2026 13:43:44] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:44.194144712Z 172.18.0.5 - - [21/Nov/2026 13:43:44] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:44.198280946Z 172.18.0.5 - - [21/Nov/2026 13:43:44] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:44.202535218Z 172.18.0.5 - - [21/Nov/2026 13:43:44] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:44.224626789Z 172.18.0.5 - - [21/Nov/2026 13:43:44] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:44.239184975Z 172.18.0.5 - - [21/Nov/2026 13:43:44] "GET /pedidos HTTP/1.0" 200 -
+app2-1   | 2026-11-21T13:43:44.243441490Z 172.18.0.5 - - [21/Nov/2026 13:43:44] "GET /pedidos HTTP/1.0" 200 -
+
+=== IP de cada instancia (tras start app1; app2 no se reinició)
+app1 172.18.0.3
+app2 172.18.0.4

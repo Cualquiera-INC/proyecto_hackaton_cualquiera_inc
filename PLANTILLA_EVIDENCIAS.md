@@ -1,5 +1,5 @@
 # Registro del equipo
-Equipo: [completar]
+Equipo: Cualquiera INC
 Integrantes y responsabilidades: [completar — responsable de despliegue, de pruebas y de documentación]
 Fecha: 21 de noviembre de 2026
 Modalidad: local con contenedores (Docker Desktop en Windows 11). El despliegue en nube queda como diseño pendiente.
@@ -16,7 +16,16 @@ Arquitectura elegida y motivo:
   - Script `verificar_servicio.py` para guardar evidencias en JSON.
 - Motivo: es el MVP mínimo que separa la aplicación de sus datos, reparte las solicitudes entre dos instancias, permite ver qué instancia responde y deja recuperar los datos desde un respaldo verificado.
 
-Ayudas utilizadas y cambios realizados: se usó la ayuda opcional (`ayuda_opcional/compose.yaml` y `nginx.conf`) sin modificaciones. [completar si el equipo hace cambios propios]
+Ayudas utilizadas y cambios realizados:
+- Pruebas I01 a I05: ayuda opcional (`ayuda_opcional/compose.yaml` y `nginx.conf`) sin modificaciones.
+- Pruebas I07 e I08: despliegue propio del equipo en `despliegue/` (ver `despliegue/README.md`):
+  - `scripts/desplegar.py`: actualización escalonada, una instancia a la vez, con rollback automático y manual;
+  - imágenes con versión (`nodo-ruta:<version>`);
+  - `version_app` en las respuestas de `app.py` y apagado ordenado con SIGTERM;
+  - `restart: unless-stopped` y healthcheck también en el proxy;
+  - `proxy_connect_timeout 300ms` en NGINX;
+  - montaje de la carpeta `data/` en lugar del archivo;
+  - `scripts/monitorear.py` para registrar evidencia continua.
 
 Recursos, permisos y posibles costos:
 - Ejecución local: no se contrataron recursos y no hubo costos.
@@ -159,6 +168,67 @@ Archivo de evidencia: [completar — usar nombres nuevos, por ejemplo `evidencia
 Error encontrado y ajuste: [completar]
 Resultado al repetir la prueba: [completar]
 
+## I07 — Despliegue de una versión nueva sin caída y rollback manual
+Qué queremos comprobar: que se puede publicar una versión nueva de la aplicación, y volver a la anterior, sin que las consultas dejen de responder. Es la parte del reto que dice *"cuando una actualización introduce un error, las consultas dejan de responder"*.
+Versión y estado inicial: aplicación `v2`, datos `datos-v1`; app1, app2 y proxy en estado healthy (`despliegue/compose.yaml`, puerto 8080).
+Pasos para repetirla (dos terminales):
+```
+# Terminal A
+python scripts/monitorear.py --segundos 180 --salida evidencias/despliegue_y_rollback.json
+# Terminal B, mientras corre A
+python scripts/desplegar.py desplegar --version v4
+python scripts/desplegar.py rollback
+# Al terminar B, Ctrl+C en A
+```
+Resultado esperado: el monitor registra el cambio de v2 a v4 y de vuelta a v2, una instancia a la vez, sin ningún error.
+Resultado observado:
+- El monitor mostró, en orden:
+  - `{app1: v2, app2: v2}`
+  - `{app1: v4, app2: v2}`
+  - `{app1: v4, app2: v4}`
+  - `{app1: v2, app2: v4}`
+  - `{app1: v2, app2: v2}`
+- **708 consultas en 83,9 s, 0 errores** (resultado `SIN_CAIDA`).
+- Latencia: mediana 16 ms, p95 32 ms y máximo 297 ms. El máximo corresponde al reintento de NGINX en la otra instancia mientras una se recreaba.
+- Antes de pasar a la segunda instancia, el script comprobó en cada una: healthy, `version_app` correcta y tráfico recibido a través del proxy.
+
+Inicio, fin y duración:
+- Despliegue v2 → v4: de 09:40:44 a 09:40:55 (11,8 s).
+- Rollback v4 → v2: de 09:41:00 a 09:41:10 (9,4 s).
+
+Archivo de evidencia: `evidencias/despliegue_y_rollback.json`. El historial queda en `python scripts/desplegar.py estado`.
+¿Cumple? Sí
+Error encontrado y ajuste:
+- En un primer intento el monitor terminó (60 s) antes de que empezara el despliegue (`evidencias/despliegue_v3.json` solo registra v2). Se repitió con 180 s y deteniéndolo con Ctrl+C.
+- Otro intento falló porque el laboratorio de la ayuda opcional seguía ocupando el puerto 8080. Ahora el script detecta el puerto ocupado antes de empezar.
+
+Resultado al repetir la prueba:
+- Repetida desde Linux (Alpine, Python 3.14, Docker Compose v5.7, proyecto `nodo-ruta-linux`, puerto 8082): despliegue y rollback correctos, 0 errores.
+- Esta prueba encontró un fallo: un despliegue lanzado justo después del inicial se cancelaba porque el healthcheck del proxy seguía en `starting`. Se corrigió haciendo que la precondición espere hasta 30 s.
+
+## I08 — Versión con error y rollback automático
+Qué queremos comprobar: que si la versión nueva no arranca, el despliegue se revierte solo y el servicio nunca deja de responder.
+Versión y estado inicial: aplicación `v2` en app1 y app2, todo healthy.
+Pasos para repetirla:
+1. Añadir temporalmente en `app.py`, debajo de `port = int(...)`, la línea `raise RuntimeError("BUG SIMULADO")`.
+2. Con el monitor corriendo en otra terminal, ejecutar:
+   ```
+   python scripts/desplegar.py desplegar --version v3-roto
+   ```
+3. Quitar la línea de `app.py`.
+
+Resultado esperado: el script detecta el fallo en app1, la devuelve a la versión anterior, no toca app2 y termina con código 1. El monitor no registra errores.
+Resultado observado (prueba técnica del equipo):
+- En Windows: app1 se reinició 2 veces al arrancar. El script lo detectó en unos 2 s, devolvió app1 a v2 y terminó con código 1, todo en 4,2 s. El monitor registró 345 consultas con 0 errores y un máximo de 313 ms.
+- En Linux: mismo comportamiento, con 0 errores.
+- En las dos pruebas app2 no se tocó.
+
+Inicio, fin y duración: 4,2 s desde el inicio de la actualización hasta el rollback completo.
+Archivo de evidencia: [completar — repetir la prueba guardando `evidencias/rollback_automatico.json` con el monitor]
+¿Cumple? Sí (prueba técnica). Falta guardar la evidencia en `evidencias/`.
+Error encontrado y ajuste: ninguno.
+Resultado al repetir la prueba: [completar]
+
 # Cierre
 Qué funciona realmente (probado en local):
 - Balanceo round-robin entre dos instancias detrás de un único punto de acceso.
@@ -166,12 +236,14 @@ Qué funciona realmente (probado en local):
 - Recuperación de app1 y persistencia de los datos al recrear un contenedor.
 - Respaldo con verificación de integridad SHA-256 y restauración comprobada por versión y contenido.
 - Identificación de la instancia que responde (campo `instancia` y `upstream=` en el log de NGINX).
+- Despliegue de versiones nuevas sin caída (una instancia a la vez), rollback manual y rollback automático ante una versión que no arranca (I07 e I08), también comprobado desde Linux.
+- Reinicio automático de contenedores caídos (`restart: unless-stopped`).
 
 Qué quedó como propuesta o pendiente:
 - Despliegue en nube: no hay una cuenta habilitada sin costo. [ajustar si el equipo tiene acceso]
-- Prueba I06.
-- Health check activo en el balanceador.
-- Reinicio automático de instancias.
+- Pipeline de GitHub Actions que ejecute `scripts/desplegar.py` en el servidor. El script ya está preparado para un pipeline: no pide nada interactivo y devuelve códigos de salida.
+- Prueba I06 y la evidencia de I08.
+- Health check activo en el balanceador (NGINX gratuito solo detecta fallos de forma pasiva).
 - Respaldos fuera del equipo.
 - HTTPS.
 
@@ -184,6 +256,14 @@ Procedimiento para recrear y recuperar:
    - `python scripts/datos.py restaurar --respaldo respaldos/<archivo>.json`
    - verificar `/health` y `/pedidos`.
 6. Para terminar: `docker compose -f ayuda_opcional/compose.yaml down`. Las carpetas `data/`, `respaldos/` y `evidencias/` se conservan.
+
+Procedimiento con el despliegue propio (`despliegue/`):
+1. `python scripts/datos.py preparar` (solo la primera vez).
+2. Primer despliegue: `python scripts/desplegar.py desplegar --version v1`.
+3. Versión nueva sin caída: `python scripts/desplegar.py desplegar --version v2`. Si falla, se revierte sola.
+4. Volver a la versión anterior: `python scripts/desplegar.py rollback`, o `rollback --version <v>` para una concreta.
+5. Consultar la versión desplegada y el historial: `python scripts/desplegar.py estado`.
+6. En Linux se usa `python3`. Para aceptar conexiones externas: `export NODO_IP=0.0.0.0` (ver `despliegue/README.md`).
 
 Limitaciones:
 - Dos contenedores en un mismo computador no son alta disponibilidad.
