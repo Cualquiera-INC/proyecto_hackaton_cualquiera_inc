@@ -1,0 +1,23 @@
+name: Prueba OIDC con AWS
+
+# Solo se lanza a mano. Comprueba que GitHub puede asumir el rol de AWS
+# sin claves guardadas. El rol no tiene permisos: solo puede decir quién es.
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write # permite pedir el pase firmado (OIDC) a GitHub
+  contents: read
+
+jobs:
+  prueba-oidc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Asumir el rol de AWS por OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Quién soy para AWS
+        run: aws sts get-caller-identity
