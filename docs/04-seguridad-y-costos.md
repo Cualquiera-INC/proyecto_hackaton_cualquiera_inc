@@ -38,7 +38,7 @@ Los precios cambian y la guía pide no inventarlos. En el plan gratuito para cue
 | CloudWatch Logs | GB ingeridos + días de retención | Retención de 1 a 7 días |
 | Transferencia de salida | GB hacia internet | Insignificante en la demo |
 | Registro de imágenes | GB guardados (ECR) | GHCR público: sin costo |
-| Base de datos (D13) | Si es RDS: horas de instancia y GB; si es EC2: disco EBS y memoria extra | Instancia pequeña, sin Multi-AZ salvo que se justifique y se verifique que el plan lo permite |
+| Base de datos (D13) | Si es RDS: horas de instancia y GB; si es EC2: disco EBS y memoria extra | `db.t3.micro` o `db.t4g.micro` Single-AZ (lo único que permite el plan gratuito); borrar al terminar |
 | CloudFront + S3 de la interfaz (opcional) | Solicitudes HTTPS, transferencia y GB del sitio estático | Solo si se despliega la interfaz; build de pocos KB |
 
 ## Antes de crear cualquier recurso

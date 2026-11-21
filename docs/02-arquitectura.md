@@ -60,30 +60,34 @@ flowchart LR
 ```mermaid
 flowchart LR
     U[Operaciones] -->|HTTP| ALB
-    subgraph VPC[VPC por defecto · una región]
+    subgraph VPC[VPC · una región]
         ALB["Application Load Balancer<br/>health check activo a /health"]
         subgraph AZA[Zona A]
-            E1["EC2 #1 · Docker<br/>app1"]
+            E1["EC2 #1 · Docker<br/>app + pedidos"]
         end
         subgraph AZB[Zona B]
-            E2["EC2 #2 · Docker<br/>app2"]
+            E2["EC2 #2 · Docker<br/>app + pedidos"]
         end
+        RDS[("RDS PostgreSQL<br/>Single-AZ · subred privada")]
     end
     ALB -->|":8080 solo desde el ALB"| E1
     ALB --> E2
-    S3[("S3 con versiones<br/>actual/pedidos.json<br/>respaldos/")]
-    S3 -.->|"cada EC2 descarga la versión vigente"| E1
-    S3 -.-> E2
+    E1 -->|"5432 solo desde las EC2"| RDS
+    E2 --> RDS
+    S3[("S3 con versiones<br/>respaldos pg_dump")]
+    RDS -.->|"respaldo"| S3
     E1 --> CW[CloudWatch Logs]
     E2 --> CW
 ```
+
+> **Límite:** con el plan gratuito, RDS es de una sola zona (D13). La caída de una EC2 se tolera; la de la base no. La copia en memoria del microservicio cubre solo caídas cortas.
 
 | Rol | Local | AWS | Qué mejora |
 |---|---|---|---|
 | Punto de acceso | NGINX | **ALB** | Lo administra AWS y vigila `/health` por su cuenta |
 | Instancias | 2 contenedores en un PC | **2 EC2**, una por zona | Tolera la caída de una máquina |
-| Datos | `data/pedidos.json` | **S3** (fuente de verdad) + copia en cada EC2 | No dependen de ninguna máquina |
-| Respaldos | `respaldos/` en el mismo disco | **S3 con historial de versiones** | El respaldo vive fuera del cómputo |
+| Datos | PostgreSQL primario + réplica | **RDS PostgreSQL** (Single-AZ) | No dependen de ninguna EC2; sin operar la base |
+| Respaldos | `pg_dump` en `respaldos/` | **Snapshots de RDS + `pg_dump` en S3 con versiones** | El respaldo vive fuera del cómputo |
 | Registros | `docker compose logs` | **CloudWatch Logs** | Centralizados |
 | Exposición | Solo `127.0.0.1:8080` | Security groups: EC2 solo acepta tráfico del ALB | Misma idea |
 | Acceso de administración | — | **Session Manager** (sin SSH abierto) | Sin puerto 22 |
@@ -96,11 +100,15 @@ flowchart LR
 
 Así la interfaz y la API comparten origen (`VITE_API_URL` vacío) y se obtiene HTTPS en `*.cloudfront.net` sin comprar dominio. Con el caché desactivado para la API, las consultas siempre son en vivo. Es opcional: el MVP funciona sin la interfaz.
 
-### PostgreSQL en AWS (decisión abierta, D13)
+### PostgreSQL en AWS (D13: 2 EC2 + RDS)
 
-Con PostgreSQL, el diseño de datos de AWS cambia. Las opciones (una EC2 con todo el stack, 2 EC2 + RDS, o primario y réplica en EC2 distintas) y la propuesta están en D13 de [03-decisiones.md](03-decisiones.md). **El diagrama de AWS de arriba todavía muestra los datos como JSON en S3**; se redibuja al cerrar D13. Lo que sí se mantiene: ALB, 2 EC2 en dos zonas, CloudWatch Logs y S3 para los respaldos.
+Las dos EC2 no guardan datos: corren `app` y `pedidos` y el microservicio apunta al endpoint de RDS. El grupo de seguridad de RDS acepta el puerto 5432 solo desde las EC2. Se descartaron una sola EC2 con todo el stack y la réplica entre EC2 (ver D13 en [03-decisiones.md](03-decisiones.md)).
 
-### Cómo llegan los datos a cada EC2 (diseño con JSON, anterior a D12)
+**Lo que cambia frente a local:** no hay réplica en caliente, porque el plan gratuito solo permite RDS en una zona. Se tolera la caída de una EC2, no la de la base.
+
+### Cómo llegaban los datos a cada EC2 (diseño con JSON en S3, **superado por D12 y D13**)
+
+> Se conserva como registro. Ya no aplica: los datos viven en RDS y S3 solo guarda respaldos.
 
 1. La versión vigente vive en `s3://<bucket>/actual/pedidos.json`.
 2. En cada EC2, una tarea programada cada pocos segundos descarga el archivo a un temporal, lo valida y lo **reemplaza de forma atómica** en `/opt/nodoruta/data/`. Funciona porque montamos la **carpeta**, igual que en `despliegue/`.
@@ -135,14 +143,15 @@ El ALB **no reintenta** en otra instancia cuando una conexión falla, como sí h
 | Mecanismo | Estado |
 |---|---|
 | 2 instancias + proxy + conmutación | ✅ Probado en local |
-| Datos fuera del contenedor | ✅ Probado en local |
+| Datos fuera del contenedor | ✅ Probado en local (volumen de PostgreSQL) |
 | Respaldo automático y restauración verificada | ✅ Probado en local |
 | Despliegue sin caída y rollback | ✅ Probado en local (Windows y Linux) |
 | PostgreSQL + microservicio de pedidos (2 réplicas) | ✅ Probado en local (STG01–STG14, Windows) |
 | Caída del primario sin errores | ✅ Probado en local (STG08, STG14) |
 | Caída de las dos bases con copia en memoria | ✅ Probado en local (STG12) |
 | Acceso de GitHub Actions a AWS sin claves (OIDC) | ✅ Probado (rol sin permisos, solo `main`) |
-| Tolerancia a la caída de la máquina que aloja la base | ⏳ Diseño AWS (D13) |
+| Tolerancia a la caída de una EC2 con la base en RDS | ⏳ Diseño AWS (D13), por probar |
+| Tolerancia a la caída de la base en AWS | ❌ No cubierta: RDS Single-AZ en el plan gratuito (solo la copia en memoria, caídas cortas) |
 | Promoción automática de la réplica | ❌ No implementada, a propósito (riesgo de *split-brain*) |
 | Tolerancia a la caída de una **máquina** | ⏳ Diseño AWS, por probar |
 | Health check activo | ⏳ Diseño AWS (ALB) |

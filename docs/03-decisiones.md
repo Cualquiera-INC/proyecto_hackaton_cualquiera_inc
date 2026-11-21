@@ -51,20 +51,28 @@ Se reabre D9 y se acepta al integrar la rama `staging` a `main`, con 14 pruebas 
 - **Diseño mínimo:** un solo microservicio nuevo (`servicio-pedidos`, 2 réplicas) entre las apps y PostgreSQL. Las apps mantienen el contrato público (`/pedidos`, `/health`), así que la interfaz, los scripts de prueba y el despliegue escalonado siguen funcionando.
 - **`app.py`:** con `PEDIDOS_URL` pide los datos por HTTP; sin ella, lee el JSON como antes. el modo JSON sigue funcionando.
 - **Seguridad:** red de datos `internal` sin salida a internet; PostgreSQL sin puertos publicados; contraseña como Docker secret fuera del repositorio; conexión de solo lectura con `statement_timeout`.
-- **Costo:** $0 en local. Dónde vive la base en AWS está abierto en D13. Detalle del diseño: [08-postgres-y-microservicio-pedidos.md](08-postgres-y-microservicio-pedidos.md).
+- **Costo:** $0 en local. En AWS: RDS (D13). Detalle del diseño: [08-postgres-y-microservicio-pedidos.md](08-postgres-y-microservicio-pedidos.md).
 - **Tolerancia a fallos de la base:** una réplica en caliente (streaming replication) y una copia en memoria en el microservicio, que lee la base en segundo plano. Medido: caída del primario y caída de las dos bases con 0 errores (STG08, STG12, STG14).
 - **Lo que empeora y se reconoce:** hay más piezas que operar, las escrituras dependen del primario (sin promoción automática) y primario y réplica comparten máquina. Se tolera la caída de una *base*, no la de la *máquina*.
 
-## D13 · Dónde vive PostgreSQL en AWS 🟡 (abierta)
-El diseño de AWS ([02-arquitectura.md](02-arquitectura.md)) lleva los datos como JSON en S3, sincronizado a cada EC2. Con PostgreSQL eso ya no aplica y hay que decidir de nuevo. Opciones:
+## D13 · PostgreSQL en AWS: 2 EC2 + RDS 🟢 (21-11, elegida entre tres opciones)
+El diseño de AWS ([02-arquitectura.md](02-arquitectura.md)) llevaba los datos como JSON en S3. Con PostgreSQL había que decidir de nuevo. Se evaluaron:
 
 | Opción | Cómo queda | A favor | En contra |
 |---|---|---|---|
-| A. Una EC2 con todo el stack | El `compose.yaml` actual en una máquina | Lo más simple; es lo ya probado en local | No demuestra la caída de una máquina; sin ALB útil; una sola zona |
-| **B. 2 EC2 (apps + pedidos) en dos zonas + RDS PostgreSQL** | Las EC2 sin estado; la base administrada | Conserva la prueba de apagar una máquina; sin operar la base | RDS consume créditos por hora; **verificar** en la consola qué instancias y si Multi-AZ permite el plan gratuito |
-| C. 2 EC2 con primario en una y réplica en la otra | Replicación entre zonas, sin RDS | Sin servicio administrado | Se opera a mano y la promoción es manual; más riesgo |
+| A. Una EC2 con todo el stack | El `compose.yaml` actual en una máquina | Lo más simple; ya probado en local | No demuestra la caída de una máquina; una sola zona |
+| **B. 2 EC2 (app + pedidos) en dos zonas + RDS PostgreSQL** 🟢 | Las EC2 sin estado; la base administrada | Conserva la prueba de apagar una máquina; no se opera la base | RDS consume créditos por hora |
+| C. Primario y réplica en EC2 distintas | Replicación entre zonas, sin RDS | Sin servicio administrado | Se opera a mano; promoción manual; más riesgo |
 
-**Propuesta:** B con una instancia RDS pequeña. En la caída de una EC2 se mide el comportamiento; la copia en memoria del microservicio cubre caídas cortas de la base. **No** se promete en AWS el "0 errores" medido en local (ahí la réplica se lee en vivo): en la nube es solo diseño hasta medirlo.
+**Elegida: B.** Se verificó en la documentación de AWS qué permite el plan gratuito para RDS: PostgreSQL en `db.t3.micro` o `db.t4g.micro`, **solo Single-AZ** (no Multi-AZ).
+
+Consecuencias que se reconocen:
+- **La base en AWS es un punto único de falla** (una instancia, una zona). No hay réplica en caliente como en local. Multi-AZ exigiría un plan de pago, y se deja como diseño.
+- Lo que sí tolera: la caída de **una EC2** (la otra sigue, detrás del ALB) y caídas **cortas** de la base (la copia en memoria del microservicio sirve la última lectura buena hasta 5 min).
+- **No se promete** en AWS el "0 errores" medido en local para la caída del primario: allá la réplica se lee en vivo y aquí no existe. Se mide y se reporta lo que salga.
+- Respaldos: los automáticos de RDS (retención corta) y `pg_dump` hacia S3 con versiones. Se confirma al implementar.
+- Los servicios `postgres`, `postgres-replica` y `respaldo` del `compose.yaml` no corren en AWS; `pedidos` apunta al endpoint de RDS.
+- Pendiente de elegir al implementar: la clase (`t4g.micro` es Arm; `t3.micro` es x86) y que el grupo de seguridad de RDS acepte solo a las EC2.
 
 ## D14 · Infraestructura en AWS con CloudFormation 🟢 (21-11)
 La nube pasa de diseño a implementación. Las plantillas viven en `infra/aws/` y reemplazan la idea de scripts con AWS CLI: crear y **destruir** con una pila. GitHub Actions entra a AWS por OIDC, sin claves guardadas (probado: rol `github-actions-nodo-ruta`, solo la rama `main`, hoy sin permisos). Los permisos del rol se agregan solo cuando una plantilla los necesita, y mínimos.

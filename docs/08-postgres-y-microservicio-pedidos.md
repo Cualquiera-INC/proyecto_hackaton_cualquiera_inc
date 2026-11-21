@@ -113,7 +113,7 @@ Monitor con una consulta a `/pedidos` cada 0,1 s a través del proxy. Detalle en
 
 ## PostgreSQL en AWS (diseño, por probar)
 
-> **Decisión abierta (D13 en [03-decisiones.md](03-decisiones.md)).** Lo que sigue es la opción más simple, una sola EC2 con todo el stack, y se escribió antes de que la nube pasara a implementación con CloudFormation. Con una sola máquina **no** se demuestra la caída de una máquina, que es el objetivo del diseño de AWS (ver [02-arquitectura.md](02-arquitectura.md)). Se reescribe al cerrar D13.
+> **Decidido en D13: 2 EC2 + RDS** (ver [02-arquitectura.md](02-arquitectura.md)). Lo que sigue es la opción descartada, una sola EC2 con todo el stack, y se conserva como alternativa de respaldo si RDS no funcionara en el plan. En AWS definitivo no corren `postgres`, `postgres-replica` ni `respaldo`: `pedidos` apunta al endpoint de RDS.
 
 Para staging basta **una EC2** con Docker que corra este mismo `compose.yaml`. Así se valida el stack completo sin crear recursos administrados.
 

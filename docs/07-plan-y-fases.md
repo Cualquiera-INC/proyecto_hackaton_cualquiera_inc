@@ -46,7 +46,7 @@ flowchart LR
 |---|---|
 | **Alerta de presupuesto** | ✅ Hecha (21-11): `nodo-ruta-mensual`, USD 5 al mes sin contar créditos, avisos al 50 % y al 100 % |
 | **Acceso de GitHub a AWS sin claves** | ✅ OIDC probado (21-11): rol `github-actions-nodo-ruta`, solo `main`, sin permisos todavía |
-| **Dónde vive PostgreSQL en AWS** | Abierta: D13 en `docs/03`. Bloquea el diseño de la fase 4 |
+| **Dónde vive PostgreSQL en AWS** | ✅ Decidido (D13): 2 EC2 + RDS PostgreSQL Single-AZ (`t3.micro` o `t4g.micro`). Sin Multi-AZ en el plan gratuito |
 | Usuarios IAM para el equipo | Nadie trabaja con el usuario raíz; permisos mínimos |
 | Decidir la región | La más cercana con todo lo necesario en el plan gratuito |
 | **Decidir cómo se sirve la interfaz** | (a) CloudFront + S3, que da HTTPS gratis pero suma dos servicios; o (b) la misma imagen `nodo-ruta-proxy` en cada EC2 detrás del ALB, que reutiliza lo ya probado pero no tiene HTTPS. Ver `docs/02` |
@@ -66,7 +66,7 @@ Plantillas de **CloudFormation** en `infra/aws/` para crear y destruir con una p
 6. **CloudWatch Logs** con retención corta.
 7. (Según la decisión de la fase 3) CloudFront + S3 para la interfaz.
 
-> Los puntos 1, 3 y 4 asumían los datos como JSON en S3. Con PostgreSQL cambian según D13; esta lista se reescribe al decidirlo.
+> Los puntos 1, 3 y 4 asumían los datos como JSON en S3. Con D13 cambian: S3 solo guarda respaldos, las EC2 corren `app` + `pedidos` sin sincronizar nada y se suma una instancia RDS en subred privada (con su grupo de seguridad). Esta lista se reescribe al empezar las plantillas de CloudFormation.
 
 ### Fase 5 · Probar en AWS y destruir
 
