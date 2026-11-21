@@ -156,6 +156,88 @@ Resultado observado:
 
 ¿Cumple? Sí (prueba técnica). **Falta guardar la evidencia**: repetir con `--salida evidencias/I08_rollback_automatico.json`.
 
+# Staging: microservicios + PostgreSQL
+
+Stack `despliegue/` con PostgreSQL (integrado desde la rama `staging`): `postgres`, `pedidos1`/`pedidos2` (microservicio HTTP), `app1`/`app2`, `proxy` y `respaldo` (`pg_dump`). Diseño en [docs/08-postgres-y-microservicio-pedidos.md](docs/08-postgres-y-microservicio-pedidos.md).
+Entorno: Windows 11 + Docker Desktop, 21-11-2026, puerto 8080. Las horas de esta sección son locales (UTC-5). Monitor: `monitorear.py`, una consulta a `/pedidos` cada 0,1 s.
+
+| ID | Prueba | Quién | Resultado |
+|---|---|---|---|
+| STG01 | Actualización escalonada de las 4 instancias | Steban | Cumple, 0 errores en 487 consultas |
+| STG02 | Versión rota de pedidos → rollback automático (1.ª versión) | Steban | Rollback correcto, **1 error (504)** → hallazgo |
+| STG03 | Despliegue de la corrección (alias `pedidos`) | Steban | 1 error (504), atribuible al código anterior |
+| STG04 | Versión rota de pedidos → rollback automático (corregido) | Steban | Cumple, 0 errores en 328 consultas |
+| STG05 | Respaldo → daño → restauración | Steban | Cumple, restauración 0,6 s |
+| STG06 | Reinicio de PostgreSQL | Steban | Cumple, 0 errores en 239 consultas |
+| STG07 | Transición en caliente a primario + réplica | Steban | Cumple, 0 errores en 983 consultas |
+| STG08 | Caída del primario (con réplica) | Steban | Cumple, 0 errores en 418 consultas |
+| STG09 | Caída de ambas bases (lectura en la consulta) | Steban | **No cumple: 2 errores 504** → hallazgo |
+| STG10 | Despliegue con refresco en segundo plano | Steban | **2 errores (504/502)** → hallazgo |
+| STG11 | Dos despliegues seguidos (corregido) | Steban | Cumple, 0 errores en 625 consultas |
+| STG12 | Caída de ambas bases (corregido) | Steban | Cumple, 0 errores en 505 consultas |
+| STG13 | Daño en los datos con copia en memoria | Steban | Cumple: 503 (no se tapa); servicio de vuelta en 3,2 s |
+| STG14 | Caída del primario (código final) | Steban | Cumple, 0 errores en 381 consultas |
+
+## STG01 — Actualización escalonada
+Pasos: primer despliegue `stg-v1`; con el monitor corriendo, `desplegar --version stg-v2`.
+Resultado observado: el script actualizó pedidos1 → pedidos2 → app1 → app2 y comprobó en cada una: healthy, `version_app` y, en las apps, tráfico a través del proxy. Tardó **15,3 s**. **487 consultas, 0 errores**; mediana 16 ms, p95 32 ms, máximo 1047 ms. **CUMPLE**. Evidencia: `evidencias/STG01_despliegue_escalonado.json`
+
+## STG02 — Versión rota del microservicio de pedidos (primera versión)
+Pasos: `raise RuntimeError("BUG SIMULADO")` en `servicio_pedidos.py` y `desplegar --version stg-v3-roto`.
+Resultado observado: pedidos1 se reinició al arrancar. El script lo detectó en 2 s, lo devolvió a `stg-v2` y terminó con código 1; pedidos2 y las apps no se tocaron. Pero hubo **1 error: HTTP 504** (3016 ms).
+Causa (medida): las apps llamaban a `pedidos1` por nombre. Mientras se recreaba, el nombre no existía, y resolver un nombre inexistente en la red `internal` tardó **7,84 s** (`socket.getaddrinfo` dentro de app1). El `timeout` HTTP no cubre la resolución DNS y el proxy cortó a los 3 s.
+Corrección: alias de red `pedidos` compartido por las dos réplicas; la app resuelve el alias y prueba cada IP. Evidencia: `evidencias/STG02_rollback_automatico_pedidos.json`
+
+## STG03 — Despliegue de la corrección
+Resultado observado: stg-v2 → stg-v4 en 12,6 s. 352 consultas y 1 error 504, a las 11:11:45, mientras se recreaba pedidos1. En ese momento app1 y app2 todavía corrían stg-v2, con el código anterior y el mismo fallo de STG02; es la última vez que puede ocurrir. Evidencia: `evidencias/STG03_despliegue_alias_pedidos.json`
+
+## STG04 — Versión rota del microservicio de pedidos (corregido)
+Pasos: los mismos de STG02, con todo en stg-v4 y `desplegar --version stg-v5-roto`.
+Resultado observado: rollback automático de pedidos1 en 3 s, con código de salida 1. **328 consultas, 0 errores**; máximo 1031 ms. **CUMPLE**. Evidencia: `evidencias/STG04_rollback_automatico_pedidos.json`
+
+## STG05 — Respaldo, daño y restauración
+Pasos: `datos.py respaldar`, `datos.py simular-error` (DROP TABLE pedidos), consultar `/health` y `datos.py restaurar --respaldo respaldos/<archivo>.dump`.
+Resultado observado: con la tabla borrada, `/health` → **503** `error_datos`. `restaurar` verificó el SHA-256 y restauró en una transacción en **0,6 s**. Después, `/health` → 200 con `datos-v1` y `verificar` → 6 pedidos. **CUMPLE**. Evidencia: `evidencias/STG05_respaldo_restauracion.txt`
+Ajuste: los respaldos manuales usaban hora local y los automáticos UTC, igual que en el hallazgo del respaldo JSON. Ahora los dos usan UTC.
+
+## STG06 — Reinicio de PostgreSQL
+Pasos: con el monitor corriendo, `docker compose -f despliegue/compose.yaml restart postgres`.
+Resultado observado: el reinicio tardó ~1 s. **239 consultas, 0 errores**, máximo 953 ms: el pool del servicio de pedidos descarta las conexiones muertas y reconecta. **CUMPLE**, con una salvedad: una caída más larga de la base dejaría sin servicio a todo (punto único de falla). Por eso se hicieron STG07–STG14. Evidencia: `evidencias/STG06_reinicio_postgres.json`
+
+## STG07 — Transición en caliente a primario + réplica
+Qué queremos comprobar: que el stack que ya estaba corriendo, con una sola base, pasa a primario + réplica sin reinicializar los datos y sin caída.
+Pasos: `desplegar --version stg-v6` con el monitor corriendo. `desplegar.py` recrea primero el primario (nuevas reglas de acceso y `wal_keep_size`), crea la réplica (que se copia sola con `pg_basebackup`) y luego actualiza pedidos1, pedidos2, app1 y app2.
+Resultado observado: primario healthy en 1,4 s; réplica en 1,5 s; `pg_stat_replication` = `streaming`; la réplica tiene los 6 pedidos y `pg_is_in_recovery() = true`. **983 consultas, 0 errores**. Máximo **2953 ms**, cerca del límite de 3 s del proxy: al recrearse el primario, pedidos todavía corría stg-v4, que apuntaba al nombre `postgres` (mismo problema de DNS que STG02). No se repite después de la transición. **CUMPLE**. Evidencia: `evidencias/STG07_transicion_a_replica.json`
+
+## STG08 — Caída del primario
+Pasos: `docker compose stop postgres` durante 25 s y `start`.
+Resultado observado: `/health` siguió en `ok` con `origen_datos: base` (en vivo, desde la réplica). **418 consultas, 0 errores**, máximo 79 ms. **CUMPLE**. Evidencia: `evidencias/STG08_caida_primario.json`
+
+## STG09 — Caída de ambas bases (primera versión de la copia en memoria)
+Pasos: `docker compose stop postgres postgres-replica` durante ~25 s.
+Resultado observado: **2 errores 504** y p95 de 2016 ms. La copia en memoria existía, pero cada consulta intentaba primero la base: esperaba la conexión (2 s) y además resolver `pg-lectura`, que con las dos bases detenidas no existe (~8 s, como en STG02).
+Corrección: las consultas ya no tocan la base. Un hilo de fondo la lee cada 1 s y las consultas responden desde memoria. Evidencia: `evidencias/STG09_caida_ambas_bases.json`
+
+## STG10 — Despliegue con refresco en segundo plano
+Resultado observado: stg-v6 → stg-v7 correcto, pero con **2 errores en el proxy** (504 de 0,3 s y 502) justo al recrear app2, 1 s después de confirmar app1. NGINX todavía tenía app1 marcada como caída por su propia recreación (`max_fails=1`, `fail_timeout=3s`) y no tuvo a quién reintentar. No es de la base: es la capa de NGINX.
+Corrección: `desplegar.py` espera 3,5 s (`TIEMPO_ASENTAR`) tras confirmar una app antes de tocar la siguiente. Evidencia: `evidencias/STG10_despliegue_refresco_fondo.json`
+
+## STG11 — Dos despliegues seguidos (corregido)
+Pasos: `desplegar --version stg-v8` y enseguida `--version stg-v9`, con un solo monitor de 75 s.
+Resultado observado: 21,9 s y 20,3 s (incluye la pausa entre apps). **625 consultas, 0 errores**, máximo 1032 ms. **CUMPLE**. Evidencia: `evidencias/STG11_dos_despliegues_seguidos.json`
+
+## STG12 — Caída de ambas bases (corregido)
+Pasos: los de STG09, con stg-v9, durante ~30 s.
+Resultado observado: `/health` → 200 `degradado` con `origen_datos: cache` y `antiguedad_cache_s` creciente, en 5 ms. Al levantar las bases volvió solo a `ok` / `base`. **505 consultas, 0 errores**, máximo 63 ms. **CUMPLE**. Evidencia: `evidencias/STG12_caida_ambas_bases_corregido.json`
+
+## STG13 — Un daño en los datos no se tapa con la copia
+Qué queremos comprobar: que la copia en memoria no oculta datos dañados.
+Pasos: `respaldar`, `simular-error` (DROP TABLE en el primario, replicado a la réplica), esperar 3 s, consultar y `restaurar`.
+Resultado observado: `/health` → **503** `error_datos` (la copia se descartó). `/pedidos` → 502 por el reintento de NGINX ante 503 (hallazgo conocido de I06). Tras `restaurar`, el primer `/health` 200 llegó a los **3,19 s**: restauración ~0,6 s + refresco ≤1 s + `fail_timeout` de NGINX. **CUMPLE**. Evidencia: `evidencias/STG13_dano_datos_con_cache.txt`
+
+## STG14 — Caída del primario (código final)
+Resultado observado: primario detenido 20 s. **381 consultas, 0 errores**, máximo 47 ms. Al volver el primario, la réplica reanudó la replicación sola (`state = streaming`). **CUMPLE**. Evidencia: `evidencias/STG14_caida_primario_final.json`
+
 # Cierre
 
 Qué funciona realmente (probado en local):

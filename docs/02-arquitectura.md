@@ -8,29 +8,36 @@ Dos partes: lo que corre **en local y está probado**, y el **diseño para AWS**
 flowchart LR
     U[Operaciones / scripts de prueba] -->|"127.0.0.1:8080"| N
     subgraph PC[Computador · Docker Compose · proyecto nodo-ruta]
-        N["proxy<br/>nodo-ruta-proxy (NGINX + interfaz)<br/>healthcheck /proxy-health"]
-        A1["app1<br/>nodo-ruta:&lt;versión&gt;"]
-        A2["app2<br/>nodo-ruta:&lt;versión&gt;"]
-        R["respaldo<br/>python:3.12-slim<br/>cada 5 min"]
-        D[("data/pedidos.json")]
-        B[("respaldos/<br/>JSON + .sha256")]
+        N["proxy<br/>nodo-ruta-proxy (NGINX + interfaz)"]
+        subgraph datos["red datos (internal: sin salida a internet)"]
+            A1["app1"] & A2["app2"]
+            S1["pedidos1<br/>copia en memoria"] & S2["pedidos2<br/>copia en memoria"]
+            DB[("postgres (primario)<br/>volumen pgdata")]
+            RE[("postgres-replica<br/>solo lectura")]
+            R["respaldo<br/>pg_dump cada 5 min"]
+        end
+        B[("respaldos/<br/>.dump + .sha256")]
     end
-    N -->|"reparte por turnos<br/>reintenta en la otra"| A1
-    N --> A2
-    A1 -.->|"lee en cada consulta<br/>(solo lectura)"| D
-    A2 -.-> D
-    R -->|"valida y copia"| B
-    D -.-> R
-    B -->|"datos.py restaurar<br/>(verifica SHA-256)"| D
+    N -->|"reparte por turnos<br/>reintenta en la otra"| A1 & A2
+    A1 & A2 -->|"alias de red 'pedidos'"| S1 & S2
+    S1 & S2 -->|"hilo de fondo cada 1 s<br/>alias 'pg-lectura'"| DB & RE
+    DB ==>|"streaming replication"| RE
+    R -->|"pg-lectura"| DB
+    R --> B
+    B -->|"datos.py restaurar<br/>(verifica SHA-256)"| DB
 ```
 
 | Pieza | Qué hace |
 |---|---|
-| `proxy` (NGINX + interfaz) | Único puerto publicado. Sirve la interfaz web en `/` y la API en `/pedidos` y `/health`. Reparte por turnos y, si una instancia no responde, reintenta en la otra (detección pasiva). Registra qué instancia atendió y cuánto tardó. |
-| `app1`, `app2` | La misma app con imágenes versionadas. Responden `instancia` y `version_app`. Se apagan de forma ordenada con SIGTERM. |
-| `respaldo` | Cada 5 min ejecuta `datos.py respaldar`. Si el JSON está dañado, no respalda. |
-| `scripts/desplegar.py` | Actualiza una instancia a la vez y revierte solo si la nueva falla. |
-| `data/` y `respaldos/` | En el disco del computador, fuera de los contenedores. No van al repositorio. |
+| `proxy` (NGINX + interfaz) | Único puerto publicado. Sirve la interfaz web en `/` y la API en `/pedidos` y `/health`. Reparte por turnos y, si una instancia no responde, reintenta en la otra (detección pasiva). Registra qué instancia atendió y cuánto tardó. No ve la red de datos. |
+| `app1`, `app2` | La misma app con imágenes versionadas. Responden `instancia`, `version_app` y `servicio_datos`. Piden los datos por HTTP al alias `pedidos`. Se apagan de forma ordenada con SIGTERM. |
+| `pedidos1`, `pedidos2` | Microservicio de solo lectura. Un hilo lee la base cada 1 s y las consultas responden desde memoria; si las dos bases caen, sirve la última lectura buena (marcada `degradado`) hasta 5 min. |
+| `postgres` + `postgres-replica` | Primario y réplica en caliente (streaming replication). Sin puertos publicados; contraseña como Docker secret. Detalle y límites en [08-postgres-y-microservicio-pedidos.md](08-postgres-y-microservicio-pedidos.md). |
+| `respaldo` | Cada 5 min ejecuta `pg_dump` con huella SHA-256. Lee de `pg-lectura`, así que sigue si el primario cae. |
+| `scripts/desplegar.py` | Actualiza una instancia a la vez (pedidos1 → pedidos2 → app1 → app2) y revierte solo si la nueva falla. |
+| Volúmenes y `respaldos/` | `pgdata` y `pgdata-replica` en volúmenes Docker; `respaldos/` en el disco del computador. No van al repositorio. |
+
+> El diagrama visual [diagrama_solucion_local.html](diagrama_solucion_local.html) describe el stack anterior, con `data/pedidos.json`. Pendiente de regenerar con PostgreSQL; este diagrama Mermaid es el vigente.
 
 ### Interfaz web (frontend de Silvia)
 
@@ -44,7 +51,7 @@ flowchart LR
 
 `app.py` envía `Access-Control-Allow-Origin: *` y responde `OPTIONS`, para que la interfaz pueda consultar la API desde otro origen durante el desarrollo.
 
-**Puntos únicos de falla en local:** el computador, el proxy, el archivo de datos compartido y la carpeta de respaldos en el mismo disco. Por eso esto es **tolerancia a la caída de una instancia**, no alta disponibilidad.
+**Puntos únicos de falla en local:** el computador (primario y réplica comparten máquina), el proxy y la carpeta de respaldos en el mismo disco. Se tolera la caída de una instancia y de una base, no la de la máquina. Por eso esto es **tolerancia a la caída de una instancia**, no alta disponibilidad.
 
 ## 2. AWS, plan gratuito (diseño, por probar)
 
@@ -89,7 +96,11 @@ flowchart LR
 
 Así la interfaz y la API comparten origen (`VITE_API_URL` vacío) y se obtiene HTTPS en `*.cloudfront.net` sin comprar dominio. Con el caché desactivado para la API, las consultas siempre son en vivo. Es opcional: el MVP funciona sin la interfaz.
 
-### Cómo llegan los datos a cada EC2
+### PostgreSQL en AWS (decisión abierta, D13)
+
+Con PostgreSQL, el diseño de datos de AWS cambia. Las opciones (una EC2 con todo el stack, 2 EC2 + RDS, o primario y réplica en EC2 distintas) y la propuesta están en D13 de [03-decisiones.md](03-decisiones.md). **El diagrama de AWS de arriba todavía muestra los datos como JSON en S3**; se redibuja al cerrar D13. Lo que sí se mantiene: ALB, 2 EC2 en dos zonas, CloudWatch Logs y S3 para los respaldos.
+
+### Cómo llegan los datos a cada EC2 (diseño con JSON, anterior a D12)
 
 1. La versión vigente vive en `s3://<bucket>/actual/pedidos.json`.
 2. En cada EC2, una tarea programada cada pocos segundos descarga el archivo a un temporal, lo valida y lo **reemplaza de forma atómica** en `/opt/nodoruta/data/`. Funciona porque montamos la **carpeta**, igual que en `despliegue/`.
@@ -115,7 +126,7 @@ El ALB **no reintenta** en otra instancia cuando una conexión falla, como sí h
 |---|---|---|
 | Región | us-east-1 u otra | La de menor latencia con todo disponible en el plan gratuito |
 | Registro de imagen | GHCR público / ECR | GHCR público: sin costo y sin secretos en la imagen |
-| Cómo se crea la infraestructura | Consola / scripts con AWS CLI | Scripts en `infra/aws/` para crear y **destruir** de forma reproducible |
+| Cómo se crea la infraestructura | Consola / scripts / CloudFormation | 🟢 **CloudFormation** en `infra/aws/` (D14): crear y **destruir** con una pila |
 | Intervalo de sincronización con S3 | 5–30 s | 10 s; cada revisión es una solicitud a S3, así que también cuenta como costo |
 | HTTPS e interfaz | Sin dominio / CloudFront delante del ALB y del S3 de la interfaz | CloudFront: da `https://*.cloudfront.net` y sirve el frontend |
 
@@ -127,6 +138,12 @@ El ALB **no reintenta** en otra instancia cuando una conexión falla, como sí h
 | Datos fuera del contenedor | ✅ Probado en local |
 | Respaldo automático y restauración verificada | ✅ Probado en local |
 | Despliegue sin caída y rollback | ✅ Probado en local (Windows y Linux) |
+| PostgreSQL + microservicio de pedidos (2 réplicas) | ✅ Probado en local (STG01–STG14, Windows) |
+| Caída del primario sin errores | ✅ Probado en local (STG08, STG14) |
+| Caída de las dos bases con copia en memoria | ✅ Probado en local (STG12) |
+| Acceso de GitHub Actions a AWS sin claves (OIDC) | ✅ Probado (rol sin permisos, solo `main`) |
+| Tolerancia a la caída de la máquina que aloja la base | ⏳ Diseño AWS (D13) |
+| Promoción automática de la réplica | ❌ No implementada, a propósito (riesgo de *split-brain*) |
 | Tolerancia a la caída de una **máquina** | ⏳ Diseño AWS, por probar |
 | Health check activo | ⏳ Diseño AWS (ALB) |
 | Respaldos fuera del computador | ⏳ Diseño AWS (S3) |

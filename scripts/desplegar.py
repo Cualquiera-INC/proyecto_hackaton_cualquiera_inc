@@ -6,17 +6,23 @@ Uso:
   python scripts/desplegar.py estado                    muestra versiones desplegadas y disponibles
 
 Cómo evita la caída:
-  1. Construye la imagen nueva (nodo-ruta:<version>) ANTES de tocar el servicio.
-  2. Comprueba que app1, app2 y el proxy están sanos.
-  3. Actualiza UNA instancia: mientras se recrea, NGINX envía todo a la otra.
+  1. Construye las imágenes nuevas (nodo-ruta:<version> y nodo-ruta-pedidos:<version>)
+     ANTES de tocar el servicio.
+  2. Comprueba que postgres, pedidos1, pedidos2, app1, app2 y el proxy están sanos.
+  3. Actualiza UNA instancia a la vez, en orden pedidos1, pedidos2, app1, app2:
+     mientras se recrea una, la otra réplica de la misma capa atiende (las apps
+     reintentan en la otra réplica de pedidos; NGINX, en la otra app).
   4. Espera a que la nueva esté healthy, que responda con la versión nueva y
-     que el proxy ya la esté usando. Solo entonces actualiza la segunda.
+     (en las apps) que el proxy ya la esté usando. Solo entonces sigue.
   5. Si algún paso falla, devuelve las instancias tocadas a la versión anterior
      (rollback automático) y termina con código 1. La otra instancia nunca dejó
      de atender con la versión anterior.
 
 Los códigos de salida (0 = éxito, 1 = fallo/rollback, 2 = uso incorrecto) permiten
 llamarlo desde un pipeline (por ejemplo GitHub Actions) sin cambios.
+
+El rollback revierte el código, no el esquema de la base: los cambios de esquema
+deben ser compatibles con la versión anterior (añadir antes de quitar).
 """
 from pathlib import Path
 import argparse, datetime, json, os, socket, subprocess, sys, time, urllib.request, urllib.error
@@ -26,9 +32,22 @@ DIR = ROOT / "despliegue"
 COMPOSE = DIR / "compose.yaml"
 ENV_FILE = DIR / ".env"
 ESTADO = DIR / "estado.json"
-DATOS = ROOT / "data" / "pedidos.json"
+SECRETO = DIR / "secretos" / "db_password.txt"
 IMAGEN = "nodo-ruta"
-SERVICIOS = ["app1", "app2"]
+IMAGEN_PEDIDOS = "nodo-ruta-pedidos"
+# Orden de la actualización escalonada: primero la capa de datos, luego las apps.
+SERVICIOS = ["pedidos1", "pedidos2", "app1", "app2"]
+APPS = ["app1", "app2"]
+# Bases de datos: no se versionan con la app; se ponen al día antes de cada despliegue.
+BASES = ["postgres", "postgres-replica"]
+
+
+def imagen_de(svc):
+    return IMAGEN_PEDIDOS if svc.startswith("pedidos") else IMAGEN
+
+
+def puerto_interno(svc):
+    return 8081 if svc.startswith("pedidos") else 8080
 
 
 def puerto_configurado():
@@ -47,6 +66,10 @@ PUERTO = puerto_configurado()
 TIEMPO_SALUD = 60      # segundos máximos para que una instancia nueva quede healthy
 TIEMPO_PROXY = 20      # segundos máximos para que el proxy la empiece a usar
 TIEMPO_PRECONDICION = 30  # segundos máximos esperando a que todo esté sano antes de actualizar
+# Pausa tras confirmar una app antes de tocar la otra. NGINX marca como caída una
+# instancia que falló durante fail_timeout=3s (nginx.conf); si se recrea la otra
+# dentro de ese margen, no le queda ninguna a la que reintentar (504/502, STG10).
+TIEMPO_ASENTAR = 3.5
 
 
 class FalloDespliegue(Exception):
@@ -78,22 +101,28 @@ def guardar_estado(estado):
     ESTADO.write_text(json.dumps(estado, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def variables_tags(tags):
+    # Un servicio sin versión registrada (estado de antes de staging) recibe un
+    # marcador para que Compose pueda interpretar el archivo; el despliegue lo trata como inicial.
+    return {f"{svc.upper()}_TAG": tags.get(svc, "sin-desplegar") for svc in SERVICIOS}
+
+
 def escribir_env(tags):
     """Fija la versión de cada instancia para Compose (también para comandos manuales)."""
-    ENV_FILE.write_text(
-        "# Generado por scripts/desplegar.py; no editar a mano.\n"
-        f"APP1_TAG={tags['app1']}\nAPP2_TAG={tags['app2']}\nNODO_PUERTO={PUERTO}\n",
-        encoding="utf-8")
+    lineas = [f"{k}={v}" for k, v in variables_tags(tags).items()]
+    ENV_FILE.write_text("# Generado por scripts/desplegar.py; no editar a mano.\n"
+                        + "\n".join(lineas) + f"\nNODO_PUERTO={PUERTO}\n", encoding="utf-8")
 
 
 def compose(*args, tags, capturar=False, check=True):
-    env = dict(os.environ, APP1_TAG=tags["app1"], APP2_TAG=tags["app2"], NODO_PUERTO=PUERTO)
+    env = dict(os.environ, NODO_PUERTO=PUERTO, **variables_tags(tags))
     return docker("compose", "-f", str(COMPOSE), *args, capturar=capturar, check=check, env=env)
 
 
 def existe_imagen(tag):
-    return subprocess.run(["docker", "image", "inspect", f"{IMAGEN}:{tag}"],
-                          capture_output=True).returncode == 0
+    return all(subprocess.run(["docker", "image", "inspect", f"{img}:{tag}"],
+                              capture_output=True).returncode == 0
+               for img in (IMAGEN, IMAGEN_PEDIDOS))
 
 
 # ---------- comprobaciones ----------
@@ -109,13 +138,13 @@ def estado_contenedor(cid):
     return partes[0], partes[1], int(partes[2] or 0)
 
 
-def esperar_sano(svc, tags, limite=TIEMPO_SALUD):
+def esperar_sano(svc, tags, limite=TIEMPO_SALUD, tolerar_reinicios=False):
     inicio = time.monotonic()
     while time.monotonic() - inicio < limite:
         cid = contenedor(svc, tags)
         if cid:
             status, salud, reinicios = estado_contenedor(cid)
-            if status in ("exited", "dead") or reinicios > 0:
+            if status in ("exited", "dead") or (reinicios > 0 and not tolerar_reinicios):
                 logs = docker("logs", "--tail", "15", cid, capturar=True, check=False)
                 raise FalloDespliegue(f"{svc} falló al arrancar: el proceso terminó y Docker lo reinició "
                                       f"{reinicios} vez/veces (estado={status}). Últimos registros:\n{logs}")
@@ -130,7 +159,7 @@ def esperar_sano(svc, tags, limite=TIEMPO_SALUD):
 
 def health_interno(svc, tags):
     codigo = ("import urllib.request;"
-              "print(urllib.request.urlopen('http://127.0.0.1:8080/health',timeout=2).read().decode())")
+              f"print(urllib.request.urlopen('http://127.0.0.1:{puerto_interno(svc)}/health',timeout=2).read().decode())")
     out = compose("exec", "-T", svc, "python", "-c", codigo, tags=tags, capturar=True)
     return json.loads(out)
 
@@ -158,15 +187,13 @@ def confirmar_en_proxy(svc, tag, limite=TIEMPO_PROXY):
 
 
 def todo_sano(tags):
-    for svc in SERVICIOS + ["proxy"]:
+    for svc in BASES + SERVICIOS + ["proxy"]:
         cid = contenedor(svc, tags)
         if not cid:
             return False, f"{svc} no existe"
         status, salud, _ = estado_contenedor(cid)
-        if status != "running" or salud not in ("healthy", ""):
+        if status != "running" or salud != "healthy":
             return False, f"{svc} está {status}/{salud or 'sin healthcheck'}"
-        if svc != "proxy" and salud != "healthy":
-            return False, f"{svc} está {salud}"
     return True, ""
 
 
@@ -186,14 +213,16 @@ def construir(tag, estado):
         raise FalloDespliegue(f"La versión {tag} ya fue desplegada; use otra --version "
                               f"(o 'rollback --version {tag}' para volver a ella)")
     if existe_imagen(tag):
-        log(f"La imagen {IMAGEN}:{tag} existe pero nunca se desplegó con éxito: se reconstruye")
-    log(f"Construyendo {IMAGEN}:{tag} (el servicio actual sigue atendiendo)")
+        log(f"Las imágenes de {tag} existen pero nunca se desplegaron con éxito: se reconstruyen")
+    log(f"Construyendo {IMAGEN}:{tag} y {IMAGEN_PEDIDOS}:{tag} (el servicio actual sigue atendiendo)")
     docker("build", "-t", f"{IMAGEN}:{tag}", "--build-arg", f"APP_VERSION={tag}",
            "--label", f"nodo-ruta.version={tag}", str(ROOT))
+    docker("build", "-t", f"{IMAGEN_PEDIDOS}:{tag}", "--build-arg", f"APP_VERSION={tag}",
+           "--label", f"nodo-ruta.version={tag}", str(ROOT / "servicios" / "pedidos"))
 
 
 def actualizar_instancia(svc, tag, tags):
-    log(f"Actualizando {svc}: {tags[svc]} -> {tag}")
+    log(f"Actualizando {svc}: {tags.get(svc)} -> {tag}")
     tags[svc] = tag
     escribir_env(tags)
     compose("up", "-d", "--no-deps", svc, tags=tags)
@@ -202,13 +231,33 @@ def actualizar_instancia(svc, tag, tags):
     if info.get("version_app") != tag or info.get("estado") != "ok":
         raise FalloDespliegue(f"{svc} responde {info}, se esperaba version_app={tag}")
     log(f"  {svc} responde version_app={tag}, datos={info.get('version_datos')}")
-    confirmar_en_proxy(svc, tag)
+    if svc in APPS:
+        confirmar_en_proxy(svc, tag)
+        time.sleep(TIEMPO_ASENTAR)
+
+
+def asegurar_bases(tags):
+    """Aplica cambios de configuración de las bases y del respaldo, una a la vez.
+
+    Compose solo recrea un contenedor si su configuración cambió: normalmente no
+    hace nada. Primero la réplica (mientras se recrea, se lee del primario) y
+    luego el primario (mientras se recrea, se lee de la réplica). Si la réplica
+    aún no existe, se crea copiando la base del primario.
+    """
+    # Sin réplica todavía (stack de antes): primero el primario, que es el que
+    # trae las reglas de acceso que permiten replicar.
+    orden = ["postgres-replica", "postgres"] if contenedor("postgres-replica", tags) else ["postgres", "postgres-replica"]
+    for svc in orden + ["respaldo"]:
+        compose("up", "-d", "--no-deps", svc, tags=tags)
+        if svc in BASES:
+            esperar_sano(svc, tags, tolerar_reinicios=True)
 
 
 def escalonado(tag, estado, accion):
-    """Actualiza app1 y luego app2; ante cualquier fallo revierte lo tocado."""
+    """Actualiza pedidos1, pedidos2, app1 y app2 en orden; ante cualquier fallo revierte lo tocado."""
     previos = dict(estado["tags"])
     tags = dict(previos)
+    asegurar_bases(tags)
     # Si algún contenedor acaba de arrancar (healthcheck en "starting"), se espera
     # un poco en vez de abortar; si sigue mal tras el límite, no se toca nada.
     limite = time.monotonic() + TIEMPO_PRECONDICION
@@ -219,7 +268,7 @@ def escalonado(tag, estado, accion):
     if not ok:
         raise FalloDespliegue(f"Precondición no cumplida tras {TIEMPO_PRECONDICION} s: {motivo}. "
                               "No se actualiza para no dejar el servicio sin instancias.")
-    log(f"Precondición: app1, app2 y proxy sanos. Versión actual: {previos}")
+    log(f"Precondición: {', '.join(BASES + SERVICIOS)} y proxy sanos. Versión actual: {previos}")
     tocadas = []
     inicio = time.monotonic()
     try:
@@ -245,13 +294,16 @@ def escalonado(tag, estado, accion):
 
 
 def primer_despliegue(tag, estado):
-    log("No hay despliegue previo: se levantan app1, app2 y proxy")
-    tags = {"app1": tag, "app2": tag}
+    log("No hay despliegue previo: se levantan postgres, pedidos1, pedidos2, app1, app2, proxy y respaldo")
+    tags = {svc: tag for svc in SERVICIOS}
     escribir_env(tags)
     inicio = time.monotonic()
-    compose("up", "-d", tags=tags)
+    compose("up", "-d", "--remove-orphans", tags=tags)
+    for svc in BASES:
+        esperar_sano(svc, tags, tolerar_reinicios=True)
     for svc in SERVICIOS:
         esperar_sano(svc, tags)
+    for svc in APPS:
         confirmar_en_proxy(svc, tag)
     esperar_sano("proxy", tags)
     estado.update(actual=tag, anterior=estado.get("actual"), tags=tags)
@@ -280,8 +332,9 @@ def main():
     p.add_argument("--version", help="desplegar: nombre de la versión nueva; rollback: versión a la que volver")
     a = p.parse_args()
 
-    if not DATOS.is_file():
-        p.exit(2, "Falta data/pedidos.json. Ejecute: python scripts/datos.py preparar\n")
+    if a.accion != "estado" and not SECRETO.is_file():
+        p.exit(2, "Falta la contraseña de la base (despliegue/secretos/db_password.txt). "
+                  "Ejecute: python scripts/datos.py preparar\n")
     estado = leer_estado()
 
     if a.accion == "estado":
@@ -296,8 +349,10 @@ def main():
     try:
         if a.accion == "desplegar":
             tag = a.version or version_por_defecto()
-            inicial = not estado["actual"] or not contenedor("app1", estado["tags"])
-            proxy_propio = contenedor("proxy", estado["tags"] or {"app1": tag, "app2": tag})
+            # Inicial también si el estado es de antes de staging (sin pedidos1/pedidos2).
+            inicial = (not estado["actual"] or any(s not in estado["tags"] for s in SERVICIOS)
+                       or not contenedor("app1", estado["tags"]))
+            proxy_propio = contenedor("proxy", estado["tags"])
             if inicial and puerto_ocupado() and not (proxy_propio and estado_contenedor(proxy_propio)[0] == "running"):
                 p.exit(1, f"El puerto {PUERTO} ya está en uso por otro programa. Si es el laboratorio de la ayuda "
                           f"opcional, deténgalo con:\n  docker compose -f ayuda_opcional/compose.yaml down\n"

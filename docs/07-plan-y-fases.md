@@ -14,7 +14,8 @@
 | **Restauración verificada** | `datos.py restaurar` comprueba la huella antes de escribir; el servicio vuelve en 157 ms | I05c, I05d |
 | **Despliegue sin caída + rollback** | `desplegar.py`: una instancia a la vez, rollback automático si la nueva falla | I07 (0 errores en 708 consultas), I08 |
 | **CI en GitHub Actions** | Build del frontend + prueba de punta a punta del despliegue en Linux en cada PR | checks de los PR #7 y #8 |
-| **Documentación** | `docs/01` a `docs/06`, `EVIDENCIAS.md`, README | — |
+| **PostgreSQL + microservicio de pedidos** | `pedidos1`/`pedidos2` (solo lectura, copia en memoria), primario + réplica en caliente, respaldo con `pg_dump`. Tolera la caída de una base | STG01–STG14 |
+| **Documentación** | `docs/01` a `docs/08`, `EVIDENCIAS.md`, README | — |
 
 **Lo que todavía no está demostrado:** que el servicio sobreviva a la caída de una **máquina** completa, el health check activo, los respaldos fuera del computador y HTTPS. Todo eso es el objetivo de AWS.
 
@@ -43,17 +44,19 @@ flowchart LR
 
 | Tarea | Detalle |
 |---|---|
-| **Alerta de presupuesto** | AWS Budgets con aviso al correo del responsable. Es lo primero, sin excepción |
+| **Alerta de presupuesto** | ✅ Hecha (21-11): `nodo-ruta-mensual`, USD 5 al mes sin contar créditos, avisos al 50 % y al 100 % |
+| **Acceso de GitHub a AWS sin claves** | ✅ OIDC probado (21-11): rol `github-actions-nodo-ruta`, solo `main`, sin permisos todavía |
+| **Dónde vive PostgreSQL en AWS** | Abierta: D13 en `docs/03`. Bloquea el diseño de la fase 4 |
 | Usuarios IAM para el equipo | Nadie trabaja con el usuario raíz; permisos mínimos |
 | Decidir la región | La más cercana con todo lo necesario en el plan gratuito |
 | **Decidir cómo se sirve la interfaz** | (a) CloudFront + S3, que da HTTPS gratis pero suma dos servicios; o (b) la misma imagen `nodo-ruta-proxy` en cada EC2 detrás del ALB, que reutiliza lo ya probado pero no tiene HTTPS. Ver `docs/02` |
 | Registro de imágenes | Propuesta: GHCR público, publicado desde GitHub Actions (sin costo y sin secretos) |
 | Etiqueta común | `proyecto=nodo-ruta` en todo, para encontrarlo y borrarlo |
-| Rama `staging` | Hoy es idéntica a `main`. Si es para AWS, definir para qué se usa; si no, borrarla |
+| Rama `staging` | Su contenido (PostgreSQL + microservicio) se integra a `main`; después se puede borrar la rama |
 
 ### Fase 4 · Construir en AWS (`infra/aws/`)
 
-Scripts en Python con AWS CLI para **crear y destruir** de forma reproducible:
+Plantillas de **CloudFormation** en `infra/aws/` para crear y destruir con una pila (D14):
 
 1. **S3** con versiones: `actual/pedidos.json` y `respaldos/`.
 2. **Imagen** construida una sola vez y publicada (GitHub Actions → GHCR).
@@ -62,6 +65,8 @@ Scripts en Python con AWS CLI para **crear y destruir** de forma reproducible:
 5. **ALB** + target group con health check a `/health`. Security groups: las EC2 solo aceptan tráfico del ALB y no tienen SSH (se usa Session Manager).
 6. **CloudWatch Logs** con retención corta.
 7. (Según la decisión de la fase 3) CloudFront + S3 para la interfaz.
+
+> Los puntos 1, 3 y 4 asumían los datos como JSON en S3. Con PostgreSQL cambian según D13; esta lista se reescribe al decidirlo.
 
 ### Fase 5 · Probar en AWS y destruir
 
