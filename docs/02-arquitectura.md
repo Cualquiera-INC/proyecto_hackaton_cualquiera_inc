@@ -8,7 +8,7 @@ Dos partes: lo que corre **en local y está probado**, y el **diseño para AWS**
 flowchart LR
     U[Operaciones / scripts de prueba] -->|"127.0.0.1:8080"| N
     subgraph PC[Computador · Docker Compose · proyecto nodo-ruta]
-        N["proxy<br/>nginx:1.28-alpine<br/>healthcheck /proxy-health"]
+        N["proxy<br/>nodo-ruta-proxy (NGINX + interfaz)<br/>healthcheck /proxy-health"]
         A1["app1<br/>nodo-ruta:&lt;versión&gt;"]
         A2["app2<br/>nodo-ruta:&lt;versión&gt;"]
         R["respaldo<br/>python:3.12-slim<br/>cada 5 min"]
@@ -26,7 +26,7 @@ flowchart LR
 
 | Pieza | Qué hace |
 |---|---|
-| `proxy` (NGINX) | Único puerto publicado. Reparte por turnos y, si una instancia no responde, reintenta en la otra (detección pasiva). Registra qué instancia atendió y cuánto tardó. |
+| `proxy` (NGINX + interfaz) | Único puerto publicado. Sirve la interfaz web en `/` y la API en `/pedidos` y `/health`. Reparte por turnos y, si una instancia no responde, reintenta en la otra (detección pasiva). Registra qué instancia atendió y cuánto tardó. |
 | `app1`, `app2` | La misma app con imágenes versionadas. Responden `instancia` y `version_app`. Se apagan de forma ordenada con SIGTERM. |
 | `respaldo` | Cada 5 min ejecuta `datos.py respaldar`. Si el JSON está dañado, no respalda. |
 | `scripts/desplegar.py` | Actualiza una instancia a la vez y revierte solo si la nueva falla. |
@@ -39,9 +39,8 @@ flowchart LR
 | Cómo se usa | Estado |
 |---|---|
 | Desarrollo: `npm run dev` en `frontend-nodo/`; Vite reenvía `/pedidos` y `/health` a `127.0.0.1:8080` | ✅ disponible |
-| Contenedor: `ayuda_opcional/Dockerfile.proxy` construye la interfaz y NGINX la sirve en `/`, mientras balancea `/pedidos` y `/health` | 🟡 el Dockerfile existe, pero `ayuda_opcional/compose.yaml` todavía usa la imagen `nginx` sin la interfaz |
-| Stack oficial `despliegue/` | ⏳ sin interfaz: `/` sigue devolviendo el JSON de la app |
-| CI: `.github/workflows/frontend.yml` (lint + build) y `contenedores.yml` (valida y construye `ayuda_opcional`) | ✅ |
+| **Stack oficial:** `despliegue/Dockerfile.proxy` construye la interfaz dentro de Docker (no hace falta Node en el PC) y la imagen `nodo-ruta-proxy:<versión>` la sirve en `/`, mientras balancea `/pedidos` y `/health` | ✅ probado: 233 consultas con 0 errores durante una actualización escalonada |
+| CI: `frontend.yml` (lint + build) y `contenedores.yml` (construye la referencia y hace una **prueba de punta a punta** de `despliegue/` en Linux) | ✅ |
 
 `app.py` envía `Access-Control-Allow-Origin: *` y responde `OPTIONS`, para que la interfaz pueda consultar la API desde otro origen durante el desarrollo.
 

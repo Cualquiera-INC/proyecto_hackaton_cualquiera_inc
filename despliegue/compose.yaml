@@ -43,7 +43,14 @@ services:
       DATA_PATH: /data/pedidos.json
 
   proxy:
-    image: nginx:1.28-alpine
+    # NGINX + interfaz web. La imagen se construye la primera vez que se levanta
+    # el stack. Si cambia frontend-nodo/, subir PROXY_TAG y reconstruir:
+    #   docker compose -f despliegue/compose.yaml build proxy
+    #   docker compose -f despliegue/compose.yaml up -d --no-deps proxy
+    image: nodo-ruta-proxy:${PROXY_TAG:-1.0.0}
+    build:
+      context: ..
+      dockerfile: despliegue/Dockerfile.proxy
     restart: unless-stopped
     ports:
       # NODO_IP=127.0.0.1 (por defecto) solo acepta conexiones del propio equipo.

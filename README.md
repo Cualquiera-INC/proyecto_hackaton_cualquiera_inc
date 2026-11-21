@@ -25,9 +25,9 @@ python scripts/desplegar.py desplegar --version v1     # levanta app1, app2, pro
 python scripts/desplegar.py estado                     # versión actual e historial
 ```
 
-Abre http://127.0.0.1:8080/health o http://127.0.0.1:8080/pedidos. El campo `instancia` va alternando entre `app1` y `app2`.
+Abre http://127.0.0.1:8080/ para ver la **interfaz web** (estado del servicio, pedidos y búsqueda por ID). La API está en http://127.0.0.1:8080/health y http://127.0.0.1:8080/pedidos, donde el campo `instancia` va alternando entre `app1` y `app2`.
 
-Interfaz web (opcional): con el servicio arriba, entra a `frontend-nodo/` y ejecuta `npm install` y luego `npm run dev` (ver [frontend-nodo/README.md](frontend-nodo/README.md)).
+El primer despliegue tarda un poco más porque construye la interfaz dentro de Docker; no hace falta tener Node instalado. Para desarrollar la interfaz con recarga en vivo, ver [frontend-nodo/README.md](frontend-nodo/README.md).
 
 | Acción | Comando |
 |---|---|
@@ -64,13 +64,13 @@ python scripts/monitorear.py --segundos 120 --salida evidencias/I07_<fecha>.json
 
 ```
 app.py  Dockerfile  pedidos.json   app del reto (cambios mínimos) y datos originales
-despliegue/                        stack oficial: compose.yaml + nginx.conf
+despliegue/                        stack oficial: compose.yaml + nginx.conf + Dockerfile.proxy (interfaz)
 scripts/                           desplegar, datos, verificar_servicio, monitorear, ejecutar_local
 evidencias/                        resultados de las pruebas (el prefijo es el ID)
 docs/                              documentación del equipo
 frontend-nodo/                     interfaz web React + Vite de solo lectura (ver su README)
-.github/workflows/                 CI: frontend y contenedores
-ayuda_opcional/                    configuración de referencia del reto (no oficial) + Dockerfile.proxy de la interfaz
+.github/workflows/                 CI: frontend y prueba de punta a punta del despliegue
+ayuda_opcional/                    configuración de referencia del reto, tal como llegó (no oficial)
 recursos-reto/                     ficha, guía y plantilla originales
 ```
 

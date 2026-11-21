@@ -15,7 +15,8 @@ Una app Python pequeña lee `pedidos.json` **en cada consulta** y responde en JS
 | `scripts/desplegar.py` | Despliegue escalonado y rollback |
 | `scripts/datos.py` | Preparar, respaldar, dañar (para probar) y restaurar los datos |
 | `scripts/verificar_servicio.py`, `scripts/monitorear.py` | Generan la evidencia de las pruebas |
-| `ayuda_opcional/` | Configuración de referencia del reto (no es la oficial). Incluye `Dockerfile.proxy`, que sirve la interfaz web |
+| `despliegue/Dockerfile.proxy` | Imagen del proxy: construye la interfaz web y la sirve con NGINX |
+| `ayuda_opcional/` | Configuración de referencia del reto, tal como llegó (no es la oficial) |
 | `frontend-nodo/` | Interfaz web React + Vite de solo lectura (pedidos, búsqueda por ID, estado) |
 | `.github/workflows/` | CI: lint y build del frontend; validar y construir los contenedores |
 | `data/`, `respaldos/` | Copia de trabajo y respaldos. Se crean al usar los scripts; **no van al repo** |
@@ -79,7 +80,7 @@ La imagen trae su propia copia de `pedidos.json`, que era justo el problema del 
 | Servicio | Imagen | Puntos clave |
 |---|---|---|
 | `app1`, `app2` | `nodo-ruta:${APP1_TAG}` / `${APP2_TAG}` | Cada una puede tener una versión distinta durante un despliegue. Montan `../data` en solo lectura. Healthcheck a `/health` cada 5 s (cada 1 s al arrancar). `restart: unless-stopped`. **Sin `ports:`** |
-| `proxy` | `nginx:1.28-alpine` | Publica `${NODO_IP:-127.0.0.1}:${NODO_PUERTO:-8080}`. Healthcheck propio en `/proxy-health`. Arranca cuando las dos apps están sanas |
+| `proxy` | `nodo-ruta-proxy:${PROXY_TAG:-1.0.0}` (NGINX + interfaz, se construye con `Dockerfile.proxy`) | Publica `${NODO_IP:-127.0.0.1}:${NODO_PUERTO:-8080}`. Healthcheck propio en `/proxy-health`. Arranca cuando las dos apps están sanas |
 | `respaldo` | `python:3.12-slim` | Bucle: `datos.py respaldar` y espera 300 s. Lee `data/`, escribe en `respaldos/` |
 
 - **No se levanta con `compose up` a mano:** lo hace `desplegar.py`, que escribe las versiones en `despliegue/.env`.
@@ -96,7 +97,8 @@ upstream aplicaciones {
     server app2:8080 resolve max_fails=1 fail_timeout=3s;
 }
 location = /proxy-health { return 200 "ok\n"; }  # salud del propio proxy
-location / {
+location / { try_files $uri $uri/ /index.html; } # interfaz web
+location ~ ^/(pedidos|health)$ {
     proxy_pass http://aplicaciones;              # reparto por turnos
     proxy_connect_timeout 300ms;                 # si no conecta en 300 ms, prueba la otra
     proxy_read_timeout 3s;
