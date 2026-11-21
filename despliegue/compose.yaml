@@ -1,46 +1,179 @@
-# Despliegue del equipo: dos instancias detrás de NGINX con actualización
-# escalonada y rollback. No ejecutar "up --build" a mano: usar
-#   python scripts/desplegar.py desplegar
-# Las etiquetas de imagen de cada instancia (APP1_TAG, APP2_TAG) las escribe
-# el script en despliegue/.env para poder actualizar una instancia a la vez.
+# Stack de STAGING (rama staging): microservicios por HTTP + PostgreSQL.
+#
+#   proxy (NGINX + interfaz) ──► app1, app2 ──HTTP──► pedidos1, pedidos2 ──SQL──► postgres (primario)
+#                                                                          └─► postgres-replica
+#
+# No ejecutar "up --build" a mano: usar
+#   python scripts/datos.py preparar                 (una vez: crea la contraseña de la base)
+#   python scripts/desplegar.py desplegar --version v1
+# Las etiquetas de imagen de cada instancia (APP1_TAG, PEDIDOS1_TAG, ...) las
+# escribe el script en despliegue/.env para poder actualizar una instancia a la vez.
 name: nodo-ruta
 
-x-app: &app
-  pull_policy: never          # las imágenes se construyen localmente (nodo-ruta:<version>)
+x-servicio: &servicio
+  pull_policy: never          # las imágenes se construyen localmente con su versión
   restart: unless-stopped     # si el proceso cae, Docker lo levanta de nuevo
   stop_grace_period: 10s      # tiempo para terminar solicitudes en curso tras SIGTERM
-  volumes:
-    # Se monta la carpeta (no el archivo) en solo lectura: permite reemplazar
-    # data/pedidos.json de forma atómica sin que el contenedor quede viendo
-    # el archivo anterior.
-    - type: bind
-      source: ../data
-      target: /data
-      read_only: true
-      bind:
-        create_host_path: false
+
+x-salud: &salud
+  interval: 5s
+  timeout: 3s
+  retries: 3
+  start_period: 5s
+  start_interval: 1s          # durante el arranque comprueba cada segundo
+
+x-app: &app
+  <<: *servicio
+  networks: [frontal, datos]
+  environment: &app-env
+    # "pedidos" es un alias de red compartido por pedidos1 y pedidos2 (ver x-pedidos).
+    PEDIDOS_URL: http://pedidos:8081
   healthcheck:
+    <<: *salud
     test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=2).read()"]
-    interval: 5s
-    timeout: 3s
-    retries: 3
-    start_period: 5s
-    start_interval: 1s        # durante el arranque comprueba cada segundo
+  depends_on:
+    pedidos1:
+      condition: service_healthy
+    pedidos2:
+      condition: service_healthy
+
+x-pedidos: &pedidos
+  <<: *servicio
+  networks:
+    datos:
+      # Alias compartido: el DNS de Docker devuelve la IP de cada réplica que
+      # exista en ese momento. Mientras una se recrea, el nombre sigue
+      # resolviendo (a la otra) al instante. Resolver un nombre inexistente en
+      # esta red interna tarda ~8 s: medido en la prueba STG02.
+      aliases: [pedidos]
+  secrets: [db_password]
+  environment: &pedidos-env
+    # "pg-lectura" es un alias compartido por el primario y la réplica: el
+    # servicio lee de cualquiera de los dos y, si uno cae, del otro.
+    DB_HOST: pg-lectura
+    DB_PORT: "5432"
+    DB_NAME: nodo_ruta
+    DB_USER: ${DB_USUARIO:-cualquieraInc}
+    DB_PASSWORD_FILE: /run/secrets/db_password
+  healthcheck:
+    <<: *salud
+    test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8081/health', timeout=2).read()"]
+  depends_on:
+    postgres:
+      condition: service_healthy
 
 services:
+  # ---------- capa de datos (red interna, sin puertos publicados) ----------
+  # Primario: única base que acepta escrituras (datos.py restaurar, simular-error).
+  postgres:
+    image: postgres:17.6-alpine
+    restart: unless-stopped
+    stop_grace_period: 30s    # deja que PostgreSQL cierre limpio (checkpoint)
+    # hba_file: reglas de acceso del repositorio (permiten la replicación).
+    # wal_keep_size: conserva WAL para que la réplica se ponga al día tras una caída.
+    command: ["postgres", "-c", "hba_file=/etc/postgresql/pg_hba.conf", "-c", "wal_keep_size=256MB"]
+    networks:
+      datos:
+        aliases: [pg-lectura]
+    secrets: [db_password]
+    environment:
+      POSTGRES_DB: nodo_ruta
+      POSTGRES_USER: ${DB_USUARIO:-cualquieraInc}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      # Sumas de verificación por página: detectan corrupción en disco.
+      # Solo aplica al crear una base nueva (volumen vacío).
+      POSTGRES_INITDB_ARGS: --data-checksums
+    volumes:
+      - type: bind
+        source: ../basedatos/pg_hba.conf
+        target: /etc/postgresql/pg_hba.conf
+        read_only: true
+        bind:
+          create_host_path: false
+      # Los datos viven en un volumen de Docker, fuera del contenedor:
+      # sobreviven a recrearlo o actualizar la imagen.
+      - pgdata:/var/lib/postgresql/data
+      # Esquema y datos iniciales; solo se aplican con el volumen vacío.
+      - type: bind
+        source: ../basedatos/init
+        target: /docker-entrypoint-initdb.d
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      <<: *salud
+      # Por TCP (-h 127.0.0.1): durante la inicialización PostgreSQL solo escucha
+      # por socket local, así que no se marca sano hasta terminar de cargar los datos.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      start_period: 30s
+
+  # Réplica en caliente (hot standby): copia del primario en tiempo real, solo
+  # lectura. Si el primario cae, el servicio de pedidos sigue leyendo de aquí.
+  # Ver basedatos/replica/iniciar-replica.sh.
+  postgres-replica:
+    image: postgres:17.6-alpine
+    restart: unless-stopped
+    stop_grace_period: 30s
+    user: postgres
+    entrypoint: ["sh", "/iniciar-replica.sh"]
+    networks:
+      datos:
+        aliases: [pg-lectura]
+    secrets: [db_password]
+    environment:
+      PRIMARIO: postgres
+      POSTGRES_USER: ${DB_USUARIO:-cualquieraInc}
+      POSTGRES_DB: nodo_ruta
+    volumes:
+      - pgdata-replica:/var/lib/postgresql/data
+      - type: bind
+        source: ../basedatos/replica/iniciar-replica.sh
+        target: /iniciar-replica.sh
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ../basedatos/pg_hba.conf
+        target: /etc/postgresql/pg_hba.conf
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      <<: *salud
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      start_period: 60s       # la primera vez copia la base completa
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  pedidos1:
+    <<: *pedidos
+    image: nodo-ruta-pedidos:${PEDIDOS1_TAG:?Ejecute scripts/desplegar.py para generar despliegue/.env}
+    environment:
+      <<: *pedidos-env
+      INSTANCE_ID: pedidos1
+
+  pedidos2:
+    <<: *pedidos
+    image: nodo-ruta-pedidos:${PEDIDOS2_TAG:?Ejecute scripts/desplegar.py para generar despliegue/.env}
+    environment:
+      <<: *pedidos-env
+      INSTANCE_ID: pedidos2
+
+  # ---------- capa de aplicación (API pública /pedidos y /health) ----------
   app1:
     <<: *app
     image: nodo-ruta:${APP1_TAG:?Ejecute scripts/desplegar.py para generar despliegue/.env}
     environment:
+      <<: *app-env
       INSTANCE_ID: app1
-      DATA_PATH: /data/pedidos.json
 
   app2:
     <<: *app
     image: nodo-ruta:${APP2_TAG:?Ejecute scripts/desplegar.py para generar despliegue/.env}
     environment:
+      <<: *app-env
       INSTANCE_ID: app2
-      DATA_PATH: /data/pedidos.json
 
   proxy:
     # NGINX + interfaz web. La imagen se construye la primera vez que se levanta
@@ -52,6 +185,7 @@ services:
       context: ..
       dockerfile: despliegue/Dockerfile.proxy
     restart: unless-stopped
+    networks: [frontal]       # el proxy no ve la red de datos
     ports:
       # NODO_IP=127.0.0.1 (por defecto) solo acepta conexiones del propio equipo.
       # En un servidor: NODO_IP=0.0.0.0, idealmente detrás de HTTPS y firewall.
@@ -64,33 +198,63 @@ services:
         bind:
           create_host_path: false
     healthcheck:
+      <<: *salud
       # Salud del propio proxy, independiente de las aplicaciones.
       test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/proxy-health"]
-      interval: 5s
-      timeout: 3s
-      retries: 3
-      start_period: 5s
-      start_interval: 1s
     depends_on:
       app1:
         condition: service_healthy
       app2:
         condition: service_healthy
 
-  # Respaldo automático cada 5 min (aporte de la solución local de Oscar).
-  # datos.py valida el JSON antes de copiar, así que nunca respalda un archivo
-  # corrupto. Usa una imagen de Python fija y no la de la app: solo necesita la
-  # biblioteca estándar y así no depende de la versión desplegada.
-  # desplegar.py lo levanta en el primer despliegue (compose up -d) y no lo
-  # toca en las actualizaciones escalonadas (--no-deps app1/app2).
-  # Pendiente: rotar respaldos antiguos (cada uno pesa ~1 KB).
+  # Respaldo automático cada 5 min con pg_dump (formato custom) en respaldos/,
+  # fuera del volumen de la base, con su huella SHA-256. Nombres en hora UTC. Se escribe primero a un
+  # temporal: si pg_dump falla no queda un respaldo a medias.
+  # Restaurar: python scripts/datos.py restaurar --respaldo respaldos/<archivo>.dump
+  # Pendiente: rotar respaldos antiguos.
   respaldo:
-    image: python:3.12-slim
+    image: postgres:17.6-alpine
     restart: unless-stopped
-    user: "10001"
-    working_dir: /proj
-    command: ["sh", "-c", "while true; do python scripts/datos.py respaldar; sleep 300; done"]
+    networks: [datos]
+    secrets: [db_password]
+    environment:
+      # Respalda desde el primario o la réplica, la que responda: si el primario
+      # cae, los respaldos siguen.
+      PGHOST: pg-lectura
+      PGDATABASE: nodo_ruta
+      PGUSER: ${DB_USUARIO:-cualquieraInc}
+    entrypoint: ["sh", "-c"]
+    command:
+      - |
+        export PGPASSWORD="$$(cat /run/secrets/db_password)"
+        while true; do
+          f="/respaldos/$$(date -u +%Y%m%d_%H%M%S)_auto.dump"
+          if pg_dump -Fc -f "$$f.tmp"; then
+            mv "$$f.tmp" "$$f"
+            sha256sum "$$f" | cut -d' ' -f1 > "$${f%.dump}.sha256"
+            echo "Respaldo creado: $$f"
+          else
+            rm -f "$$f.tmp"
+            echo "Respaldo FALLIDO $$(date -Iseconds)" >&2
+          fi
+          sleep 300
+        done
     volumes:
-      - ../scripts:/proj/scripts:ro
-      - ../data:/proj/data:ro
-      - ../respaldos:/proj/respaldos
+      - ../respaldos:/respaldos
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+networks:
+  frontal: {}
+  datos:
+    internal: true            # sin salida a internet: solo apps, servicios de pedidos y base
+
+volumes:
+  pgdata: {}
+  pgdata-replica: {}
+
+secrets:
+  db_password:
+    # Lo crea "python scripts/datos.py preparar". No va al repositorio.
+    file: ./secretos/db_password.txt

@@ -1,8 +1,11 @@
+import http.client
+import itertools
 import json
 import os
 import signal
 import socket
 import threading
+import urllib.parse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -11,6 +14,45 @@ DATA = Path(os.environ.get("DATA_PATH", "pedidos.json"))
 INSTANCE = os.environ.get("INSTANCE_ID") or socket.gethostname()
 # Versión del código desplegado; la fija el build (--build-arg APP_VERSION=...).
 APP_VERSION = os.environ.get("APP_VERSION", "dev")
+# Modo microservicios (staging): si PEDIDOS_URL está definida, los datos se piden
+# por HTTP al servicio de pedidos (que los lee de PostgreSQL). Si no, se lee el
+# archivo JSON como en la versión original.
+PEDIDOS_URL = urllib.parse.urlsplit(os.environ.get("PEDIDOS_URL", ""))
+PEDIDOS_TIMEOUT = float(os.environ.get("PEDIDOS_TIMEOUT", "2"))
+_turno = itertools.count()
+
+
+def leer_datos():
+    """Devuelve (datos, origen). origen identifica la réplica del servicio de pedidos."""
+    if not PEDIDOS_URL.hostname:
+        return json.loads(DATA.read_text(encoding="utf-8")), None
+    # El nombre (alias de red "pedidos") resuelve a la IP de cada réplica viva.
+    # Se reparten por turnos y, si una no responde o devuelve error, se prueba la
+    # siguiente. Se usa el alias y no un nombre por réplica porque resolver el
+    # nombre de un contenedor que se está recreando tarda varios segundos.
+    puerto = PEDIDOS_URL.port or 80
+    ips = sorted({a[4][0] for a in socket.getaddrinfo(PEDIDOS_URL.hostname, puerto, type=socket.SOCK_STREAM)})
+    inicio, ultimo_error = next(_turno), None
+    for i in range(len(ips)):
+        ip = ips[(inicio + i) % len(ips)]
+        conn = http.client.HTTPConnection(ip, puerto, timeout=PEDIDOS_TIMEOUT)
+        try:
+            conn.request("GET", "/pedidos", headers={"Host": PEDIDOS_URL.netloc})
+            r = conn.getresponse()
+            cuerpo = r.read()
+            if r.status != 200:
+                raise OSError(f"{ip} respondió {r.status}")
+            datos = json.loads(cuerpo)
+            origen = {"instancia": datos.get("instancia"), "version_app": datos.get("version_app"),
+                      "origen_datos": datos.get("origen_datos")}
+            if datos.get("origen_datos") == "cache":
+                origen["antiguedad_cache_s"] = datos.get("antiguedad_cache_s")
+            return {"version": datos.get("version"), "pedidos": datos.get("pedidos")}, origen
+        except (OSError, ValueError, http.client.HTTPException) as e:
+            ultimo_error = e
+        finally:
+            conn.close()
+    raise OSError(f"servicio de pedidos no disponible: {ultimo_error}")
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -19,7 +61,7 @@ class Handler(BaseHTTPRequestHandler):
             status, response = 404, {"error": "Ruta no disponible", "instancia": INSTANCE}
         else:
             try:
-                data = json.loads(DATA.read_text(encoding="utf-8"))
+                data, origen = leer_datos()
                 if not isinstance(data.get("pedidos"), list):
                     raise ValueError("Formato de datos inválido")
                 status = 200
@@ -29,7 +71,13 @@ class Handler(BaseHTTPRequestHandler):
                     response = {"estado": "ok", "instancia": INSTANCE, "version_app": APP_VERSION, "version_datos": data.get("version")}
                 else:
                     response = {"servicio": "Nodo Ruta - caso ficticio", "instancia": INSTANCE, "version_app": APP_VERSION, "rutas": ["/health", "/pedidos"]}
-            except (OSError, ValueError, TypeError, AttributeError):
+                if origen:
+                    response["servicio_datos"] = origen
+                    if route == "/health" and origen.get("origen_datos") == "cache":
+                        response["estado"] = "degradado"  # responde, pero con la copia en memoria
+            except (OSError, ValueError, TypeError, AttributeError) as e:
+                if PEDIDOS_URL.hostname:
+                    self.log_error("%s", e)
                 status, response = 503, {"estado": "error_datos", "instancia": INSTANCE, "version_app": APP_VERSION}
         payload = json.dumps(response, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
