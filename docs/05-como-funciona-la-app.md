@@ -15,7 +15,9 @@ Una app Python pequeña lee `pedidos.json` **en cada consulta** y responde en JS
 | `scripts/desplegar.py` | Despliegue escalonado y rollback |
 | `scripts/datos.py` | Preparar, respaldar, dañar (para probar) y restaurar los datos |
 | `scripts/verificar_servicio.py`, `scripts/monitorear.py` | Generan la evidencia de las pruebas |
-| `ayuda_opcional/` | Configuración de referencia del reto (no es la oficial) |
+| `ayuda_opcional/` | Configuración de referencia del reto (no es la oficial). Incluye `Dockerfile.proxy`, que sirve la interfaz web |
+| `frontend-nodo/` | Interfaz web React + Vite de solo lectura (pedidos, búsqueda por ID, estado) |
+| `.github/workflows/` | CI: lint y build del frontend; validar y construir los contenedores |
 | `data/`, `respaldos/` | Copia de trabajo y respaldos. Se crean al usar los scripts; **no van al repo** |
 | `evidencias/` | Resultados de las pruebas (JSON y TXT) |
 
@@ -30,7 +32,7 @@ Una app Python pequeña lee `pedidos.json` **en cada consulta** y responde en JS
 | `APP_VERSION` | Versión del código; la fija `desplegar.py` al construir | `v1`, `v2`… |
 | `PORT` | Puerto | `8080` |
 
-**Qué hace con cada consulta** (solo `GET`; otros métodos reciben 501):
+**Qué hace con cada consulta** (`GET`; `OPTIONS` responde 204 para CORS; otros métodos reciben 501):
 
 ```mermaid
 flowchart TD
@@ -52,8 +54,9 @@ GET /pedidos → {"instancia": "app2", "version_app": "v1", "version": "datos-v1
 2. **`/health` es un chequeo profundo:** no dice solo "estoy viva", comprueba que puede leer datos válidos.
 3. **Con datos dañados fallan las tres rutas** (todas leen el archivo).
 4. **Apagado ordenado:** al recibir SIGTERM (`docker stop`, un despliegue) deja de aceptar conexiones y termina las que tiene en curso. Sin esto, Python como proceso principal del contenedor ignora la señal y Docker lo mata a los 10 s.
-5. **Registros:** una línea por consulta en la consola. Docker la captura y se ve con `logs`.
-6. **Servidor de laboratorio:** `ThreadingHTTPServer` no es para producción, y lo decimos.
+5. **CORS:** cada respuesta lleva `Access-Control-Allow-Origin: *` y la app responde `OPTIONS`, para que la interfaz web pueda llamarla desde otro origen en desarrollo.
+6. **Registros:** una línea por consulta en la consola. Docker la captura y se ve con `logs`.
+7. **Servidor de laboratorio:** `ThreadingHTTPServer` no es para producción, y lo decimos.
 
 ## 4. La imagen (`Dockerfile`)
 

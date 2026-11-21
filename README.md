@@ -27,6 +27,8 @@ python scripts/desplegar.py estado                     # versión actual e histo
 
 Abre http://127.0.0.1:8080/health o http://127.0.0.1:8080/pedidos. El campo `instancia` va alternando entre `app1` y `app2`.
 
+Interfaz web (opcional): con el servicio arriba, entra a `frontend-nodo/` y ejecuta `npm install` y luego `npm run dev` (ver [frontend-nodo/README.md](frontend-nodo/README.md)).
+
 | Acción | Comando |
 |---|---|
 | Publicar una versión nueva (sin caída) | `python scripts/desplegar.py desplegar --version v2` |
@@ -66,7 +68,9 @@ despliegue/                        stack oficial: compose.yaml + nginx.conf
 scripts/                           desplegar, datos, verificar_servicio, monitorear, ejecutar_local
 evidencias/                        resultados de las pruebas (el prefijo es el ID)
 docs/                              documentación del equipo
-ayuda_opcional/                    configuración de referencia del reto (no oficial)
+frontend-nodo/                     interfaz web React + Vite de solo lectura (ver su README)
+.github/workflows/                 CI: frontend y contenedores
+ayuda_opcional/                    configuración de referencia del reto (no oficial) + Dockerfile.proxy de la interfaz
 recursos-reto/                     ficha, guía y plantilla originales
 ```
 

@@ -31,6 +31,7 @@ Los precios cambian y la guía pide no inventarlos. En el plan gratuito para cue
 | CloudWatch Logs | GB ingeridos + días de retención | Retención de 1 a 7 días |
 | Transferencia de salida | GB hacia internet | Insignificante en la demo |
 | Registro de imágenes | GB guardados (ECR) | GHCR público: sin costo |
+| CloudFront + S3 de la interfaz (opcional) | Solicitudes HTTPS, transferencia y GB del sitio estático | Solo si se despliega la interfaz; build de pocos KB |
 
 ## Antes de crear cualquier recurso
 
@@ -40,9 +41,10 @@ Los precios cambian y la guía pide no inventarlos. En el plan gratuito para cue
 
 ## Destrucción al terminar (obligatoria)
 
-1. ALB y target group.
-2. Las 2 EC2 (terminar, no solo detener; así se liberan el disco y la IP).
-3. Bucket S3 vaciado, **incluidas las versiones antiguas**, y luego eliminado.
-4. Log group de CloudWatch.
-5. Rol de IAM, security groups y alerta de presupuesto (esta al final).
-6. Revisar el panel de facturación y comprobar que no queda nada con la etiqueta `proyecto=nodo-ruta`.
+1. Distribución de CloudFront, si se creó: deshabilitar y eliminar.
+2. ALB y target group.
+3. Las 2 EC2 (terminar, no solo detener; así se liberan el disco y la IP).
+4. Buckets S3 (datos y, si existe, el de la interfaz) vaciados, **incluidas las versiones antiguas**, y luego eliminados.
+5. Log group de CloudWatch.
+6. Rol de IAM, security groups y alerta de presupuesto (esta al final).
+7. Revisar el panel de facturación y comprobar que no queda nada con la etiqueta `proyecto=nodo-ruta`.

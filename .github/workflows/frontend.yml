@@ -1,0 +1,47 @@
+name: Frontend Nodo Ruta
+
+on:
+  push:
+    paths:
+      - "frontend-nodo/**"
+      - ".github/workflows/frontend.yml"
+  pull_request:
+    paths:
+      - "frontend-nodo/**"
+      - ".github/workflows/frontend.yml"
+
+defaults:
+  run:
+    working-directory: frontend-nodo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend-nodo/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build (mismo origen / producción)
+        env:
+          VITE_API_URL: ""
+        run: npm run build
+
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend-nodo/dist
+          retention-days: 7

@@ -32,6 +32,19 @@ flowchart LR
 | `scripts/desplegar.py` | Actualiza una instancia a la vez y revierte solo si la nueva falla. |
 | `data/` y `respaldos/` | En el disco del computador, fuera de los contenedores. No van al repositorio. |
 
+### Interfaz web (frontend de Silvia)
+
+`frontend-nodo/` es una interfaz en React + Vite, de **solo lectura**: muestra el estado de `/health`, lista los pedidos de `/pedidos` y busca por ID.
+
+| Cómo se usa | Estado |
+|---|---|
+| Desarrollo: `npm run dev` en `frontend-nodo/`; Vite reenvía `/pedidos` y `/health` a `127.0.0.1:8080` | ✅ disponible |
+| Contenedor: `ayuda_opcional/Dockerfile.proxy` construye la interfaz y NGINX la sirve en `/`, mientras balancea `/pedidos` y `/health` | 🟡 el Dockerfile existe, pero `ayuda_opcional/compose.yaml` todavía usa la imagen `nginx` sin la interfaz |
+| Stack oficial `despliegue/` | ⏳ sin interfaz: `/` sigue devolviendo el JSON de la app |
+| CI: `.github/workflows/frontend.yml` (lint + build) y `contenedores.yml` (valida y construye `ayuda_opcional`) | ✅ |
+
+`app.py` envía `Access-Control-Allow-Origin: *` y responde `OPTIONS`, para que la interfaz pueda consultar la API desde otro origen durante el desarrollo.
+
 **Puntos únicos de falla en local:** el computador, el proxy, el archivo de datos compartido y la carpeta de respaldos en el mismo disco. Por eso esto es **tolerancia a la caída de una instancia**, no alta disponibilidad.
 
 ## 2. AWS, plan gratuito (diseño, por probar)
@@ -69,6 +82,14 @@ flowchart LR
 | Exposición | Solo `127.0.0.1:8080` | Security groups: EC2 solo acepta tráfico del ALB | Misma idea |
 | Acceso de administración | — | **Session Manager** (sin SSH abierto) | Sin puerto 22 |
 
+### Interfaz web en AWS (propuesta de Silvia)
+
+**CloudFront** delante de todo, con dos comportamientos:
+- la interfaz (`/`, `/assets/*`) se sirve desde un **bucket S3 de sitio estático**, con el build del workflow `frontend.yml`;
+- la API (`/pedidos`, `/health`) se envía al **ALB**.
+
+Así la interfaz y la API comparten origen (`VITE_API_URL` vacío) y se obtiene HTTPS en `*.cloudfront.net` sin comprar dominio. Con el caché desactivado para la API, las consultas siempre son en vivo. Es opcional: el MVP funciona sin la interfaz.
+
 ### Cómo llegan los datos a cada EC2
 
 1. La versión vigente vive en `s3://<bucket>/actual/pedidos.json`.
@@ -97,7 +118,7 @@ El ALB **no reintenta** en otra instancia cuando una conexión falla, como sí h
 | Registro de imagen | GHCR público / ECR | GHCR público: sin costo y sin secretos en la imagen |
 | Cómo se crea la infraestructura | Consola / scripts con AWS CLI | Scripts en `infra/aws/` para crear y **destruir** de forma reproducible |
 | Intervalo de sincronización con S3 | 5–30 s | 10 s; cada revisión es una solicitud a S3, así que también cuenta como costo |
-| HTTPS | Sin dominio / CloudFront delante del ALB | Opcional: CloudFront da `https://*.cloudfront.net` |
+| HTTPS e interfaz | Sin dominio / CloudFront delante del ALB y del S3 de la interfaz | CloudFront: da `https://*.cloudfront.net` y sirve el frontend |
 
 ## 3. Probado vs. diseñado
 

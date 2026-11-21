@@ -20,7 +20,9 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 - `scripts/`: `desplegar.py`, `datos.py`, `verificar_servicio.py`, `monitorear.py`, `ejecutar_local.py`.
 - `docs/`: 01 reto, 02 arquitectura, 03 decisiones, 04 seguridad y costos, 05 cómo funciona, 06 pitch.
 - `evidencias/`: el prefijo del archivo es el ID de la prueba (`I05c_…`). `EVIDENCIAS.md` es la única bitácora.
-- `ayuda_opcional/` y `recursos-reto/`: material original del reto, solo como referencia.
+- `frontend-nodo/`: interfaz web React + Vite de solo lectura (PR #5). Hoy solo se integra vía `ayuda_opcional/Dockerfile.proxy`; falta decidir si entra a `despliegue/` (D11).
+- `.github/workflows/`: CI del frontend y validación y construcción de los contenedores de `ayuda_opcional`.
+- `ayuda_opcional/` y `recursos-reto/`: material del reto como referencia (`ayuda_opcional` ya tiene cambios del equipo para la interfaz).
 
 ## Comandos
 
