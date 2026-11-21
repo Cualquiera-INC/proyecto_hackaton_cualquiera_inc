@@ -11,6 +11,7 @@ Dos instancias de la app detrás de NGINX, datos fuera de los contenedores, resp
 | Saber por qué se decidió cada cosa | [docs/03-decisiones.md](docs/03-decisiones.md) |
 | Seguridad y costos | [docs/04-seguridad-y-costos.md](docs/04-seguridad-y-costos.md) |
 | Entender cómo funciona cada pieza | [docs/05-como-funciona-la-app.md](docs/05-como-funciona-la-app.md) |
+| **Ver qué tenemos y qué sigue** | [docs/07-plan-y-fases.md](docs/07-plan-y-fases.md) |
 | Ver los resultados de las pruebas | [EVIDENCIAS.md](EVIDENCIAS.md) |
 | Detalle del despliegue y el rollback | [despliegue/README.md](despliegue/README.md) |
 | Material original del reto | [recursos-reto/](recursos-reto/) |
