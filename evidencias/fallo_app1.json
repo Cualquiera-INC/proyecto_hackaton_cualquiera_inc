@@ -1,0 +1,92 @@
+{
+  "url": "http://127.0.0.1:8080/pedidos",
+  "resultado": "CUMPLE",
+  "instancias_observadas": [
+    "app2"
+  ],
+  "instancias_esperadas": [
+    "app2"
+  ],
+  "consultas": [
+    {
+      "consulta": 1,
+      "fecha_utc": "2026-11-21T13:21:26.416634+00:00",
+      "http": 200,
+      "instancia": "app2",
+      "version": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 2,
+      "fecha_utc": "2026-11-21T13:21:26.428846+00:00",
+      "http": 200,
+      "instancia": "app2",
+      "version": "datos-v1",
+      "milisegundos": 1016.0
+    },
+    {
+      "consulta": 3,
+      "fecha_utc": "2026-11-21T13:21:27.435868+00:00",
+      "http": 200,
+      "instancia": "app2",
+      "version": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 4,
+      "fecha_utc": "2026-11-21T13:21:27.457781+00:00",
+      "http": 200,
+      "instancia": "app2",
+      "version": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 5,
+      "fecha_utc": "2026-11-21T13:21:27.461353+00:00",
+      "http": 200,
+      "instancia": "app2",
+      "version": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 6,
+      "fecha_utc": "2026-11-21T13:21:27.464420+00:00",
+      "http": 200,
+      "instancia": "app2",
+      "version": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 7,
+      "fecha_utc": "2026-11-21T13:21:27.466970+00:00",
+      "http": 200,
+      "instancia": "app2",
+      "version": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 8,
+      "fecha_utc": "2026-11-21T13:21:27.469548+00:00",
+      "http": 200,
+      "instancia": "app2",
+      "version": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 9,
+      "fecha_utc": "2026-11-21T13:21:27.472861+00:00",
+      "http": 200,
+      "instancia": "app2",
+      "version": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 10,
+      "fecha_utc": "2026-11-21T13:21:27.488863+00:00",
+      "http": 200,
+      "instancia": "app2",
+      "version": "datos-v1",
+      "milisegundos": 16.0
+    }
+  ]
+}

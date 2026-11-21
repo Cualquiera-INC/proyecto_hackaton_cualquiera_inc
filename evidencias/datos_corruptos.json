@@ -1,0 +1,78 @@
+{
+  "url": "http://127.0.0.1:8080/pedidos",
+  "resultado": "REVISAR",
+  "instancias_observadas": [],
+  "instancias_esperadas": [],
+  "consultas": [
+    {
+      "consulta": 1,
+      "fecha_utc": "2026-11-21T13:22:28.722186+00:00",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 2,
+      "fecha_utc": "2026-11-21T13:22:28.737714+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 3,
+      "fecha_utc": "2026-11-21T13:22:28.741333+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 4,
+      "fecha_utc": "2026-11-21T13:22:28.743419+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 5,
+      "fecha_utc": "2026-11-21T13:22:28.758806+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 6,
+      "fecha_utc": "2026-11-21T13:22:28.774790+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 7,
+      "fecha_utc": "2026-11-21T13:22:28.776633+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 8,
+      "fecha_utc": "2026-11-21T13:22:28.790810+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 9,
+      "fecha_utc": "2026-11-21T13:22:28.792374+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 10,
+      "fecha_utc": "2026-11-21T13:22:28.806767+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 0.0
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+# Despliegue del equipo: dos instancias detrás de NGINX con actualización
+# escalonada y rollback. No ejecutar "up --build" a mano: usar
+#   python scripts/desplegar.py desplegar
+# Las etiquetas de imagen de cada instancia (APP1_TAG, APP2_TAG) las escribe
+# el script en despliegue/.env para poder actualizar una instancia a la vez.
+name: nodo-ruta
+
+x-app: &app
+  pull_policy: never          # las imágenes se construyen localmente (nodo-ruta:<version>)
+  restart: unless-stopped     # si el proceso cae, Docker lo levanta de nuevo
+  stop_grace_period: 10s      # tiempo para terminar solicitudes en curso tras SIGTERM
+  volumes:
+    # Se monta la carpeta (no el archivo) en solo lectura: permite reemplazar
+    # data/pedidos.json de forma atómica sin que el contenedor quede viendo
+    # el archivo anterior.
+    - type: bind
+      source: ../data
+      target: /data
+      read_only: true
+      bind:
+        create_host_path: false
+  healthcheck:
+    test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=2).read()"]
+    interval: 5s
+    timeout: 3s
+    retries: 3
+    start_period: 5s
+    start_interval: 1s        # durante el arranque comprueba cada segundo
+
+services:
+  app1:
+    <<: *app
+    image: nodo-ruta:${APP1_TAG:?Ejecute scripts/desplegar.py para generar despliegue/.env}
+    environment:
+      INSTANCE_ID: app1
+      DATA_PATH: /data/pedidos.json
+
+  app2:
+    <<: *app
+    image: nodo-ruta:${APP2_TAG:?Ejecute scripts/desplegar.py para generar despliegue/.env}
+    environment:
+      INSTANCE_ID: app2
+      DATA_PATH: /data/pedidos.json
+
+  proxy:
+    image: nginx:1.28-alpine
+    restart: unless-stopped
+    ports:
+      # NODO_IP=127.0.0.1 (por defecto) solo acepta conexiones del propio equipo.
+      # En un servidor: NODO_IP=0.0.0.0, idealmente detrás de HTTPS y firewall.
+      - "${NODO_IP:-127.0.0.1}:${NODO_PUERTO:-8080}:80"
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      # Salud del propio proxy, independiente de las aplicaciones.
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/proxy-health"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+      start_interval: 1s
+    depends_on:
+      app1:
+        condition: service_healthy
+      app2:
+        condition: service_healthy
