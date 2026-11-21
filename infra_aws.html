@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>infra_aws.html — Guía de Implementación en AWS Free Tier (Nodo Ruta)</title>
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=X_Mp-iRMSLNFZ01CplBZ2OIDTMApAW9R_oULM3nNWRHrveoxPqhUv84aQ02IopPFIjT2n-ZTNSwZ4UOi3stEkhnah8sClGuaQYs8ONPDk8Xfmn4z_GBIPpLMkp0H1QO8LhnkR6r_JCmwghB1dKqwdeP2UfUUq13HiTWxeCWtBGrKyfKhy63tSvn7ouDEFwzQl47qhY43nl_VOqf253pQHHiTW2aFSXDi9WI_k92FU64cU_ee7E9WS4roAVc-hcnR0j6fMAmxids7w6-52IDyV9ewAcnMFix7jfTkg4HLHRS7M1n6PA2tkwI8RI2TsaIurdefvDrunI-U2nXGn0zopQ" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9jb250cmlidXRpb24udXNlcmNvbnRlbnQuZ29vZ2xlLmNvbS9kb3dubG9hZD9jPUNneGlZWEprWDNOMGIzSmhaMlVTVUJJTmNtVnpjRzl1YzJWZlpHRjBZUm9fQ2pBMU5XTTNOVGhsWmpkak0yWmxOMlZsTURBd05qWXdZMkV3WmpOaFlXUmpNVEF4TXpBM09UQm1OREV4TnpWa05URVNDeElIRUpqTjV1dS1EQmdCJmZpbGVuYW1lPWluZnJhX2F3cy5odG1sJm9waT0xMDMxMzUwNTAmYXV0aHVzZXI9Mg"/><style>
+    :root, [data-theme="dark"] {
+      --bg: #020617;
+      --surface: #0f172a;
+      --surface-2: #1e293b;
+      --border: #1e293b;
+      --border-strong: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.14);
+      --emerald: #34d399;
+      --emerald-soft: rgba(52, 211, 153, 0.14);
+      --amber: #fbbf24;
+      --amber-soft: rgba(251, 191, 36, 0.14);
+      --violet: #a78bfa;
+      --violet-soft: rgba(167, 139, 250, 0.14);
+      --rose: #fb7185;
+      --rose-soft: rgba(251, 113, 133, 0.14);
+      --orange: #fb923c;
+      --orange-soft: rgba(251, 146, 60, 0.14);
+      --code-bg: #090d1a;
+      --mask: #0f172a;
+    }
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-2: #f1f5f9;
+      --border: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --text-dim: #64748b;
+      --accent: #0284c7;
+      --accent-soft: rgba(2, 132, 199, 0.1);
+      --emerald: #059669;
+      --emerald-soft: rgba(5, 150, 105, 0.1);
+      --amber: #d97706;
+      --amber-soft: rgba(217, 119, 6, 0.1);
+      --violet: #7c3aed;
+      --violet-soft: rgba(124, 58, 237, 0.1);
+      --rose: #e11d48;
+      --rose-soft: rgba(225, 29, 72, 0.1);
+      --orange: #ea580c;
+      --orange-soft: rgba(234, 88, 12, 0.1);
+      --code-bg: #0f172a;
+      --mask: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      font-size: 15.5px;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: color-mix(in srgb, var(--surface) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+    }
+    .topbar-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .brand-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+    }
+    .brand-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    }
+    .top-actions { display: flex; gap: 0.5rem; }
+    .btn {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border-strong);
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn:hover { border-color: var(--accent); color: var(--accent); }
+    .shell {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 2.25rem;
+      align-items: start;
+    }
+    @media (max-width: 920px) {
+      .shell { grid-template-columns: 1fr; }
+      .toc { position: static !important; }
+    }
+    .toc {
+      position: sticky;
+      top: 4.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0.85rem;
+      padding: 1.1rem;
+    }
+    .toc-title {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      font-weight: 700;
+      margin-bottom: 0.65rem;
+    }
+    .toc ul { list-style: none; display: flex; flex-direction: column; gap: 0.35rem; }
+    .toc a {
+      display: block;
+      text-decoration: none;
+      color: var(--text-muted);
+      font-size: 0.84rem;
+      padding: 0.32rem 0.55rem;
+      border-radius: 0.45rem;
+      transition: all 0.14s ease;
+    }
+    .toc a:hover { background: var(--surface-2); color: var(--accent); }
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.75rem 2rem;
+      margin-bottom: 1.75rem;
+    }
+    .hero h1 { font-size: 1.75rem; font-weight: 800; line-height: 1.25; margin-bottom: 0.5rem; }
+    .hero p { color: var(--text-muted); font-size: 0.98rem; }
+    .meta-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+    .pill {
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: var(--surface-2);
+      color: var(--text-muted);
+      border: 1px solid var(--border-strong);
+    }
+    section.doc-sec {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.6rem 1.85rem;
+      margin-bottom: 1.5rem;
+    }
+    section.doc-sec h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.55rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .sec-num {
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 0.15rem 0.5rem;
+      border-radius: 0.38rem;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    section.doc-sec h3 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      margin: 1.25rem 0 0.5rem;
+      color: var(--text);
+    }
+    p { margin-bottom: 0.85rem; color: var(--text-muted); }
+    p:last-child { margin-bottom: 0; }
+    ul.clean, ol.clean {
+      margin: 0.5rem 0 1rem 1.25rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    li strong { color: var(--text); }
+    code.inline {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.84em;
+      background: var(--surface-2);
+      color: var(--accent);
+      padding: 0.12rem 0.38rem;
+      border-radius: 0.32rem;
+      border: 1px solid var(--border-strong);
+    }
+    .code-wrap {
+      position: relative;
+      margin: 0.85rem 0 1.15rem;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      border: 1px solid #1e293b;
+      background: var(--code-bg);
+    }
+    .code-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.42rem 0.85rem;
+      background: #131c31;
+      border-bottom: 1px solid #1e293b;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #94a3b8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    .copy-btn {
+      background: rgba(56, 189, 248, 0.12);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 0.38rem;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .copy-btn:hover { background: rgba(56, 189, 248, 0.24); }
+    pre {
+      padding: 0.95rem 1.1rem;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.83rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+    }
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      padding: 0.85rem 1.1rem;
+      border-radius: 0 0.65rem 0.65rem 0;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .callout.warn {
+      border-left-color: var(--rose);
+      background: var(--rose-soft);
+    }
+    .callout.ok {
+      border-left-color: var(--emerald);
+      background: var(--emerald-soft);
+    }
+    .callout strong { color: var(--text); display: block; margin-bottom: 0.2rem; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.86rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.68rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      background: var(--surface-2);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    td { color: var(--text-muted); }
+    .diagram-box {
+      margin: 1rem 0;
+      padding: 0.9rem;
+      background: var(--bg);
+      border: 1px solid var(--border-strong);
+      border-radius: 0.85rem;
+      overflow-x: auto;
+    }
+    .diagram-box svg {
+      width: 100%;
+      min-width: 680px;
+      height: auto;
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .checklist { list-style: none; margin: 0.75rem 0; display: flex; flex-direction: column; gap: 0.55rem; }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      padding: 0.55rem 0.75rem;
+      background: var(--surface-2);
+      border-radius: 0.55rem;
+      border: 1px solid var(--border);
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+    .checklist input[type="checkbox"] { margin-top: 0.25rem; accent-color: var(--emerald); width: 16px; height: 16px; cursor: pointer; }
+    @media print {
+      .topbar, .toc, .copy-btn { display: none !important; }
+      .shell { grid-template-columns: 1fr; padding: 0; }
+      body { background: #fff; color: #000; }
+      section.doc-sec, .hero { break-inside: avoid; border-color: #ccc; }
+    }
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-dot" style="background:var(--amber);box-shadow:0 0 10px var(--amber)"></span>
+        <span>Nodo Ruta S.A.S. · Arquitectura y Despliegue en AWS</span>
+        <span class="brand-tag">AWS Free Tier · Multi-AZ</span>
+      </div>
+      <div class="top-actions">
+        <button class="btn" type="button" onclick="toggleTheme()">Tema Claro / Oscuro</button>
+        <button class="btn" type="button" onclick="window.print()">Imprimir / PDF</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="shell">
+    <nav class="toc" aria-label="Tabla de contenido">
+      <div class="toc-title">Contenido</div>
+      <ul>
+        <li><a href="#estrategia">1. Estrategia Free Tier y Costos</a></li>
+        <li><a href="#arquitectura">2. Arquitectura Equivalente AWS</a></li>
+        <li><a href="#fase1">3. Fase 1: S3, IAM y Red</a></li>
+        <li><a href="#fase2">4. Fase 2: Instancias EC2 + Docker</a></li>
+        <li><a href="#fase3">5. Fase 3: ALB y CloudFront HTTPS</a></li>
+        <li><a href="#fase4">6. Fase 4: Pruebas, Plan B y Limpieza</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <div class="hero">
+        <h1>Implementación Equivalente en Nube (AWS Free Tier)</h1>
+        <p>Guía técnica para desplegar el servicio de consulta de <strong>Nodo Ruta</strong> en Amazon Web Services eliminando los puntos únicos de fallo locales y maximizando las cuotas gratuitas y créditos iniciales.</p>
+        <div class="meta-pills">
+          <span class="pill">HTTPS: CloudFront (*.cloudfront.net)</span>
+          <span class="pill">Balanceo: ALB Multi-AZ (/health)</span>
+          <span class="pill">Cómputo: 2 × EC2 t3.micro + Docker</span>
+          <span class="pill">Datos: EBS (:ro) + S3 Versionado</span>
+        </div>
+      </div>
+
+      <section id="estrategia" class="doc-sec">
+        <h2><span class="sec-num">01</span> Estrategia de Costo Cero y Gobernanza Free Tier</h2>
+        <p>Para cumplir la restricción de no contratar servicios pagos fuera de cuota, la arquitectura aprovecha los límites gratuitos de AWS y descarta componentes costosos innecesarios para el MVP:</p>
+        <ul class="clean">
+          <li><strong>Cuentas nuevas (Free Plan):</strong> Disponen de créditos iniciales (USD $100 ampliables hasta USD $200 completando actividades de incorporación, vigentes por 6 meses) y acceso a más de 30 servicios <em>Always Free</em> sin cargos inesperados mientras no se migre a plan pago.</li>
+          <li><strong>Cuentas educativas / Free Tier clásico (12 meses):</strong> Incluyen hasta 750 horas/mes de EC2 (<code class="inline">t3.micro</code> o <code class="inline">t2.micro</code>), 30 GB de EBS, 750 horas/mes de Application Load Balancer, 5 GB en S3 Standard, más los niveles <em>Always Free</em> de CloudWatch (5 GB de logs y 10 alarmas) y CloudFront (1 TB de salida y 10M de solicitudes HTTPS/mes).</li>
+          <li><strong>Servicios descartados:</strong> Se evitan <strong>EKS (Kubernetes)</strong>, <strong>NAT Gateway</strong>, <strong>EFS</strong>, zonas hospedadas en <strong>Route 53</strong> y direcciones <strong>Elastic IP</strong> sin asociar.</li>
+        </ul>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Rol en el reto</th>
+              <th>Servicio AWS</th>
+              <th>Mejora frente al entorno local</th>
+              <th>Factores de consumo (sin inventar precios)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Acceso público y HTTPS</strong></td>
+              <td>Amazon CloudFront</td>
+              <td>Provee HTTPS/TLS gratuito (<code class="inline">*.cloudfront.net</code>) sin comprar dominio ni usar Route 53.</td>
+              <td>Transferencia saliente y número de solicitudes HTTPS (cubierto por <em>Always Free</em>).</td>
+            </tr>
+            <tr>
+              <td><strong>Proxy y Salud activa</strong></td>
+              <td>Application Load Balancer (ALB)</td>
+              <td>Distribuye tráfico Multi-AZ y ejecuta health checks activos sobre <code class="inline">GET /health</code>.</td>
+              <td>Horas de funcionamiento del ALB y unidades de capacidad (LCU).</td>
+            </tr>
+            <tr>
+              <td><strong>Instancias en contenedores</strong></td>
+              <td>2 × EC2 <code class="inline">t3.micro</code> + Docker</td>
+              <td>Separa <code class="inline">app1</code> y <code class="inline">app2</code> en dos Zonas de Disponibilidad distintas.</td>
+              <td>Horas-instancia (2 instancias = ~2h por cada hora reloj; 375h continuas dentro de 750h/mes) + IPv4 pública.</td>
+            </tr>
+            <tr>
+              <td><strong>Datos y Respaldos</strong></td>
+              <td>EBS <code class="inline">gp3</code> (:ro) + S3 Versionado</td>
+              <td>Desacopla los datos del cómputo y conserva versiones respaldadas con SHA-256.</td>
+              <td>GB-mes en EBS (16 GB total), almacenamiento en S3 (&lt;1 MB) y peticiones GET/PUT.</td>
+            </tr>
+            <tr>
+              <td><strong>Observabilidad y Permisos</strong></td>
+              <td>CloudWatch Logs + IAM Role</td>
+              <td>Centraliza logs de ambos contenedores y evita secretos estáticos en código.</td>
+              <td>GB ingeridos/almacenados en CloudWatch Logs (cubierto por <em>Always Free</em>). IAM sin costo.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="arquitectura" class="doc-sec">
+        <h2><span class="sec-num">02</span> Arquitectura Equivalente en AWS</h2>
+        <div class="diagram-box">
+          <svg viewBox="0 0 840 460" role="img" aria-label="Diagrama de arquitectura en AWS">
+            <defs>
+              <marker id="a-cy" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#38bdf8"/></marker>
+              <marker id="a-em" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#34d399"/></marker>
+              <marker id="a-vi" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#a78bfa"/></marker>
+              <marker id="a-sl" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#94a3b8"/></marker>
+            </defs>
+            <rect x="14" y="68" width="812" height="378" rx="14" fill="rgba(251,191,36,0.06)" stroke="#fbbf24" stroke-dasharray="6 4"/>
+            <text x="28" y="90" fill="#fbbf24" font-size="11" font-weight="700">AWS CLOUD (Región us-east-1)</text>
+
+            <rect x="30" y="168" width="540" height="262" rx="10" fill="rgba(56,189,248,0.08)" stroke="#38bdf8"/>
+            <text x="44" y="188" fill="#38bdf8" font-size="10.5" font-weight="700">Amazon VPC (Security Groups encadenados: sg-alb → sg-app)</text>
+
+            <rect x="46" y="266" width="242" height="148" rx="8" fill="rgba(15,23,42,0.55)" stroke="#34d399" stroke-dasharray="4 3"/>
+            <text x="58" y="284" fill="#34d399" font-size="9.5" font-weight="700">AZ-a (us-east-1a)</text>
+
+            <rect x="310" y="266" width="242" height="148" rx="8" fill="rgba(15,23,42,0.55)" stroke="#34d399" stroke-dasharray="4 3"/>
+            <text x="322" y="284" fill="#34d399" font-size="9.5" font-weight="700">AZ-b (us-east-1b)</text>
+
+            <rect x="588" y="168" width="222" height="262" rx="10" fill="rgba(148,163,184,0.07)" stroke="#64748b"/>
+            <text x="602" y="188" fill="#cbd5e1" font-size="10.5" font-weight="700">Servicios Administrados</text>
+
+            <rect x="195" y="8" width="210" height="42" rx="8" fill="#1e293b" stroke="#94a3b8"/>
+            <text x="300" y="33" fill="#f8fafc" font-size="11" font-weight="700" text-anchor="middle">Operaciones / Verificador</text>
+
+            <rect x="180" y="104" width="240" height="46" rx="8" fill="rgba(56,189,248,0.18)" stroke="#38bdf8"/>
+            <text x="300" y="125" fill="#f8fafc" font-size="11" font-weight="700" text-anchor="middle">Amazon CloudFront (HTTPS)</text>
+            <text x="300" y="141" fill="#cbd5e1" font-size="9.2" text-anchor="middle">TLS gratuito *.cloudfront.net</text>
+
+            <rect x="175" y="198" width="250" height="48" rx="8" fill="rgba(251,146,60,0.2)" stroke="#fb923c"/>
+            <text x="300" y="220" fill="#f8fafc" font-size="11" font-weight="700" text-anchor="middle">Application Load Balancer (ALB)</text>
+            <text x="300" y="236" fill="#cbd5e1" font-size="9.2" text-anchor="middle">Health Check activo: GET /health</text>
+
+            <rect x="58" y="294" width="218" height="52" rx="7" fill="rgba(52,211,153,0.18)" stroke="#34d399"/>
+            <text x="167" y="316" fill="#f8fafc" font-size="10.5" font-weight="700" text-anchor="middle">EC2 #1 (t3.micro) · app1</text>
+            <text x="167" y="332" fill="#cbd5e1" font-size="9" text-anchor="middle">Docker :8080 · IAM Role · SSM</text>
+
+            <rect x="322" y="294" width="218" height="52" rx="7" fill="rgba(52,211,153,0.18)" stroke="#34d399"/>
+            <text x="431" y="316" fill="#f8fafc" font-size="10.5" font-weight="700" text-anchor="middle">EC2 #2 (t3.micro) · app2</text>
+            <text x="431" y="332" fill="#cbd5e1" font-size="9" text-anchor="middle">Docker :8080 · IAM Role · SSM</text>
+
+            <rect x="58" y="358" width="218" height="42" rx="7" fill="rgba(167,139,250,0.2)" stroke="#a78bfa"/>
+            <text x="167" y="383" fill="#f8fafc" font-size="9.5" font-weight="700" text-anchor="middle">EBS gp3 · /opt/nodoruta/data (:ro)</text>
+
+            <rect x="322" y="358" width="218" height="42" rx="7" fill="rgba(167,139,250,0.2)" stroke="#a78bfa"/>
+            <text x="431" y="383" fill="#f8fafc" font-size="9.5" font-weight="700" text-anchor="middle">EBS gp3 · /opt/nodoruta/data (:ro)</text>
+
+            <rect x="604" y="202" width="190" height="72" rx="8" fill="rgba(167,139,250,0.2)" stroke="#a78bfa"/>
+            <text x="699" y="224" fill="#f8fafc" font-size="10.5" font-weight="700" text-anchor="middle">Amazon S3 (Versionado)</text>
+            <text x="699" y="241" fill="#cbd5e1" font-size="9" text-anchor="middle">actual/pedidos.json</text>
+            <text x="699" y="256" fill="#34d399" font-size="9" text-anchor="middle">respaldos/*.json + .sha256</text>
+
+            <rect x="604" y="288" width="190" height="64" rx="8" fill="#1e293b" stroke="#94a3b8"/>
+            <text x="699" y="310" fill="#f8fafc" font-size="10.5" font-weight="700" text-anchor="middle">CloudWatch Logs</text>
+            <text x="699" y="326" fill="#cbd5e1" font-size="9" text-anchor="middle">/nodoruta/servicio (app1, app2)</text>
+            <text x="699" y="341" fill="#34d399" font-size="8.8" text-anchor="middle">Always Free: 5 GB</text>
+
+            <rect x="604" y="366" width="190" height="50" rx="8" fill="rgba(251,113,133,0.18)" stroke="#fb7185"/>
+            <text x="699" y="388" fill="#f8fafc" font-size="10.5" font-weight="700" text-anchor="middle">IAM Role: NodoRutaEC2Role</text>
+            <text x="699" y="403" fill="#cbd5e1" font-size="8.8" text-anchor="middle">Mínimo privilegio (sin claves fijas)</text>
+
+            <path d="M 300 50 L 300 102" stroke="#38bdf8" stroke-width="2" fill="none" marker-end="url(#a-cy)"/>
+            <path d="M 300 150 L 300 196" stroke="#34d399" stroke-width="2" fill="none" marker-end="url(#a-em)"/>
+            <path d="M 240 246 L 167 292" stroke="#34d399" stroke-width="1.8" fill="none" marker-end="url(#a-em)"/>
+            <path d="M 360 246 L 431 292" stroke="#34d399" stroke-width="1.8" fill="none" marker-end="url(#a-em)"/>
+            <path d="M 604 238 L 555 238 L 555 379 L 542 379" stroke="#a78bfa" stroke-width="1.6" stroke-dasharray="4 3" fill="none" marker-end="url(#a-vi)"/>
+            <path d="M 540 320 L 602 320" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4 3" fill="none" marker-end="url(#a-sl)"/>
+          </svg>
+        </div>
+      </section>
+
+      <section id="fase1" class="doc-sec">
+        <h2><span class="sec-num">03</span> Fase 1: Almacenamiento S3, IAM y Security Groups</h2>
+        <h3>1.1 Crear bucket S3 con versionado y subir respaldo inicial</h3>
+        <p>Sustituye <code class="inline">&lt;tu-equipo&gt;</code> por un identificador único en minúsculas:</p>
+        <div class="code-wrap"><div class="code-head"><span>bash</span><button class="copy-btn" type="button" onclick="copyCode(this)">Copiar</button></div><pre><code>aws s3api create-bucket --bucket nodoruta-datos-&lt;tu-equipo&gt; --region us-east-1
+aws s3api put-bucket-versioning --bucket nodoruta-datos-&lt;tu-equipo&gt; --versioning-configuration Status=Enabled
+
+# Preparar datos y respaldo SHA-256 desde tu equipo local
+python scripts/datos.py preparar
+python scripts/datos.py respaldar
+
+# Subir copia activa y carpeta de respaldos a S3
+aws s3 cp data/pedidos.json s3://nodoruta-datos-&lt;tu-equipo&gt;/actual/pedidos.json
+aws s3 sync respaldos/ s3://nodoruta-datos-&lt;tu-equipo&gt;/respaldos/</code></pre></div>
+
+        <h3>1.2 Política IAM de Mínimo Privilegio (<code class="inline">NodoRutaEC2Role</code>)</h3>
+        <p>Crea un rol IAM para EC2 (Instance Profile) con esta política para evitar guardar credenciales en archivos <code class="inline">.env</code> o imágenes Docker:</p>
+        <div class="code-wrap"><div class="code-head"><span>json</span><button class="copy-btn" type="button" onclick="copyCode(this)">Copiar</button></div><pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: [&quot;s3:GetObject&quot;, &quot;s3:PutObject&quot;, &quot;s3:ListBucket&quot;],
+      &quot;Resource&quot;: [
+        &quot;arn:aws:s3:::nodoruta-datos-&lt;tu-equipo&gt;&quot;,
+        &quot;arn:aws:s3:::nodoruta-datos-&lt;tu-equipo&gt;/*&quot;
+      ]
+    },
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: [&quot;logs:CreateLogGroup&quot;, &quot;logs:CreateLogStream&quot;, &quot;logs:PutLogEvents&quot;],
+      &quot;Resource&quot;: &quot;arn:aws:logs:*:*:log-group:/nodoruta/servicio:*&quot;
+    }
+  ]
+}</code></pre></div>
+
+        <h3>1.3 Reglas de Security Groups</h3>
+        <ul class="clean">
+          <li><strong><code class="inline">sg-alb</code>:</strong> Entrada TCP <code class="inline">80</code> y <code class="inline">443</code> desde <code class="inline">0.0.0.0/0</code>.</li>
+          <li><strong><code class="inline">sg-app</code>:</strong> Entrada TCP <code class="inline">8080</code> únicamente con origen <code class="inline">sg-alb</code>. No abrir puerto SSH (<code class="inline">22</code>); administrar las instancias mediante <strong>AWS Systems Manager (Session Manager)</strong>.</li>
+        </ul>
+      </section>
+
+      <section id="fase2" class="doc-sec">
+        <h2><span class="sec-num">04</span> Fase 2: Despliegue de las Dos Instancias (<code class="inline">app1</code> y <code class="inline">app2</code>)</h2>
+        <p>Lanza <strong>2 instancias EC2 <code class="inline">t3.micro</code></strong> (Amazon Linux 2023, disco raíz EBS <code class="inline">gp3</code> de 8 GB) ubicadas en <code class="inline">us-east-1a</code> y <code class="inline">us-east-1b</code>, con <code class="inline">sg-app</code> y el perfil IAM <code class="inline">NodoRutaEC2Role</code>.</p>
+        <p>Copia <code class="inline">app.py</code> y <code class="inline">Dockerfile</code> en <code class="inline">/opt/nodoruta/app</code> de cada instancia y ejecuta (cambiando <code class="inline">app1</code> por <code class="inline">app2</code> en la segunda EC2):</p>
+        <div class="code-wrap"><div class="code-head"><span>bash</span><button class="copy-btn" type="button" onclick="copyCode(this)">Copiar</button></div><pre><code># 1. Instalar e iniciar Docker
+sudo dnf update -y &amp;&amp; sudo dnf install -y docker
+sudo systemctl enable --now docker
+
+# 2. Descargar datos desde S3 hacia almacenamiento persistente externo
+sudo mkdir -p /opt/nodoruta/data /opt/nodoruta/app
+sudo aws s3 cp s3://nodoruta-datos-&lt;tu-equipo&gt;/actual/pedidos.json /opt/nodoruta/data/pedidos.json
+
+# 3. Construir la imagen Docker
+cd /opt/nodoruta/app
+sudo docker build -t nodoruta-consulta:1.0 .
+
+# 4. Ejecutar contenedor en modo solo lectura (:ro) con envío de logs a CloudWatch
+# Verifica en app.py/Dockerfile la variable de entorno exacta del ID (ej. INSTANCE_ID)
+sudo docker run -d \
+  --name app1 \
+  --restart unless-stopped \
+  -p 8080:8080 \
+  -e INSTANCE_ID=app1 \
+  -v /opt/nodoruta/data:/app/data:ro \
+  --log-driver=awslogs \
+  --log-opt awslogs-region=us-east-1 \
+  --log-opt awslogs-group=/nodoruta/servicio \
+  --log-opt awslogs-create-group=true \
+  --log-opt awslogs-stream=app1 \
+  nodoruta-consulta:1.0</code></pre></div>
+      </section>
+
+      <section id="fase3" class="doc-sec">
+        <h2><span class="sec-num">05</span> Fase 3: Balanceo Multi-AZ (ALB) y HTTPS (CloudFront)</h2>
+        <ol class="clean">
+          <li><strong>Target Group (<code class="inline">tg-nodoruta</code>):</strong> Tipo <em>Instances</em>, protocolo <code class="inline">HTTP</code>, puerto <code class="inline">8080</code>. Configura el <strong>Health Check activo</strong> en la ruta <code class="inline">/health</code>, código esperado <code class="inline">200</code>, intervalo <code class="inline">10s</code>, umbral saludable <code class="inline">2</code> y no saludable <code class="inline">2</code>. Registra ambas EC2.</li>
+          <li><strong>Application Load Balancer (<code class="inline">alb-nodoruta</code>):</strong> Esquema <em>Internet-facing</em>, subredes públicas en <code class="inline">us-east-1a</code> y <code class="inline">us-east-1b</code>, Security Group <code class="inline">sg-alb</code>, listener <code class="inline">HTTP:80</code> hacia <code class="inline">tg-nodoruta</code>.</li>
+          <li><strong>Distribución CloudFront:</strong> Origen apuntando al DNS público del ALB, política de origen <code class="inline">HTTP only</code>, política de espectador <code class="inline">Redirect HTTP to HTTPS</code> y política de caché <code class="inline">CachingDisabled</code> para que las consultas a <code class="inline">/pedidos</code> y <code class="inline">/health</code> lleguen siempre al backend.</li>
+        </ol>
+      </section>
+
+      <section id="fase4" class="doc-sec">
+        <h2><span class="sec-num">06</span> Fase 4: Pruebas (I01–I06), Plan B y Limpieza</h2>
+        <h3>Ejecución de pruebas contra el punto de acceso HTTPS</h3>
+        <div class="code-wrap"><div class="code-head"><span>bash</span><button class="copy-btn" type="button" onclick="copyCode(this)">Copiar</button></div><pre><code># I01: Verificar distribución entre app1 y app2 vía CloudFront HTTPS
+python scripts/verificar_servicio.py https://&lt;id-distribucion&gt;.cloudfront.net/pedidos --esperadas app1,app2 --salida evidencias/aws_I01.json
+
+# I02: Detener app1 en EC2-1 (sudo docker stop app1), esperar que ALB marque Unhealthy y probar:
+python scripts/verificar_servicio.py https://&lt;id-distribucion&gt;.cloudfront.net/pedidos --esperadas app2 --salida evidencias/aws_I02.json
+
+# I05: Restaurar respaldo validando SHA-256 y sincronizar hacia S3 y ambas EC2
+python scripts/datos.py restaurar --respaldo respaldos/ARCHIVO.json
+aws s3 cp data/pedidos.json s3://nodoruta-datos-&lt;tu-equipo&gt;/actual/pedidos.json</code></pre></div>
+
+        <div class="callout">
+          <strong>Plan B (Si la cuenta educativa restringe ALB o CloudFront)</strong>
+          Si los permisos de la cuenta educativa bloquean la creación de balanceadores o distribuciones CDN, ejecuta la demostración completa en el entorno local (<code class="inline">infra_local.html</code>) y presenta esta arquitectura como diseño documentado de nube, tal como autoriza la ficha del reto.
+        </div>
+
+        <div class="callout warn">
+          <strong>Limpieza obligatoria al finalizar las pruebas</strong>
+          Para evitar consumir horas o créditos en reposo: deshabilita y elimina la distribución CloudFront, elimina el ALB y el Target Group, termina (<em>Terminate</em>) las 2 instancias EC2, vacía y elimina el bucket S3, y borra el Log Group <code class="inline">/nodoruta/servicio</code> en CloudWatch.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  }
+  function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = 'Copiado ✓';
+      setTimeout(() => { btn.textContent = orig; }, 1600);
+    });
+  }
+</script>
+</body>
+</html>
