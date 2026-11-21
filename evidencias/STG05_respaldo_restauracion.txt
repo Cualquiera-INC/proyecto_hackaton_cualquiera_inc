@@ -1,0 +1,25 @@
+STG05 - Respaldo, daño y restauración con PostgreSQL (staging)
+Fecha: 2026-11-21, ~11:14 hora local (UTC-5). Windows 11 + Docker Desktop. Stack en stg-v4.
+Salida de consola, copiada tal cual:
+
+> python scripts/datos.py respaldar
+Respaldo creado: respaldos/20261121_111358_661241.dump
+
+> python scripts/datos.py simular-error
+Tabla pedidos eliminada. /health debe devolver 503.
+Respaldo más reciente: respaldos/20261121_160929_auto.dump
+(Nota: en esta corrida el respaldo manual se nombró en hora local y el automático en UTC; por eso el
+"más reciente" no era el último. Corregido después: los dos usan UTC.)
+
+> curl http://127.0.0.1:8080/health
+{"estado": "error_datos", "instancia": "app1", "version_app": "stg-v4"} [HTTP 503]
+
+> python scripts/datos.py restaurar --respaldo respaldos/20261121_111358_661241.dump
+Datos restaurados: version=datos-v1, pedidos=6. Verifique /health y /pedidos.
+restauración en 0,60 s   (medido con Get-Date alrededor del comando)
+
+> curl http://127.0.0.1:8080/health
+{"estado": "ok", "instancia": "app1", "version_app": "stg-v4", "version_datos": "datos-v1", "servicio_datos": {"instancia": "pedidos1", "version_app": "stg-v4"}} [HTTP 200]
+
+> python scripts/datos.py verificar
+version=datos-v1 pedidos=6

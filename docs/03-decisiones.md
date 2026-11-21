@@ -38,11 +38,22 @@ Se habían propuesto en el encuentro 1 (3 microservicios + PostgreSQL). Se desca
 
 **Se reconsideran si** los pedidos pasan a modificarse a cada rato desde muchos puntos. Ahí sí hace falta una base de datos.
 
+**Actualización:** el equipo los reabrió para la rama `staging`; ver D12.
+
 ## D10 · Observabilidad sin herramientas pesadas 🟢
 `instancia` y `version_app` en cada respuesta, el log de NGINX con el upstream y el tiempo, los healthchecks y los scripts `verificar_servicio.py` y `monitorear.py` como evidencia. En AWS: CloudWatch Logs y las métricas del ALB. Descartados: Prometheus y Grafana (fuera de alcance).
 
 ## D11 · Interfaz web de solo lectura en React + Vite 🟢 (PR #5, Silvia)
 Una interfaz para que operaciones consulte los pedidos y el estado sin leer JSON. Es solo lectura y no cambia la API. Su CI está en GitHub Actions. Integrada al stack oficial: la imagen del proxy (`despliegue/Dockerfile.proxy`) la construye dentro de Docker y la sirve en `/`. Por eso el JSON de bienvenida de la app (`/`) ya no se ve a través del proxy; la API sigue en `/pedidos` y `/health`. En AWS se serviría desde S3 detrás de CloudFront.
+
+## D12 · Microservicio de pedidos + PostgreSQL en staging 🟡 (21-11, decisión del equipo)
+Se reabre D9 en la rama `staging` (preproducción, con destino a un servidor en AWS). Motivo: pasar de datos fijos en un JSON a una base que pueda recibir cambios desde varios puntos, que es justo la condición que D9 dejó abierta.
+- **Diseño mínimo:** un solo microservicio nuevo (`servicio-pedidos`, 2 réplicas) entre las apps y PostgreSQL. Las apps mantienen el contrato público (`/pedidos`, `/health`), así que la interfaz, los scripts de prueba y el despliegue escalonado siguen funcionando.
+- **`app.py`:** con `PEDIDOS_URL` pide los datos por HTTP; sin ella, lee el JSON como antes. `master` no se rompe.
+- **Seguridad:** red de datos `internal` sin salida a internet; PostgreSQL sin puertos publicados; contraseña como Docker secret fuera del repositorio; conexión de solo lectura con `statement_timeout`.
+- **Costo:** $0 en local. En AWS, PostgreSQL en la misma EC2 en vez de RDS (ver [07-staging-microservicios-postgres.md](07-staging-microservicios-postgres.md)).
+- **Tolerancia a fallos de la base:** una réplica en caliente (streaming replication) y una copia en memoria en el microservicio, que lee la base en segundo plano. Medido: caída del primario y caída de las dos bases con 0 errores (STG08, STG12, STG14).
+- **Lo que empeora y se reconoce:** hay más piezas que operar, las escrituras dependen del primario (sin promoción automática) y primario y réplica comparten máquina.
 
 ## Pendientes medidos (mejoras para el siguiente PR)
 

@@ -4,6 +4,8 @@ Reto 16 de la hackatón EstudIA (nube e infraestructura, nivel intermedio). Caso
 
 Dos instancias de la app detrás de NGINX, datos fuera de los contenedores, respaldo automático con verificación de integridad y despliegue de versiones nuevas sin caída, con rollback. Costo $0 en local; en preparación en AWS (plan gratuito).
 
+> **Rama `staging`:** los datos viven en **PostgreSQL** y las apps los piden a un microservicio HTTP (`servicios/pedidos/`). Ver [docs/07-staging-microservicios-postgres.md](docs/07-staging-microservicios-postgres.md).
+
 | Quiero… | Ir a |
 |---|---|
 | Entender el reto y lo que pide | [docs/01-reto-y-requisitos.md](docs/01-reto-y-requisitos.md) |
@@ -20,8 +22,8 @@ Dos instancias de la app detrás de NGINX, datos fuera de los contenedores, resp
 Requisitos: Python 3 y Docker **iniciado** (Docker Desktop u OrbStack). En Windows usa `py` si ese es tu comando; en Linux, `python3`.
 
 ```text
-python scripts/datos.py preparar                       # solo la primera vez: crea data/pedidos.json
-python scripts/desplegar.py desplegar --version v1     # levanta app1, app2, proxy y respaldo
+python scripts/datos.py preparar                       # solo la primera vez: pide la contraseña de la base
+python scripts/desplegar.py desplegar --version v1     # levanta postgres, pedidos1/2, app1/2, proxy y respaldo
 python scripts/desplegar.py estado                     # versión actual e historial
 ```
 
@@ -36,7 +38,7 @@ El primer despliegue tarda un poco más porque construye la interfaz dentro de D
 | Ver contenedores / registros | `docker compose -f despliegue/compose.yaml ps` / `logs --tail 50` |
 | Apagar todo | `docker compose -f despliegue/compose.yaml down` |
 
-`data/`, `respaldos/` y `evidencias/` se conservan al apagar. Si el puerto 8080 está ocupado, define `NODO_PUERTO` antes del primer despliegue (ver [despliegue/README.md](despliegue/README.md)).
+La base (volumen `pgdata`), `respaldos/` y `evidencias/` se conservan al apagar; `down -v` borra la base. Si el puerto 8080 está ocupado, define `NODO_PUERTO` antes del primer despliegue (ver [despliegue/README.md](despliegue/README.md)).
 
 ## Pruebas
 
@@ -52,8 +54,9 @@ docker compose -f despliegue/compose.yaml start app1
 # I04 recrear sin perder datos
 docker compose -f despliegue/compose.yaml up -d --force-recreate --no-deps app1
 # I05 datos alterados -> restaurar
+python scripts/datos.py respaldar
 python scripts/datos.py simular-error
-python scripts/datos.py restaurar --respaldo respaldos/<ARCHIVO>.json
+python scripts/datos.py restaurar --respaldo respaldos/<ARCHIVO>.dump
 # I07 despliegue sin caída (en otra terminal, mientras corre el monitor)
 python scripts/monitorear.py --segundos 120 --salida evidencias/I07_<fecha>.json
 ```
@@ -65,6 +68,8 @@ python scripts/monitorear.py --segundos 120 --salida evidencias/I07_<fecha>.json
 ```
 app.py  Dockerfile  pedidos.json   app del reto (cambios mínimos) y datos originales
 despliegue/                        stack oficial: compose.yaml + nginx.conf + Dockerfile.proxy (interfaz)
+servicios/pedidos/                 microservicio HTTP de pedidos sobre PostgreSQL (staging)
+basedatos/init/                    esquema y datos iniciales de PostgreSQL (staging)
 scripts/                           desplegar, datos, verificar_servicio, monitorear, ejecutar_local
 evidencias/                        resultados de las pruebas (el prefijo es el ID)
 docs/                              documentación del equipo

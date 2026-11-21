@@ -11,7 +11,7 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 - **Local: hecho y probado.** El stack oficial es `despliegue/` (app1, app2, proxy NGINX con la interfaz web y respaldo) y se opera con `scripts/desplegar.py`. Evidencias I01–I08 en `EVIDENCIAS.md`.
 - **AWS (plan gratuito para cuentas nuevas): en preparación.** Diseño: EC2 ×2 en dos zonas + ALB + S3 con versiones (`docs/02-arquitectura.md`). Todavía no se ha creado ningún recurso.
 - **Mejoras pendientes medidas:** quitar `http_503` de `proxy_next_upstream`, fijar `python:3.12-slim`, `server_tokens off` y endurecer los contenedores (`docs/03-decisiones.md`).
-- Descartado por ahora (D9): microservicios y PostgreSQL. No proponerlos de nuevo sin un motivo nuevo.
+- **Staging (rama `staging`, D12):** el equipo reabrió D9. `despliegue/` suma PostgreSQL primario + réplica en caliente (`basedatos/`, alias de lectura `pg-lectura`) y el microservicio `servicios/pedidos/` (pedidos1/pedidos2, alias de red `pedidos`), que lee la base en segundo plano cada 1 s y responde desde memoria; las apps lo llaman por HTTP con `PEDIDOS_URL`. Nunca usar nombres de contenedor individuales entre servicios: en la red `internal` resolver un nombre inexistente tarda ~8 s (STG02/STG09). Contraseña en `despliegue/secretos/db_password.txt` (Docker secret, ignorada por git). Destino: un servidor en AWS. Pruebas STG01–STG14 en `EVIDENCIAS.md`; detalle en `docs/07-staging-microservicios-postgres.md`. En `master` sigue el stack JSON.
 
 ## Mapa
 
@@ -27,7 +27,8 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 ## Comandos
 
 ```text
-python scripts/datos.py preparar
+python scripts/datos.py preparar        # staging: crea el secreto de la base (NODO_DB_PASSWORD o pregunta)
+python scripts/datos.py respaldar | verificar | simular-error | restaurar --respaldo respaldos/<x>.dump
 python scripts/desplegar.py desplegar --version v1
 python scripts/desplegar.py rollback
 python scripts/desplegar.py estado

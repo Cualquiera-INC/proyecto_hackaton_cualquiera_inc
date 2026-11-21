@@ -1,0 +1,1063 @@
+{
+  "url": "http://127.0.0.1:8080/pedidos",
+  "resultado": "CON_ERRORES",
+  "consultas": 116,
+  "errores": 2,
+  "duracion_s": 45.1,
+  "respuestas_por_version": {
+    "stg-v6": 114
+  },
+  "respuestas_por_instancia": {
+    "app1@stg-v6": 58,
+    "app2@stg-v6": 56
+  },
+  "latencia_ms": {
+    "max": 2031.0,
+    "p95": 2016.0,
+    "mediana": 16.0
+  },
+  "primer_error": "2026-11-21T11:33:18.412",
+  "ultimo_error": "2026-11-21T11:33:23.642",
+  "detalle": [
+    {
+      "consulta": 1,
+      "fecha": "2026-11-21T11:32:53.800",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 2,
+      "fecha": "2026-11-21T11:32:53.914",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 32.0
+    },
+    {
+      "consulta": 3,
+      "fecha": "2026-11-21T11:32:54.036",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 4,
+      "fecha": "2026-11-21T11:32:54.157",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 5,
+      "fecha": "2026-11-21T11:32:54.273",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 6,
+      "fecha": "2026-11-21T11:32:54.405",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 7,
+      "fecha": "2026-11-21T11:32:54.528",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 8,
+      "fecha": "2026-11-21T11:32:54.651",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 9,
+      "fecha": "2026-11-21T11:32:54.759",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 10,
+      "fecha": "2026-11-21T11:32:54.888",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 11,
+      "fecha": "2026-11-21T11:32:55.021",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 12,
+      "fecha": "2026-11-21T11:32:55.151",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 13,
+      "fecha": "2026-11-21T11:32:55.269",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 14,
+      "fecha": "2026-11-21T11:32:55.388",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 15,
+      "fecha": "2026-11-21T11:32:55.509",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 16,
+      "fecha": "2026-11-21T11:32:55.634",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 17,
+      "fecha": "2026-11-21T11:32:55.751",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 18,
+      "fecha": "2026-11-21T11:32:55.869",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 19,
+      "fecha": "2026-11-21T11:32:55.986",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 20,
+      "fecha": "2026-11-21T11:32:56.108",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 21,
+      "fecha": "2026-11-21T11:32:56.218",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 22,
+      "fecha": "2026-11-21T11:32:56.335",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 23,
+      "fecha": "2026-11-21T11:32:56.453",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 24,
+      "fecha": "2026-11-21T11:32:56.586",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 25,
+      "fecha": "2026-11-21T11:32:56.703",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 26,
+      "fecha": "2026-11-21T11:32:56.835",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 27,
+      "fecha": "2026-11-21T11:32:56.945",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 28,
+      "fecha": "2026-11-21T11:32:57.053",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 29,
+      "fecha": "2026-11-21T11:32:57.172",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2031.0
+    },
+    {
+      "consulta": 30,
+      "fecha": "2026-11-21T11:32:59.304",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2031.0
+    },
+    {
+      "consulta": 31,
+      "fecha": "2026-11-21T11:33:01.434",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2015.0
+    },
+    {
+      "consulta": 32,
+      "fecha": "2026-11-21T11:33:03.564",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2000.0
+    },
+    {
+      "consulta": 33,
+      "fecha": "2026-11-21T11:33:05.672",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2016.0
+    },
+    {
+      "consulta": 34,
+      "fecha": "2026-11-21T11:33:07.798",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2016.0
+    },
+    {
+      "consulta": 35,
+      "fecha": "2026-11-21T11:33:09.920",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2016.0
+    },
+    {
+      "consulta": 36,
+      "fecha": "2026-11-21T11:33:12.047",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2016.0
+    },
+    {
+      "consulta": 37,
+      "fecha": "2026-11-21T11:33:14.169",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2016.0
+    },
+    {
+      "consulta": 38,
+      "fecha": "2026-11-21T11:33:16.294",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2016.0
+    },
+    {
+      "consulta": 39,
+      "fecha": "2026-11-21T11:33:18.412",
+      "http": 504,
+      "error": "HTTP Error 504: Gateway Time-out",
+      "milisegundos": 3000.0
+    },
+    {
+      "consulta": 40,
+      "fecha": "2026-11-21T11:33:21.519",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 2015.0
+    },
+    {
+      "consulta": 41,
+      "fecha": "2026-11-21T11:33:23.642",
+      "http": 504,
+      "error": "HTTP Error 504: Gateway Time-out",
+      "milisegundos": 3015.0
+    },
+    {
+      "consulta": 42,
+      "fecha": "2026-11-21T11:33:26.764",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 1359.0
+    },
+    {
+      "consulta": 43,
+      "fecha": "2026-11-21T11:33:28.228",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 1656.0
+    },
+    {
+      "consulta": 44,
+      "fecha": "2026-11-21T11:33:29.977",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 45,
+      "fecha": "2026-11-21T11:33:30.095",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 46,
+      "fecha": "2026-11-21T11:33:30.203",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 47,
+      "fecha": "2026-11-21T11:33:30.328",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 48,
+      "fecha": "2026-11-21T11:33:30.449",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 49,
+      "fecha": "2026-11-21T11:33:30.568",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 50,
+      "fecha": "2026-11-21T11:33:30.676",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 51,
+      "fecha": "2026-11-21T11:33:30.803",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 52,
+      "fecha": "2026-11-21T11:33:30.937",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 53,
+      "fecha": "2026-11-21T11:33:31.062",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 54,
+      "fecha": "2026-11-21T11:33:31.193",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 55,
+      "fecha": "2026-11-21T11:33:31.316",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 56,
+      "fecha": "2026-11-21T11:33:31.435",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 57,
+      "fecha": "2026-11-21T11:33:31.570",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 58,
+      "fecha": "2026-11-21T11:33:31.705",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 59,
+      "fecha": "2026-11-21T11:33:31.813",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 60,
+      "fecha": "2026-11-21T11:33:31.939",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 61,
+      "fecha": "2026-11-21T11:33:32.070",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 62,
+      "fecha": "2026-11-21T11:33:32.203",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 63,
+      "fecha": "2026-11-21T11:33:32.320",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 64,
+      "fecha": "2026-11-21T11:33:32.439",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 65,
+      "fecha": "2026-11-21T11:33:32.548",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 66,
+      "fecha": "2026-11-21T11:33:32.669",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 67,
+      "fecha": "2026-11-21T11:33:32.790",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 32.0
+    },
+    {
+      "consulta": 68,
+      "fecha": "2026-11-21T11:33:32.922",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 69,
+      "fecha": "2026-11-21T11:33:33.052",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 70,
+      "fecha": "2026-11-21T11:33:33.169",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 71,
+      "fecha": "2026-11-21T11:33:33.276",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 72,
+      "fecha": "2026-11-21T11:33:33.400",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 73,
+      "fecha": "2026-11-21T11:33:33.518",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 74,
+      "fecha": "2026-11-21T11:33:33.635",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 75,
+      "fecha": "2026-11-21T11:33:33.745",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 32.0
+    },
+    {
+      "consulta": 76,
+      "fecha": "2026-11-21T11:33:33.871",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 32.0
+    },
+    {
+      "consulta": 77,
+      "fecha": "2026-11-21T11:33:33.994",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 78,
+      "fecha": "2026-11-21T11:33:34.103",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 79,
+      "fecha": "2026-11-21T11:33:34.211",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 80,
+      "fecha": "2026-11-21T11:33:34.330",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 81,
+      "fecha": "2026-11-21T11:33:34.470",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 82,
+      "fecha": "2026-11-21T11:33:34.603",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 83,
+      "fecha": "2026-11-21T11:33:34.711",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 84,
+      "fecha": "2026-11-21T11:33:34.835",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 85,
+      "fecha": "2026-11-21T11:33:34.952",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 86,
+      "fecha": "2026-11-21T11:33:35.074",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 87,
+      "fecha": "2026-11-21T11:33:35.204",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 88,
+      "fecha": "2026-11-21T11:33:35.333",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 89,
+      "fecha": "2026-11-21T11:33:35.452",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 90,
+      "fecha": "2026-11-21T11:33:35.583",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 91,
+      "fecha": "2026-11-21T11:33:35.703",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 92,
+      "fecha": "2026-11-21T11:33:35.835",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 93,
+      "fecha": "2026-11-21T11:33:35.967",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 94,
+      "fecha": "2026-11-21T11:33:36.084",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 95,
+      "fecha": "2026-11-21T11:33:36.207",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 96,
+      "fecha": "2026-11-21T11:33:36.337",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 97,
+      "fecha": "2026-11-21T11:33:36.458",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 98,
+      "fecha": "2026-11-21T11:33:36.577",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 99,
+      "fecha": "2026-11-21T11:33:36.688",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 100,
+      "fecha": "2026-11-21T11:33:36.819",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 101,
+      "fecha": "2026-11-21T11:33:36.941",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 102,
+      "fecha": "2026-11-21T11:33:37.068",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 103,
+      "fecha": "2026-11-21T11:33:37.186",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 104,
+      "fecha": "2026-11-21T11:33:37.305",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 105,
+      "fecha": "2026-11-21T11:33:37.436",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 15.0
+    },
+    {
+      "consulta": 106,
+      "fecha": "2026-11-21T11:33:37.557",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 107,
+      "fecha": "2026-11-21T11:33:37.665",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 32.0
+    },
+    {
+      "consulta": 108,
+      "fecha": "2026-11-21T11:33:37.786",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 109,
+      "fecha": "2026-11-21T11:33:37.906",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 32.0
+    },
+    {
+      "consulta": 110,
+      "fecha": "2026-11-21T11:33:38.037",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 32.0
+    },
+    {
+      "consulta": 111,
+      "fecha": "2026-11-21T11:33:38.168",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 31.0
+    },
+    {
+      "consulta": 112,
+      "fecha": "2026-11-21T11:33:38.300",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 113,
+      "fecha": "2026-11-21T11:33:38.422",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 16.0
+    },
+    {
+      "consulta": 114,
+      "fecha": "2026-11-21T11:33:38.549",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 115,
+      "fecha": "2026-11-21T11:33:38.657",
+      "http": 200,
+      "instancia": "app1",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 32.0
+    },
+    {
+      "consulta": 116,
+      "fecha": "2026-11-21T11:33:38.785",
+      "http": 200,
+      "instancia": "app2",
+      "version_app": "stg-v6",
+      "version_datos": "datos-v1",
+      "milisegundos": 32.0
+    }
+  ]
+}
