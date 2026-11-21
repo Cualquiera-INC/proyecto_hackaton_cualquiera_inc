@@ -1,0 +1,6 @@
+# Finales de línea LF para todo el texto (el equipo usa macOS, Windows y Linux;
+# los archivos que se montan en contenedores deben ser LF).
+* text=auto eol=lf
+*.pdf binary
+*.png binary
+*.docx binary

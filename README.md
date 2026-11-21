@@ -1,49 +1,81 @@
-# Nodo Ruta — solución local (MVP)
+# Nodo Ruta — despliegue y recuperación de un servicio de consulta
 
-Caso ficticio de la hackatón EstudIA. Dos instancias de la app detrás de NGINX, datos fuera del contenedor y respaldo automático, todo con Docker Compose y **costo $0**.
-Diagrama: [docs/diagrama_solucion_local.html](docs/diagrama_solucion_local.html) · Evidencias: [EVIDENCIAS.md](EVIDENCIAS.md) · Nube (solo diseño): [docs/nube-diseno.md](docs/nube-diseno.md)
+Reto 16 de la hackatón EstudIA (nube e infraestructura, nivel intermedio). Caso **ficticio** con datos sintéticos.
 
-| Servicio | Qué hace |
+Dos instancias de la app detrás de NGINX, datos fuera de los contenedores, respaldo automático con verificación de integridad y despliegue de versiones nuevas sin caída, con rollback. Costo $0 en local; en preparación en AWS (plan gratuito).
+
+| Quiero… | Ir a |
 |---|---|
-| `proxy` | NGINX, único puerto publicado: `127.0.0.1:8080`. Reparte entre app1 y app2 y reintenta en la otra si una falla (detección pasiva). |
-| `app1`, `app2` | `app.py`, la misma imagen. Leen `data/pedidos.json` en solo lectura. El campo `instancia` dice quién respondió. |
-| `respaldo` | Cada 5 min ejecuta `scripts/datos.py respaldar`, que valida el JSON y guarda la copia y su SHA-256 en `respaldos/`. |
+| Entender el reto y lo que pide | [docs/01-reto-y-requisitos.md](docs/01-reto-y-requisitos.md) |
+| Ver la arquitectura (local y AWS) | [docs/02-arquitectura.md](docs/02-arquitectura.md) · [diagrama visual](docs/diagrama_solucion_local.html) |
+| Saber por qué se decidió cada cosa | [docs/03-decisiones.md](docs/03-decisiones.md) |
+| Seguridad y costos | [docs/04-seguridad-y-costos.md](docs/04-seguridad-y-costos.md) |
+| Entender cómo funciona cada pieza | [docs/05-como-funciona-la-app.md](docs/05-como-funciona-la-app.md) |
+| Ver los resultados de las pruebas | [EVIDENCIAS.md](EVIDENCIAS.md) |
+| Detalle del despliegue y el rollback | [despliegue/README.md](despliegue/README.md) |
+| Material original del reto | [recursos-reto/](recursos-reto/) |
 
-## Recrear el despliegue
-Requisitos: Python 3 y Docker Desktop **iniciado**. En Windows, `py` en lugar de `python` si es tu comando.
+## Levantar el servicio
+
+Requisitos: Python 3 y Docker **iniciado** (Docker Desktop u OrbStack). En Windows usa `py` si ese es tu comando; en Linux, `python3`.
+
 ```text
-python scripts/datos.py preparar
-docker compose up -d --build
-docker compose ps
+python scripts/datos.py preparar                       # solo la primera vez: crea data/pedidos.json
+python scripts/desplegar.py desplegar --version v1     # levanta app1, app2, proxy y respaldo
+python scripts/desplegar.py estado                     # versión actual e historial
 ```
-Espera a que app1 y app2 aparezcan como `healthy`.
 
-## Pruebas (guardan evidencia en `evidencias/`; usa un nombre de salida nuevo en cada repetición)
+Abre http://127.0.0.1:8080/health o http://127.0.0.1:8080/pedidos. El campo `instancia` va alternando entre `app1` y `app2`.
+
+Interfaz web (opcional): con el servicio arriba, entra a `frontend-nodo/` y ejecuta `npm install` y luego `npm run dev` (ver [frontend-nodo/README.md](frontend-nodo/README.md)).
+
+| Acción | Comando |
+|---|---|
+| Publicar una versión nueva (sin caída) | `python scripts/desplegar.py desplegar --version v2` |
+| Volver a la versión anterior | `python scripts/desplegar.py rollback` |
+| Ver contenedores / registros | `docker compose -f despliegue/compose.yaml ps` / `logs --tail 50` |
+| Apagar todo | `docker compose -f despliegue/compose.yaml down` |
+
+`data/`, `respaldos/` y `evidencias/` se conservan al apagar. Si el puerto 8080 está ocupado, define `NODO_PUERTO` antes del primer despliegue (ver [despliegue/README.md](despliegue/README.md)).
+
+## Pruebas
+
+Cada prueba guarda su evidencia en `evidencias/`. Usa un nombre nuevo en cada repetición: los scripts no sobrescriben.
+
 ```text
 # I01 acceso común
-python scripts/verificar_servicio.py --esperadas app1,app2 --salida evidencias/I01_inicio.json
-# I02 caída de app1
-docker compose stop app1
-python scripts/verificar_servicio.py --esperadas app2 --salida evidencias/I02_fallo_app1.json
-# I03 recuperación
-docker compose start app1
-python scripts/verificar_servicio.py --esperadas app1,app2 --salida evidencias/I03_recupera_app1.json
+python scripts/verificar_servicio.py --esperadas app1,app2 --salida evidencias/I01_<fecha>.json
+# I02 caída de app1  /  I03 recuperación
+docker compose -f despliegue/compose.yaml stop app1
+python scripts/verificar_servicio.py --esperadas app2 --salida evidencias/I02_<fecha>.json
+docker compose -f despliegue/compose.yaml start app1
 # I04 recrear sin perder datos
-docker compose up -d --force-recreate app1
-python scripts/verificar_servicio.py --esperadas app1,app2 --salida evidencias/I04_recrear_app1.json
-# I05 datos alterados -> 503 -> restaurar
+docker compose -f despliegue/compose.yaml up -d --force-recreate --no-deps app1
+# I05 datos alterados -> restaurar
 python scripts/datos.py simular-error
-python scripts/verificar_servicio.py --peticiones 3 --salida evidencias/I05a_datos_alterados.json
-python scripts/datos.py restaurar --respaldo respaldos/ARCHIVO.json
-python scripts/verificar_servicio.py --esperadas app1,app2 --salida evidencias/I05b_restaurado.json
+python scripts/datos.py restaurar --respaldo respaldos/<ARCHIVO>.json
+# I07 despliegue sin caída (en otra terminal, mientras corre el monitor)
+python scripts/monitorear.py --segundos 120 --salida evidencias/I07_<fecha>.json
 ```
-I06: otra persona del equipo repite todo desde este README en su PC.
 
-Registros: `docker compose logs --tail 50` (el proxy muestra `upstream=` y el estado de cada petición).
-Al terminar: `docker compose down` (las carpetas `data/`, `respaldos/` y `evidencias/` se conservan).
+**I06:** otra persona del equipo repite todo desde este README en su computador y lo registra en [EVIDENCIAS.md](EVIDENCIAS.md).
 
-## Límites (no es alta disponibilidad)
-- Todo corre en un solo computador: si cae, cae el servicio, y los respaldos también viven ahí.
-- El JSON compartido es un punto único de fallo: si se corrompe, responden 503 las dos instancias (I05).
-- `restart: unless-stopped` relanza un proceso que muere, no uno *unhealthy*.
-- La app no usa secretos; `.env` está en `.gitignore` como regla para el futuro.
+## Estructura
+
+```
+app.py  Dockerfile  pedidos.json   app del reto (cambios mínimos) y datos originales
+despliegue/                        stack oficial: compose.yaml + nginx.conf
+scripts/                           desplegar, datos, verificar_servicio, monitorear, ejecutar_local
+evidencias/                        resultados de las pruebas (el prefijo es el ID)
+docs/                              documentación del equipo
+frontend-nodo/                     interfaz web React + Vite de solo lectura (ver su README)
+.github/workflows/                 CI: frontend y contenedores
+ayuda_opcional/                    configuración de referencia del reto (no oficial) + Dockerfile.proxy de la interfaz
+recursos-reto/                     ficha, guía y plantilla originales
+```
+
+## Límites (dichos con honestidad)
+
+- En local todo corre en **un solo computador**: es tolerancia a la caída de **una instancia**, no alta disponibilidad.
+- El archivo de datos es compartido: si se daña, fallan las dos instancias hasta restaurar.
+- La tolerancia a la caída de una máquina, el health check activo y los respaldos fuera del equipo son el objetivo del despliegue en AWS ([docs/02-arquitectura.md](docs/02-arquitectura.md)).
