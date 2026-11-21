@@ -1,12 +1,14 @@
 import json
 import os
 import signal
+import socket
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 DATA = Path(os.environ.get("DATA_PATH", "pedidos.json"))
-INSTANCE = os.environ.get("INSTANCE_ID", "instancia-ejemplo")
+# Sin INSTANCE_ID (p. ej. réplicas en la nube que comparten variables) se usa el hostname.
+INSTANCE = os.environ.get("INSTANCE_ID") or socket.gethostname()
 # Versión del código desplegado; la fija el build (--build-arg APP_VERSION=...).
 APP_VERSION = os.environ.get("APP_VERSION", "dev")
 

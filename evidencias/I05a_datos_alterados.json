@@ -1,0 +1,29 @@
+{
+  "url": "http://127.0.0.1:8080/pedidos",
+  "resultado": "REVISAR",
+  "instancias_observadas": [],
+  "instancias_esperadas": [],
+  "consultas": [
+    {
+      "consulta": 1,
+      "fecha_utc": "2026-11-21T13:27:21.431046+00:00",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 47.0
+    },
+    {
+      "consulta": 2,
+      "fecha_utc": "2026-11-21T13:27:21.470590+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 0.0
+    },
+    {
+      "consulta": 3,
+      "fecha_utc": "2026-11-21T13:27:21.474634+00:00",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 0.0
+    }
+  ]
+}

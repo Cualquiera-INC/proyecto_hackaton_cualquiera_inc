@@ -1,5 +1,6 @@
 __pycache__/
 *.pyc
+.env
 # Copia de trabajo y respaldos locales (se regeneran con scripts/datos.py)
 data/
 respaldos/
