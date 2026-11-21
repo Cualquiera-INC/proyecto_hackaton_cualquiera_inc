@@ -1,10 +1,12 @@
 import json
 import os
+import socket
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 DATA = Path(os.environ.get("DATA_PATH", "pedidos.json"))
-INSTANCE = os.environ.get("INSTANCE_ID", "instancia-ejemplo")
+# Sin INSTANCE_ID (p. ej. réplicas en la nube que comparten variables) se usa el hostname.
+INSTANCE = os.environ.get("INSTANCE_ID") or socket.gethostname()
 
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
