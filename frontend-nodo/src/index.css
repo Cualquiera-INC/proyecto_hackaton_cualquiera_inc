@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+:root {
+  /* Paleta del logo Nodo Ruta */
+  --navy: #0c0c1c;
+  --navy-mid: #141428;
+  --navy-lift: #1c1c36;
+  --ink: #0c0c1c;
+  --paper: #ffffff;
+  --paper-muted: rgba(255, 255, 255, 0.72);
+  --paper-faint: rgba(255, 255, 255, 0.42);
+  --line: rgba(255, 255, 255, 0.12);
+  --line-strong: rgba(255, 255, 255, 0.22);
+
+  --ok: #3dd68c;
+  --warn: #f0c24b;
+  --danger: #ff6b7a;
+  --info: #6ea8ff;
+
+  --tone-ruta: #6ea8ff;
+  --tone-entregado: #3dd68c;
+  --tone-pendiente: #f0c24b;
+  --tone-prep: #c4a5ff;
+  --tone-otro: #9aa3b5;
+
+  --sans: 'Outfit', system-ui, sans-serif;
+  --display: 'Space Grotesk', 'Outfit', sans-serif;
+  --mono: 'Space Grotesk', ui-monospace, monospace;
+
+  color-scheme: dark;
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.45;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--navy);
+  color: var(--paper);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-height: 100svh;
+  background:
+    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(110, 168, 255, 0.14), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(196, 165, 255, 0.1), transparent 50%),
+    linear-gradient(165deg, var(--navy-mid) 0%, var(--navy) 48%, #080812 100%);
+  background-attachment: fixed;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}

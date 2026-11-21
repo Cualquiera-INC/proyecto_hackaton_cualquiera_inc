@@ -1,0 +1,37 @@
+name: Contenedores Nodo Ruta
+
+on:
+  push:
+    paths:
+      - "app.py"
+      - "Dockerfile"
+      - "pedidos.json"
+      - "ayuda_opcional/**"
+      - "frontend-nodo/**"
+      - ".github/workflows/contenedores.yml"
+  pull_request:
+    paths:
+      - "app.py"
+      - "Dockerfile"
+      - "pedidos.json"
+      - "ayuda_opcional/**"
+      - "frontend-nodo/**"
+      - ".github/workflows/contenedores.yml"
+
+jobs:
+  compose-config:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Preparar datos de trabajo
+        run: |
+          mkdir -p data
+          cp pedidos.json data/pedidos.json
+
+      - name: Validar Compose
+        run: docker compose -f ayuda_opcional/compose.yaml config
+
+      - name: Construir imágenes
+        run: docker compose -f ayuda_opcional/compose.yaml build

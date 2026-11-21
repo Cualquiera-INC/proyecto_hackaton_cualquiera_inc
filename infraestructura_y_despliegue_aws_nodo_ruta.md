@@ -18,8 +18,9 @@ Propuesta reproducible para desplegar el servicio de consulta de **Nodo Ruta** e
 
 ```mermaid
 flowchart TD
-    User["Equipo Operaciones / Verificador<br/>(HTTPS)"] --> CF["Amazon CloudFront<br/>(HTTPS nativo *.cloudfront.net)<br/><i>Always Free: 1 TB / 10M req</i>"]
-    CF --> ALB["Application Load Balancer (ALB)<br/>Subredes públicas (AZ-a y AZ-b)<br/>Health Check activo: GET /health"]
+    User["Equipo Operaciones / Verificador<br/>(HTTPS · UI React)"] --> CF["Amazon CloudFront<br/>(HTTPS nativo *.cloudfront.net)<br/>UI estática + API /pedidos /health<br/><i>Always Free: 1 TB / 10M req</i>"]
+    CF -->|"/pedidos /health"| ALB["Application Load Balancer (ALB)<br/>Subredes públicas (AZ-a y AZ-b)<br/>Health Check activo: GET /health"]
+    CF -->|"UI (/, /assets/*)"| S3UI[("S3 sitio estático<br/>frontend-nodo/dist<br/>build CI GitHub Actions")]
 
     subgraph VPC ["VPC por defecto (Aislamiento por Security Groups)"]
         subgraph AZA ["Zona de Disponibilidad A"]
@@ -46,7 +47,8 @@ flowchart TD
 
 | Rol en el reto | Servicio AWS | Función y mejora frente al entorno local | Factor de consumo |
 | :--- | :--- | :--- | :--- |
-| **Acceso público y HTTPS** | **Amazon CloudFront** | Dominio `*.cloudfront.net` con TLS/HTTPS gratuito sin comprar dominio ni zonas DNS. | Transferencia de datos saliente y solicitudes HTTPS (*Always Free* hasta límite). |
+| **Acceso público y HTTPS** | **Amazon CloudFront** | Dominio `*.cloudfront.net` con TLS/HTTPS. Comportamientos: UI desde S3; `/pedidos` y `/health` al ALB. Build del front con `VITE_API_URL=` (mismo origen). | Transferencia de datos saliente y solicitudes HTTPS (*Always Free* hasta límite). |
+| **Frontend estático** | **S3 + GitHub Actions** | Artefacto `frontend-nodo/dist` del workflow `frontend.yml`; despliegue a bucket de sitio estático (o sync manual en la demo). | GB almacenados y PUT/GET. |
 | **Balanceador y Salud** | **Application Load Balancer** | Reparte tráfico en Multi-AZ y ejecuta sondeo activo `GET /health` cada 10 s. | Horas de ALB activas y LCU consumidas. |
 | **Cómputo en contenedores** | **2 × EC2 (`t3.micro`) + Docker** | Ejecutan `app1` y `app2` en zonas de disponibilidad distintas. | Horas de instancia en ejecución e IPv4 pública asociada. |
 | **Datos y Respaldos** | **EBS local (`:ro`) + Amazon S3** | Montaje en solo lectura dentro del contenedor; S3 con versionado guarda respaldos y hashes SHA-256 fuera del cómputo. | GB almacenados (EBS/S3) y solicitudes PUT/GET a S3. |

@@ -10,11 +10,11 @@ Guía reproducible para desplegar y validar el servicio de consulta de **Nodo Ru
 
 ```mermaid
 flowchart TD
-    User["Equipo Operaciones / Verificador<br/>(Navegador / curl / verificar_servicio.py)"] -->|"HTTP 127.0.0.1:8080<br/>(/, /pedidos, /health)"| NGINX
+    User["Equipo Operaciones / Verificador<br/>(Navegador React / curl / verificar_servicio.py)"] -->|"HTTP 127.0.0.1:8080<br/>(UI /, API /pedidos /health)"| NGINX
 
     subgraph Host ["Computador Anfitrión (Entorno Local · Costo $0)"]
         subgraph DockerNet ["Red Interna Docker Bridge (nodoruta-net)"]
-            NGINX["Proxy Inverso / Balanceador<br/>NGINX 1.28-alpine (Puerto 127.0.0.1:8080:80)<br/>DNS Docker (127.0.0.11) + Failover pasivo"]
+            NGINX["Proxy Inverso / Balanceador + UI<br/>NGINX 1.28-alpine (127.0.0.1:8080:80)<br/>SPA React + DNS Docker + Failover pasivo"]
             APP1["Contenedor: app1<br/>Python App (:8080)<br/>Healthcheck: GET /health"]
             APP2["Contenedor: app2<br/>Python App (:8080)<br/>Healthcheck: GET /health"]
         end
@@ -45,7 +45,8 @@ flowchart TD
 | Componente | Implementación Local | Función y Justificación |
 | :--- | :--- | :--- |
 | **Punto de acceso común** | `127.0.0.1:8080` en **NGINX** | Expone un único puerto vinculado solo a `localhost` (`127.0.0.1`), evitando exposición innecesaria en la red local. |
-| **Balanceo y Conmutación** | **NGINX (`1.28-alpine`)** | Reparte peticiones entre `app1` y `app2` usando el DNS interno de Docker (`127.0.0.11`) y reintentos pasivos (`proxy_next_upstream`) cuando una instancia deja de responder. |
+| **Frontend** | **React + Vite** (`frontend-nodo/`) | UI en español: consulta de pedidos, búsqueda por ID y estado `/health`. En contenedores se construye dentro de `Dockerfile.proxy` con `VITE_API_URL` vacío (mismo origen). En desarrollo: `npm run dev` y `VITE_API_URL=http://127.0.0.1:8080`. |
+| **Balanceo y Conmutación** | **NGINX (`1.28-alpine`)** | Sirve la SPA en `/` y reparte `/pedidos` y `/health` entre `app1` y `app2` (DNS Docker + `proxy_next_upstream`). |
 | **Instancias de Servicio** | **2 Contenedores (`app1`, `app2`)** | Ejecutan `app.py` con identidad propia (`app1` y `app2`) devuelta en el campo `instancia` del JSON de respuesta. |
 | **Salud de Contenedores** | `healthcheck` en Compose (`/health`) | Coordina el orden de arranque (`condition: service_healthy`) y reporta el estado en `docker compose ps`. *(Nota: Docker no retira backends de NGINX; eso lo hace el proxy de forma pasiva).* |
 | **Datos Externos** | `./data/pedidos.json` (`:ro`) | Montado como *bind mount* en **solo lectura (`:ro`)** fuera de la capa efímera de los contenedores; sobrevive a recreaciones. |

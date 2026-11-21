@@ -6,3 +6,6 @@ respaldos/
 evidencias/
 data/
 .git/
+frontend-nodo/node_modules/
+frontend-nodo/dist/
+
