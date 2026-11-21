@@ -1,0 +1,9 @@
+health con datos alterados: 503
+Datos restaurados. Verifique /health, /pedidos, version y contenido.
+inicio restauracion (UTC): 2026-11-21T13:44:05.382751+00:00
+comando restaurar: 110 ms
+hasta primer /health 200 con datos-v1: 157 ms (atendio app1)
+
+Observación: la verificación inmediata (I05c_restaurado.json) dio 10/10 HTTP 200 con datos-v1, pero solo de app1.
+Mientras los datos estaban alterados, app2 devolvió 503 y NGINX la marcó caída (max_fails=1, fail_timeout=5s).
+La verificación repetida tras ~6 s (I05c_restaurado_tras_5s.json) vuelve a ver app1 y app2.

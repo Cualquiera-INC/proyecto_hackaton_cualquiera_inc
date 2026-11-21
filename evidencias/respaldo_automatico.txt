@@ -1,0 +1,24 @@
+=== Contenido de respaldos/ (2026-11-21T13:44:47Z)
+total 25
+-rw-r--r-- 1 racso 197609 610 08:44:38 20261121_084438_528226.json
+-rw-r--r-- 1 racso 197609  64 08:44:38 20261121_084438_528226.sha256
+-rw-r--r-- 1 racso 197609 610 08:25:34 20261121_132624_895735.json
+-rw-r--r-- 1 racso 197609  64 08:26:24 20261121_132624_895735.sha256
+-rw-r--r-- 1 racso 197609 610 08:27:35 20261121_133125_070832.json
+-rw-r--r-- 1 racso 197609  64 08:31:25 20261121_133125_070832.sha256
+-rw-r--r-- 1 racso 197609 610 08:27:35 20261121_133625_245086.json
+-rw-r--r-- 1 racso 197609  64 08:36:25 20261121_133625_245086.sha256
+-rw-r--r-- 1 racso 197609 610 08:27:35 20261121_134329_479621.json
+-rw-r--r-- 1 racso 197609  64 08:43:29 20261121_134329_479621.sha256
+
+=== Integridad de cada respaldo (sha256 calculado vs .sha256 guardado) y version
+respaldos/20261121_084438_528226.json  datos-v2  OK
+respaldos/20261121_132624_895735.json  datos-v1  OK
+respaldos/20261121_133125_070832.json  datos-v1  OK
+respaldos/20261121_133625_245086.json  datos-v1  OK
+respaldos/20261121_134329_479621.json  datos-v1  OK
+
+=== docker compose logs --timestamps respaldo
+respaldo-1  | 2026-11-21T13:43:29.496374720Z Respaldo creado: respaldos/20261121_134329_479621.json
+
+Nota: los nombres creados por el contenedor usan hora UTC; los creados a mano desde Windows usan la hora local (UTC-5).

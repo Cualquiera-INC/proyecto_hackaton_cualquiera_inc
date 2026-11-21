@@ -1,0 +1,12 @@
+1) Cambio en la copia de trabajo: version datos-v1 -> datos-v2, PED-003 Pendiente -> Entregado
+2) Respaldo de v2: Respaldo creado: respaldos\20261121_084438_528226.json
+3) Servicio con v2: datos-v2 ['Entregado']
+4) Punto de recuperación elegido: respaldos/20261121_132624_895735.json (datos-v1). Restaurar:
+Datos restaurados. Verifique /health, /pedidos, version y contenido.
+5) Servicio tras restaurar: datos-v1 ['Pendiente']
+6) Comparación de contenido:
+   data/pedidos.json == pedidos.json original (contenido JSON): True
+   24a3288135ebb9c2ca7be0a06b1de746f94b87a5fc4355b62e369ee969849af5 *data/pedidos.json
+   24a3288135ebb9c2ca7be0a06b1de746f94b87a5fc4355b62e369ee969849af5 *respaldos/20261121_132624_895735.json
+   2e911ae78e90628a20b0315aafaee9953cb446746f0d90982e8439be1014dd10 *respaldos/20261121_084438_528226.json
+   El respaldo de v2 (respaldos/20261121_084438_528226.json) se conserva por si se quiere volver a esa versión.
