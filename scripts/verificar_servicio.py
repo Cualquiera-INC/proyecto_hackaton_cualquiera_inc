@@ -14,7 +14,7 @@ for i in range(a.peticiones):
     try:
         with urllib.request.urlopen(a.url,timeout=5) as r:
             raw=r.read();row["http"]=r.status
-        data=json.loads(raw);row["instancia"]=data.get("instancia");row["version"]=data.get("version",data.get("version_datos"))
+        data=json.loads(raw);row["instancia"]=data.get("instancia");row["version"]=data.get("version",data.get("version_datos"));row["version_app"]=data.get("version_app")
     except urllib.error.HTTPError as e: row.update(http=e.code,error=str(e))
     except (OSError,ValueError) as e: row.update(http=None,error=str(e))
     row["milisegundos"]=round((time.monotonic()-start)*1000,2);rows.append(row)

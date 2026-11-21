@@ -1,5 +1,9 @@
-data/
-respaldos/
-.env
 __pycache__/
 *.pyc
+.env
+# Copia de trabajo y respaldos locales (se regeneran con scripts/datos.py)
+data/
+respaldos/
+# Estado local del despliegue (lo genera scripts/desplegar.py)
+despliegue/.env
+despliegue/estado.json
