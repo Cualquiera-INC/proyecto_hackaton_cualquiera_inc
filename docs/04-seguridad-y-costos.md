@@ -22,7 +22,8 @@
 | **AWS:** mínimo privilegio | Rol de la EC2 con solo `s3:GetObject` en `actual/*` y escritura de logs | ⏳ diseño |
 | **AWS:** sin claves guardadas | Rol de instancia (credenciales temporales) y Session Manager para administrar | ⏳ diseño |
 | **AWS:** GitHub Actions sin claves | OIDC + rol `github-actions-nodo-ruta` que solo acepta este repo en `main` (identidad inmutable por ID) | ✅ conexión probada; permisos por definir según cada plantilla |
-| **AWS:** contraseña de la base | Secrets Manager o SSM Parameter Store; nunca en la plantilla de CloudFormation ni en el repo | ⏳ diseño |
+| **AWS:** contraseña de la base | SSM Parameter Store SecureString (gratis) creado a mano y leído con `{{resolve:ssm-secure:...}}`; nunca en la plantilla ni en el repo. Se evita Secrets Manager (cobra) | 🟡 plantilla escrita y validada (`02-datos.yaml`), sin desplegar |
+| **AWS:** RDS y respaldos | RDS cifrada, sin acceso público, solo desde el SG de las EC2; bucket S3 con bloqueo público, SSE-S3, versiones, solo HTTPS y expiración corta | 🟡 plantilla escrita y validada, sin desplegar |
 
 ## Factores de costo en AWS (sin cifras)
 

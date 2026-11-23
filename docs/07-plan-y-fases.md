@@ -66,7 +66,7 @@ Plantillas de **CloudFormation** en `infra/aws/` para crear y destruir con una p
 6. **CloudWatch Logs** con retención corta.
 7. (Según la decisión de la fase 3) CloudFront + S3 para la interfaz.
 
-**Avance (23-11):** plantilla de red `infra/aws/01-red.yaml` escrita, validada y **desplegada** en us-east-2 como pila `nodo-ruta-red` (CREATE_COMPLETE, evidencia AWS01). Instrucciones en `infra/aws/README.md`. Pendientes: `02-datos` (RDS, S3) y `03-computo` (EC2, ALB).
+**Avance (23-11):** plantilla de red `infra/aws/01-red.yaml` escrita, validada y **desplegada** en us-east-2 como pila `nodo-ruta-red` (CREATE_COMPLETE, evidencia AWS01). Instrucciones en `infra/aws/README.md`. **Avance (23-11, rama `feat/infra-datos`):** `infra/aws/02-datos.yaml` (RDS PostgreSQL 17 Single-AZ, bucket S3 de respaldos, contrasena en SSM SecureString) escrita, validada y **desplegada** como pila `nodo-ruta-datos` (CREATE_COMPLETE, evidencia AWS02; RDS consume creditos mientras exista). Pendiente: `03-computo` (EC2, ALB).
 
 > Los puntos 1, 3 y 4 asumían los datos como JSON en S3. Con D13 cambian: S3 solo guarda respaldos, las EC2 corren `app` + `pedidos` sin sincronizar nada y se suma una instancia RDS en subred privada (con su grupo de seguridad). Esta lista se reescribe al empezar las plantillas de CloudFormation.
 

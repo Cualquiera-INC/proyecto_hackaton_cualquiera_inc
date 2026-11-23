@@ -1,0 +1,19 @@
+{
+  "prueba": "AWS02",
+  "fecha": "2026-11-23",
+  "region": "us-east-2",
+  "pila": "nodo-ruta-datos",
+  "plantilla": "infra/aws/02-datos.yaml (commit 9069bf4)",
+  "prerequisito": "parametro SecureString /nodo-ruta/db/password creado a mano (valor fuera del repo)",
+  "estado": "CREATE_COMPLETE",
+  "duracion_aprox": "~13 min (RDS)",
+  "salidas": {
+    "DbEndpoint": "nodo-ruta-datos-pg.cjcg6is4a99m.us-east-2.rds.amazonaws.com",
+    "DbPuerto": "5432",
+    "DbNombre": "nodo_ruta",
+    "DbUsuario": "cualquieraInc",
+    "RutaParametroClave": "/nodo-ruta/db/password",
+    "BucketNombre": "nodo-ruta-respaldos-<cuenta>-us-east-2"
+  },
+  "hallazgo": "La SCP de la organizacion permite crear RDS (db.t4g.micro, PostgreSQL 17) y buckets S3 en us-east-2."
+}
