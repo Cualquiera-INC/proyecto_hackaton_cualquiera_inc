@@ -1,0 +1,18 @@
+{
+  "prueba": "AWS01",
+  "fecha": "2026-11-23",
+  "region": "us-east-2",
+  "pila": "nodo-ruta-red",
+  "plantilla": "infra/aws/01-red.yaml (commit 3f37b35)",
+  "comando": "aws cloudformation create-stack ... + wait stack-create-complete",
+  "estado": "CREATE_COMPLETE",
+  "salidas": {
+    "VpcId": "vpc-0f214d12368654231",
+    "SubredesPublicas": "subnet-089f817c6060512e6,subnet-0dfbe33e88ba760eb",
+    "SubredesPrivadas": "subnet-02e2654bcc60dde7e,subnet-0b000ac996c3493ff",
+    "SgAlb": "sg-07ecfa842d9511f3d",
+    "SgEc2": "sg-049b74776af00c364",
+    "SgRds": "sg-0d794d4b6410aa912"
+  },
+  "nota": "CidrAcceso = IP publica del integrante que creo la pila (/32); no se registra aqui."
+}

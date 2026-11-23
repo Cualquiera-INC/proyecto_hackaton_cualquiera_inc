@@ -132,7 +132,7 @@ El ALB **no reintenta** en otra instancia cuando una conexión falla, como sí h
 
 | Decisión | Opciones | Propuesta |
 |---|---|---|
-| Región | us-east-1 u otra | La de menor latencia con todo disponible en el plan gratuito |
+| Región | us-east-1 u otra | 🟢 **us-east-2 (Ohio)**, impuesta: la cuenta pertenece a una organización de AWS cuya política (SCP) bloquea EC2, CloudFormation, RDS, ELB y ECS en las demás regiones probadas. Medido el 23-11 en 9 regiones |
 | Registro de imagen | GHCR público / ECR | GHCR público: sin costo y sin secretos en la imagen |
 | Cómo se crea la infraestructura | Consola / scripts / CloudFormation | 🟢 **CloudFormation** en `infra/aws/` (D14): crear y **destruir** con una pila |
 | Intervalo de sincronización con S3 | 5–30 s | 10 s; cada revisión es una solicitud a S3, así que también cuenta como costo |

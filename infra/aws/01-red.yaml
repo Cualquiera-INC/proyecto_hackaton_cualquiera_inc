@@ -1,0 +1,209 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Nodo Ruta - red base: VPC propia, 2 subredes publicas (ALB y EC2) y 2 privadas (RDS)
+  en dos zonas, y los grupos de seguridad ALB -> EC2 -> RDS. Sin NAT Gateway (consume creditos).
+
+Metadata:
+  AWSToolsMetrics:
+    AWSAgentToolkit: aws-cloudformation@3
+  com.aws.cloudformation.Context:
+    purpose: Red del despliegue de AWS (D13 y D14 en docs/03-decisiones.md).
+    must:
+      - Las EC2 solo aceptan trafico del ALB y RDS solo de las EC2 (referencias entre grupos, nunca CIDR abiertos).
+      - Sin NAT Gateway ni recursos de pago adicionales.
+      - Todo lleva la etiqueta proyecto=nodo-ruta para encontrarlo y borrarlo.
+
+Parameters:
+  CidrAcceso:
+    Type: String
+    Description: >-
+      IP o rango desde el que se permite entrar al ALB, por ejemplo 203.0.113.7/32.
+      No hay valor por defecto a proposito. 0.0.0.0/0 no esta permitido.
+    AllowedPattern: '^(\d{1,3}\.){3}\d{1,3}/\d{1,2}$'
+    ConstraintDescription: Debe ser un CIDR IPv4, por ejemplo 203.0.113.7/32.
+  CidrVpc:
+    Type: String
+    Default: 10.20.0.0/16
+    Description: Rango de la VPC propia.
+
+Rules:
+  AccesoNoAbierto:
+    Assertions:
+      - Assert: !Not [!Equals [!Ref CidrAcceso, 0.0.0.0/0]]
+        AssertDescription: CidrAcceso no puede ser 0.0.0.0/0; usa tu IP o la del equipo.
+
+Resources:
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref CidrVpc
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-vpc" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-igw" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  EnlaceInternetGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref Vpc
+      InternetGatewayId: !Ref InternetGateway
+
+  # --- Subredes publicas: ALB y EC2 (una por zona) ---
+  PublicaA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Select [0, !Cidr [!Ref CidrVpc, 4, 8]]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-publica-a" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  PublicaB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      CidrBlock: !Select [1, !Cidr [!Ref CidrVpc, 4, 8]]
+      MapPublicIpOnLaunch: true
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-publica-b" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  # --- Subredes privadas: solo RDS (sin ruta a internet) ---
+  PrivadaA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select [0, !GetAZs ""]
+      CidrBlock: !Select [2, !Cidr [!Ref CidrVpc, 4, 8]]
+      MapPublicIpOnLaunch: false
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-privada-a" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  PrivadaB:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref Vpc
+      AvailabilityZone: !Select [1, !GetAZs ""]
+      CidrBlock: !Select [3, !Cidr [!Ref CidrVpc, 4, 8]]
+      MapPublicIpOnLaunch: false
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-privada-b" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  TablaRutasPublica:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref Vpc
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-rutas-publica" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  RutaInternet:
+    Type: AWS::EC2::Route
+    DependsOn: EnlaceInternetGateway
+    Properties:
+      RouteTableId: !Ref TablaRutasPublica
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  AsociacionPublicaA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicaA
+      RouteTableId: !Ref TablaRutasPublica
+
+  AsociacionPublicaB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicaB
+      RouteTableId: !Ref TablaRutasPublica
+
+  # Tabla propia para las privadas: solo ruta local (sin ruta a internet ni NAT).
+  # Es explicita para no depender de la tabla principal de la VPC.
+  TablaRutasPrivada:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref Vpc
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-rutas-privada" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  AsociacionPrivadaA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivadaA
+      RouteTableId: !Ref TablaRutasPrivada
+
+  AsociacionPrivadaB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivadaB
+      RouteTableId: !Ref TablaRutasPrivada
+
+  # --- Grupos de seguridad: ALB -> EC2 -> RDS ---
+  SgAlb:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: ALB de Nodo Ruta; solo entra la IP indicada en CidrAcceso
+      VpcId: !Ref Vpc
+      SecurityGroupIngress:
+        - { IpProtocol: tcp, FromPort: 80, ToPort: 80, CidrIp: !Ref CidrAcceso, Description: HTTP desde el equipo }
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-sg-alb" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  SgEc2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EC2 de Nodo Ruta; solo acepta el puerto 8080 desde el ALB, sin SSH
+      VpcId: !Ref Vpc
+      SecurityGroupIngress:
+        - { IpProtocol: tcp, FromPort: 8080, ToPort: 8080, SourceSecurityGroupId: !Ref SgAlb, Description: Trafico del ALB }
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-sg-ec2" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  SgRds:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: RDS PostgreSQL de Nodo Ruta; solo acepta 5432 desde las EC2
+      VpcId: !Ref Vpc
+      SecurityGroupIngress:
+        - { IpProtocol: tcp, FromPort: 5432, ToPort: 5432, SourceSecurityGroupId: !Ref SgEc2, Description: PostgreSQL desde las EC2 }
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-sg-rds" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+Outputs:
+  VpcId:
+    Value: !Ref Vpc
+    Export: { Name: !Sub "${AWS::StackName}-VpcId" }
+  SubredesPublicas:
+    Description: Subredes para el ALB y las EC2 (una por zona)
+    Value: !Join [",", [!Ref PublicaA, !Ref PublicaB]]
+    Export: { Name: !Sub "${AWS::StackName}-SubredesPublicas" }
+  SubredesPrivadas:
+    Description: Subredes para RDS (una por zona)
+    Value: !Join [",", [!Ref PrivadaA, !Ref PrivadaB]]
+    Export: { Name: !Sub "${AWS::StackName}-SubredesPrivadas" }
+  SgAlb:
+    Value: !Ref SgAlb
+    Export: { Name: !Sub "${AWS::StackName}-SgAlb" }
+  SgEc2:
+    Value: !Ref SgEc2
+    Export: { Name: !Sub "${AWS::StackName}-SgEc2" }
+  SgRds:
+    Value: !Ref SgRds
+    Export: { Name: !Sub "${AWS::StackName}-SgRds" }

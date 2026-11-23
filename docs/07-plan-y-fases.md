@@ -48,7 +48,7 @@ flowchart LR
 | **Acceso de GitHub a AWS sin claves** | ✅ OIDC probado (21-11): rol `github-actions-nodo-ruta`, solo `main`, sin permisos todavía |
 | **Dónde vive PostgreSQL en AWS** | ✅ Decidido (D13): 2 EC2 + RDS PostgreSQL Single-AZ (`t3.micro` o `t4g.micro`). Sin Multi-AZ en el plan gratuito |
 | Usuarios IAM para el equipo | Nadie trabaja con el usuario raíz; permisos mínimos |
-| Decidir la región | La más cercana con todo lo necesario en el plan gratuito |
+| Región | ✅ **us-east-2 (Ohio)**: es la única donde la política de la organización permite EC2, CloudFormation y RDS. Todo comando y plantilla usa `--region us-east-2` |
 | **Decidir cómo se sirve la interfaz** | (a) CloudFront + S3, que da HTTPS gratis pero suma dos servicios; o (b) la misma imagen `nodo-ruta-proxy` en cada EC2 detrás del ALB, que reutiliza lo ya probado pero no tiene HTTPS. Ver `docs/02` |
 | Registro de imágenes | Propuesta: GHCR público, publicado desde GitHub Actions (sin costo y sin secretos) |
 | Etiqueta común | `proyecto=nodo-ruta` en todo, para encontrarlo y borrarlo |
@@ -65,6 +65,8 @@ Plantillas de **CloudFormation** en `infra/aws/` para crear y destruir con una p
 5. **ALB** + target group con health check a `/health`. Security groups: las EC2 solo aceptan tráfico del ALB y no tienen SSH (se usa Session Manager).
 6. **CloudWatch Logs** con retención corta.
 7. (Según la decisión de la fase 3) CloudFront + S3 para la interfaz.
+
+**Avance (23-11):** plantilla de red `infra/aws/01-red.yaml` escrita, validada y **desplegada** en us-east-2 como pila `nodo-ruta-red` (CREATE_COMPLETE, evidencia AWS01). Instrucciones en `infra/aws/README.md`. Pendientes: `02-datos` (RDS, S3) y `03-computo` (EC2, ALB).
 
 > Los puntos 1, 3 y 4 asumían los datos como JSON en S3. Con D13 cambian: S3 solo guarda respaldos, las EC2 corren `app` + `pedidos` sin sincronizar nada y se suma una instancia RDS en subred privada (con su grupo de seguridad). Esta lista se reescribe al empezar las plantillas de CloudFormation.
 
