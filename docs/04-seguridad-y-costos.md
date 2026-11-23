@@ -18,8 +18,8 @@
 | Imágenes con versión | `nodo-ruta:<versión>` y `nginx:1.28-alpine` | ✅ |
 | Imagen base fijada | `python:3.12-slim` | 🟡 pendiente (hoy `python:3-slim`) |
 | Endurecimiento extra | `read_only`, `cap_drop: [ALL]`, `no-new-privileges` | 🟡 pendiente |
-| **AWS:** firewall restrictivo | Las EC2 aceptan `:8080` solo desde el security group del ALB; sin puerto 22 | ⏳ diseño |
-| **AWS:** mínimo privilegio | Rol de la EC2 con solo `s3:GetObject` en `actual/*` y escritura de logs | ⏳ diseño |
+| **AWS:** firewall restrictivo | Las EC2 aceptan `:8080` solo desde el security group del ALB; sin puerto 22 | 🟡 plantilla `03-computo.yaml` escrita y validada, sin desplegar |
+| **AWS:** mínimo privilegio | Rol de la EC2: SSM Session Manager, `ssm:GetParameter` solo sobre la clave de la base y `s3:PutObject`/`GetObject`/`ListBucket` solo sobre `respaldos/` del bucket. IMDSv2 obligatorio con salto 1 | 🟡 plantilla escrita y validada, sin desplegar |
 | **AWS:** sin claves guardadas | Rol de instancia (credenciales temporales) y Session Manager para administrar | ⏳ diseño |
 | **AWS:** GitHub Actions sin claves | OIDC + rol `github-actions-nodo-ruta` que solo acepta este repo en `main` (identidad inmutable por ID) | ✅ conexión probada; permisos por definir según cada plantilla |
 | **AWS:** contraseña de la base | SSM Parameter Store SecureString (gratis) creado a mano y leído con `{{resolve:ssm-secure:...}}`; nunca en la plantilla ni en el repo. Se evita Secrets Manager (cobra) | 🟡 plantilla escrita y validada (`02-datos.yaml`), sin desplegar |

@@ -122,7 +122,7 @@ Los pedidos no se "suben a la app": se publica una nueva versión del archivo en
 - **Ruta de datos:** el borrador montaba `/opt/nodoruta/data:/app/data`, pero la app lee `DATA_PATH=/data/pedidos.json`. Habría leído la copia que trae la imagen y la prueba de restauración no habría servido. Se monta en `/data`.
 - **Permisos:** la EC2 solo **lee** S3 (`s3:GetObject` en `actual/*`). Quien restaura es una persona del equipo con su propio usuario, no la máquina.
 - **Créditos:** en el plan gratuito actual, el ALB, las EC2 y las IP públicas **consumen créditos por hora**. El esquema anterior de "750 h gratis" ya no aplica a cuentas nuevas.
-- **Imagen:** se construye **una vez** y se publica en un registro. No se construye en cada EC2, porque podrían salir versiones distintas.
+- **Imagen:** el diseño ideal es construirla **una vez** y publicarla (GHCR). Lo implementado en `03-computo.yaml` es más simple (D15): cada EC2 trae el repo público en una etiqueta o commit fijo (`VersionGit`) y construye las dos imágenes ahí. Con base y código fijos salen iguales; el costo es un arranque de varios minutos y que el repo deba estar publicado en GitHub.
 
 ### Lo que hay que saber antes de probar I02 en AWS
 

@@ -77,6 +77,14 @@ Consecuencias que se reconocen:
 ## D14 · Infraestructura en AWS con CloudFormation 🟢 (21-11)
 La nube pasa de diseño a implementación. Las plantillas viven en `infra/aws/` y reemplazan la idea de scripts con AWS CLI: crear y **destruir** con una pila. GitHub Actions entra a AWS por OIDC, sin claves guardadas (probado: rol `github-actions-nodo-ruta`, solo la rama `main`, hoy sin permisos). Los permisos del rol se agregan solo cuando una plantilla los necesita, y mínimos.
 
+## D15 · Cómo corren los contenedores en las EC2 🟡 (23-11, plantilla escrita y validada, sin desplegar)
+Sin ECR ni GHCR por ahora (la política de la organización solo menciona EC2, CloudFormation, RDS, ELB y ECS, y el repo es público). El user data de `infra/aws/03-computo.yaml` instala Docker y git, trae el repo en `VersionGit` (etiqueta o hash, sin valor por defecto) y ejecuta `despliegue/aws/iniciar.sh`, que: lee la clave de SSM, construye `nodo-ruta:<versión>` y `nodo-ruta-pedidos:<versión>`, carga la base **una sola vez** (`basedatos/aws/cargar-inicial.sql`: candado `pg_advisory_lock`, solo si no existe la tabla `pedidos`, en una transacción) y levanta los dos contenedores con `restart: unless-stopped`.
+- **Sin Docker Compose:** AL2023 no trae el plugin y bajarlo sin verificar suma un riesgo; son dos `docker run` en una red propia.
+- **Identificación:** `INSTANCE_ID` = zona + id de EC2 (IMDSv2). `app.py` no cambia (la instancia ya viaja en el cuerpo JSON; no hay encabezado `X-Instance-Id`).
+- **Supuestos:** el repo sigue público y el commit está en GitHub; la app usa el usuario maestro de RDS (el servicio fuerza solo lectura por sesión); `rds.force_ssl` de RDS 17 funciona con `sslmode=prefer` (por probar); sin HTTPS (no hay dominio).
+- **Se fijó** `python:3.12-slim` en el `Dockerfile` raíz (antes `python:3-slim`), pendiente ya listado abajo.
+- **Respaldo:** `despliegue/aws/respaldar.sh` (manual por SSM) hace `pg_dump` y lo sube a `s3://<bucket>/respaldos/`. Restaurar queda pendiente.
+
 ## Pendientes medidos (mejoras para el siguiente PR)
 
 | Mejora | Por qué | Estado |
