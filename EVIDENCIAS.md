@@ -245,6 +245,11 @@ Qué queremos comprobar: que la plantilla `infra/aws/01-red.yaml` se despliega e
 Pasos: `create-stack` de `nodo-ruta-red` en us-east-2 con `CidrAcceso` = IP del integrante (/32) y etiqueta `proyecto=nodo-ruta`; `wait stack-create-complete`; `describe-stacks`.
 Resultado observado: **CREATE_COMPLETE** en ~1 min, con VPC, 2 subredes públicas, 2 privadas y los grupos `SgAlb`, `SgEc2` y `SgRds` exportados. Costo: USD 0 (sin NAT ni IP elástica). **CUMPLE**. Evidencia: `evidencias/AWS01_pila_red.json`
 
+## AWS02 — Crear la pila de datos (RDS + S3)
+Qué queremos comprobar: que la SCP deja crear RDS y S3 en us-east-2 y que la contraseña llega desde SSM sin estar en el repo.
+Pasos: crear el parámetro SecureString `/nodo-ruta/db/password` (a mano, con `read -s`); `create-stack` de `nodo-ruta-datos`; `wait stack-create-complete`; `describe-stacks`.
+Resultado observado: **CREATE_COMPLETE** en ~13 min. RDS PostgreSQL 17 (`db.t4g.micro`, Single-AZ, cifrada, sin acceso público) y bucket de respaldos creados. **CUMPLE**. Evidencia: `evidencias/AWS02_pila_datos.json`. Costo: RDS consume créditos mientras exista.
+
 # Cierre
 
 Qué funciona realmente (probado en local):
