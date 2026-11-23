@@ -1,0 +1,192 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Nodo Ruta - datos: RDS PostgreSQL Single-AZ en las subredes privadas (clase del plan gratuito,
+  cifrado, sin acceso publico) y bucket S3 de respaldos con versiones y expiracion corta.
+  La contrasena no esta en la plantilla: se lee de un parametro SecureString de SSM.
+
+Metadata:
+  AWSToolsMetrics:
+    AWSAgentToolkit: aws-cloudformation@3
+  com.aws.cloudformation.Context:
+    purpose: Capa de datos del despliegue de AWS (D13 y D14 en docs/03-decisiones.md).
+    must:
+      - Importa la red de la pila nodo-ruta-red (subredes privadas y SgRds); RDS solo acepta a las EC2.
+      - Sin secretos en la plantilla ni en el repo; la contrasena viene de SSM Parameter Store (SecureString).
+      - Sin recursos de pago extra y sin snapshots que cobren al borrar la pila.
+      - Todo lleva la etiqueta proyecto=nodo-ruta.
+
+Parameters:
+  PilaRed:
+    Type: String
+    Default: nodo-ruta-red
+    Description: Nombre de la pila de red (01-red.yaml) de la que se importan los valores.
+  ClaseInstancia:
+    Type: String
+    Default: db.t4g.micro
+    AllowedValues: [db.t4g.micro, db.t3.micro]
+    Description: Clases elegibles del plan gratuito de RDS (t4g es Arm, t3 es x86). Ambas verificadas en us-east-2.
+  NombreBase:
+    Type: String
+    Default: nodo_ruta
+    Description: Nombre de la base; igual que POSTGRES_DB de despliegue/compose.yaml.
+  UsuarioBase:
+    Type: String
+    Default: cualquieraInc
+    AllowedPattern: '^[A-Za-z][A-Za-z0-9_]{0,31}$'
+    Description: Usuario maestro; igual que DB_USUARIO de despliegue/compose.yaml.
+  RutaParametroClave:
+    Type: String
+    Default: /nodo-ruta/db/password
+    Description: >-
+      Nombre del parametro SecureString de SSM (nivel estandar, gratis) con la contrasena.
+      Debe existir ANTES de crear la pila (ver infra/aws/README.md). Aqui va solo la ruta, nunca la clave.
+  CrearBucket:
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]
+    Description: Poner "false" si la politica de la organizacion bloquea la creacion de buckets S3 (no se pudo comprobar sin crear).
+
+Conditions:
+  ConBucket: !Equals [!Ref CrearBucket, "true"]
+
+Resources:
+  GrupoSubredes:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subredes privadas de Nodo Ruta (sin ruta a internet)
+      SubnetIds: !Split [",", !ImportValue { "Fn::Sub": "${PilaRed}-SubredesPrivadas" }]
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-subredes-rds" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  BaseDatos:
+    Type: AWS::RDS::DBInstance
+    # Delete (no Snapshot): un snapshot final seguiria consumiendo creditos tras destruir.
+    # Los datos son sinteticos y se recargan desde basedatos/init o desde un pg_dump en S3.
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Plan gratuito = Single-AZ, db.t3/t4g.micro, 20 GB gp2. La base es un punto unico de falla (D13).
+        must:
+          - MultiAZ false, PubliclyAccessible false.
+          - Contrasena solo por dynamic reference ssm-secure; nunca ManageMasterUserPassword (Secrets Manager cobra).
+          - Retencion de respaldos automaticos de 1 dia (supuesto: dentro de lo gratuito).
+    Properties:
+      DBInstanceIdentifier: !Sub "${AWS::StackName}-pg"
+      Engine: postgres
+      EngineVersion: "17"
+      AutoMinorVersionUpgrade: true
+      DBInstanceClass: !Ref ClaseInstancia
+      AllocatedStorage: "20"
+      StorageType: gp2
+      StorageEncrypted: true
+      DBName: !Ref NombreBase
+      MasterUsername: !Ref UsuarioBase
+      MasterUserPassword: !Sub "{{resolve:ssm-secure:${RutaParametroClave}}}"
+      DBSubnetGroupName: !Ref GrupoSubredes
+      VPCSecurityGroups:
+        - !ImportValue { "Fn::Sub": "${PilaRed}-SgRds" }
+      MultiAZ: false
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 1
+      DeletionProtection: false
+      CopyTagsToSnapshot: true
+      EnablePerformanceInsights: false
+      MonitoringInterval: 0
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-pg" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  BucketRespaldos:
+    Type: AWS::S3::Bucket
+    Condition: ConBucket
+    # Un bucket con objetos o versiones NO se borra con la pila: vaciarlo antes (infra/aws/README.md).
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Respaldos pg_dump fuera del computo y de la base; versiones para poder volver atras.
+        must:
+          - Bloqueo de acceso publico, cifrado SSE-S3 y solo HTTPS.
+          - Expiracion corta de objetos y versiones para no consumir creditos.
+    Properties:
+      BucketName: !Sub "nodo-ruta-respaldos-${AWS::AccountId}-${AWS::Region}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - BucketKeyEnabled: true
+            ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      VersioningConfiguration:
+        Status: Enabled
+      LifecycleConfiguration:
+        Rules:
+          - Id: expirar-respaldos-viejos
+            Status: Enabled
+            ExpirationInDays: 7
+            NoncurrentVersionExpiration:
+              NoncurrentDays: 3
+            AbortIncompleteMultipartUpload:
+              DaysAfterInitiation: 1
+          - Id: limpiar-marcas-de-borrado
+            Status: Enabled
+            ExpiredObjectDeleteMarker: true
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-respaldos" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  PoliticaBucketRespaldos:
+    Type: AWS::S3::BucketPolicy
+    Condition: ConBucket
+    Properties:
+      Bucket: !Ref BucketRespaldos
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: SoloHttps
+            Effect: Deny
+            Principal: "*"
+            Action: "s3:*"
+            Resource:
+              - !GetAtt BucketRespaldos.Arn
+              - !Sub "${BucketRespaldos.Arn}/*"
+            Condition:
+              Bool:
+                aws:SecureTransport: "false"
+
+Outputs:
+  DbEndpoint:
+    Description: Endpoint de RDS (para DB_HOST del microservicio pedidos).
+    Value: !GetAtt BaseDatos.Endpoint.Address
+    Export: { Name: !Sub "${AWS::StackName}-DbEndpoint" }
+  DbPuerto:
+    Description: Puerto de RDS.
+    Value: !GetAtt BaseDatos.Endpoint.Port
+    Export: { Name: !Sub "${AWS::StackName}-DbPuerto" }
+  DbNombre:
+    Description: Nombre de la base.
+    Value: !Ref NombreBase
+    Export: { Name: !Sub "${AWS::StackName}-DbNombre" }
+  DbUsuario:
+    Description: Usuario de la base.
+    Value: !Ref UsuarioBase
+    Export: { Name: !Sub "${AWS::StackName}-DbUsuario" }
+  RutaParametroClave:
+    Description: Ruta del parametro SSM con la contrasena (el valor no se exporta).
+    Value: !Ref RutaParametroClave
+    Export: { Name: !Sub "${AWS::StackName}-RutaParametroClave" }
+  BucketNombre:
+    Condition: ConBucket
+    Description: Bucket de respaldos.
+    Value: !Ref BucketRespaldos
+    Export: { Name: !Sub "${AWS::StackName}-BucketNombre" }
+  BucketArn:
+    Condition: ConBucket
+    Description: ARN del bucket de respaldos.
+    Value: !GetAtt BucketRespaldos.Arn
+    Export: { Name: !Sub "${AWS::StackName}-BucketArn" }

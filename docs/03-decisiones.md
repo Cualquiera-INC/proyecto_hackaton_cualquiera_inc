@@ -72,7 +72,7 @@ Consecuencias que se reconocen:
 - **No se promete** en AWS el "0 errores" medido en local para la caída del primario: allá la réplica se lee en vivo y aquí no existe. Se mide y se reporta lo que salga.
 - Respaldos: los automáticos de RDS (retención corta) y `pg_dump` hacia S3 con versiones. Se confirma al implementar.
 - Los servicios `postgres`, `postgres-replica` y `respaldo` del `compose.yaml` no corren en AWS; `pedidos` apunta al endpoint de RDS.
-- Pendiente de elegir al implementar: la clase (`t4g.micro` es Arm; `t3.micro` es x86) y que el grupo de seguridad de RDS acepte solo a las EC2.
+- Implementación (`infra/aws/02-datos.yaml`, validada, sin desplegar): PostgreSQL 17 (misma versión mayor que local), `db.t4g.micro` por defecto con `db.t3.micro` como parámetro (ambas aparecen disponibles en us-east-2), 20 GB gp2 cifrada, contraseña en SSM SecureString, 1 día de respaldos automáticos (supuesto) y borrado sin snapshot final. El SG de RDS (de `01-red.yaml`) acepta solo a las EC2.
 
 ## D14 · Infraestructura en AWS con CloudFormation 🟢 (21-11)
 La nube pasa de diseño a implementación. Las plantillas viven en `infra/aws/` y reemplazan la idea de scripts con AWS CLI: crear y **destruir** con una pila. GitHub Actions entra a AWS por OIDC, sin claves guardadas (probado: rol `github-actions-nodo-ruta`, solo la rama `main`, hoy sin permisos). Los permisos del rol se agregan solo cuando una plantilla los necesita, y mínimos.
