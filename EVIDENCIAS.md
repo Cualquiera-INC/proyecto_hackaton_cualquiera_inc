@@ -250,6 +250,11 @@ Qué queremos comprobar: que la SCP deja crear RDS y S3 en us-east-2 y que la co
 Pasos: crear el parámetro SecureString `/nodo-ruta/db/password` (a mano, con `read -s`); `create-stack` de `nodo-ruta-datos`; `wait stack-create-complete`; `describe-stacks`.
 Resultado observado: **CREATE_COMPLETE** en ~13 min. RDS PostgreSQL 17 (`db.t4g.micro`, Single-AZ, cifrada, sin acceso público) y bucket de respaldos creados. **CUMPLE**. Evidencia: `evidencias/AWS02_pila_datos.json`. Costo: RDS consume créditos mientras exista.
 
+## AWS03 — Reparto entre dos zonas detrás del ALB
+Qué queremos comprobar: que el ALB reparte entre las 2 EC2 (una por zona), que la app lee de RDS y que cada respuesta identifica la instancia.
+Pasos: `create-stack` de `nodo-ruta-computo` (versión git `6f5a222`); esperar el arranque; consultar `/health` del ALB varias veces; `describe-target-health`.
+Resultado observado: **CREATE_COMPLETE**; `/health` → `estado: ok`, `origen_datos: base` (RDS con los 6 pedidos cargados). Al principio solo respondía 2a: la EC2 B tardó ~8 min en construir las imágenes y estuvo `unhealthy` mientras tanto (el ALB no le mandó tráfico). Con ambas `healthy`, 8 solicitudes: 4 a `us-east-2a` y 4 a `us-east-2b`. **CUMPLE**. Evidencia: `evidencias/AWS03_reparto_dos_zonas.json`
+
 # Cierre
 
 Qué funciona realmente (probado en local):
