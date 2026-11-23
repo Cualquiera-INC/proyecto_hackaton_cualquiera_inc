@@ -238,6 +238,13 @@ Resultado observado: `/health` → **503** `error_datos` (la copia se descartó)
 ## STG14 — Caída del primario (código final)
 Resultado observado: primario detenido 20 s. **381 consultas, 0 errores**, máximo 47 ms. Al volver el primario, la réplica reanudó la replicación sola (`state = streaming`). **CUMPLE**. Evidencia: `evidencias/STG14_caida_primario_final.json`
 
+# AWS (us-east-2, plan gratuito)
+
+## AWS01 — Crear la pila de red
+Qué queremos comprobar: que la plantilla `infra/aws/01-red.yaml` se despliega en la cuenta real pese a la SCP de la organización.
+Pasos: `create-stack` de `nodo-ruta-red` en us-east-2 con `CidrAcceso` = IP del integrante (/32) y etiqueta `proyecto=nodo-ruta`; `wait stack-create-complete`; `describe-stacks`.
+Resultado observado: **CREATE_COMPLETE** en ~1 min, con VPC, 2 subredes públicas, 2 privadas y los grupos `SgAlb`, `SgEc2` y `SgRds` exportados. Costo: USD 0 (sin NAT ni IP elástica). **CUMPLE**. Evidencia: `evidencias/AWS01_pila_red.json`
+
 # Cierre
 
 Qué funciona realmente (probado en local):
