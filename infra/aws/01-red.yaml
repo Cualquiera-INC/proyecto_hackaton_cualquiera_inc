@@ -130,7 +130,27 @@ Resources:
       SubnetId: !Ref PublicaB
       RouteTableId: !Ref TablaRutasPublica
 
-  # Las subredes privadas usan la tabla principal de la VPC: solo ruta local, sin internet.
+  # Tabla propia para las privadas: solo ruta local (sin ruta a internet ni NAT).
+  # Es explicita para no depender de la tabla principal de la VPC.
+  TablaRutasPrivada:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref Vpc
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-rutas-privada" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  AsociacionPrivadaA:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivadaA
+      RouteTableId: !Ref TablaRutasPrivada
+
+  AsociacionPrivadaB:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PrivadaB
+      RouteTableId: !Ref TablaRutasPrivada
 
   # --- Grupos de seguridad: ALB -> EC2 -> RDS ---
   SgAlb:
