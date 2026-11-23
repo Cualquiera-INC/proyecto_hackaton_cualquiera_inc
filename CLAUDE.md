@@ -8,17 +8,19 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 
 ## Estado
 
-- **Local: hecho y probado.** El stack oficial es `despliegue/` (app1, app2, proxy NGINX con la interfaz web y respaldo) y se opera con `scripts/desplegar.py`. Evidencias I01–I08 en `EVIDENCIAS.md`.
-- **AWS (plan gratuito para cuentas nuevas): en preparación.** Diseño: EC2 ×2 en dos zonas + ALB + S3 con versiones (`docs/02-arquitectura.md`). Todavía no se ha creado ningún recurso.
+- **Local: hecho y probado, con PostgreSQL.** El stack oficial es `despliegue/` (proxy NGINX con la interfaz web, app1/app2, microservicio `pedidos1/pedidos2`, PostgreSQL primario + réplica en caliente y respaldo con `pg_dump`) y se opera con `scripts/desplegar.py`. Evidencias I01–I08 (stack con JSON) y STG01–STG14 (stack con PostgreSQL) en `EVIDENCIAS.md`. Diseño y límites en `docs/08-postgres-y-microservicio-pedidos.md`.
+- **AWS (plan gratuito para cuentas nuevas): pasa a implementación con CloudFormation.** Ya existen en la cuenta, sin recursos de cómputo: la alerta de presupuesto, el proveedor OIDC de GitHub y el rol `github-actions-nodo-ruta` (sin permisos; solo acepta este repo en `main`; prueba en `.github/workflows/prueba-oidc-aws.yml`). PostgreSQL en AWS: 2 EC2 + RDS Single-AZ (D13, `docs/03-decisiones.md`); el plan gratuito no permite Multi-AZ, así que la base en AWS es un punto único de falla.
 - **Plan por fases** (pulir local → preparar AWS → construir → probar y destruir → pitch): `docs/07-plan-y-fases.md`. Mantenerlo al día en cada PR.
-- Descartado por ahora (D9): microservicios y PostgreSQL. No proponerlos de nuevo sin un motivo nuevo.
+- **PostgreSQL y el microservicio de pedidos están aceptados (D12; D9 quedó superado).** Nunca usar nombres de contenedor individuales entre servicios: en la red `internal` resolver un nombre inexistente tarda ~8 s (STG02/STG09); se usan los alias `pedidos` y `pg-lectura`. Contraseña en `despliegue/secretos/db_password.txt` (Docker secret, ignorada por git).
+- **Mejoras pendientes medidas:** quitar `http_503` de `proxy_next_upstream`, fijar `python:3.12-slim`, `server_tokens off` y endurecer los contenedores (`docs/03-decisiones.md`).
 
 ## Mapa
 
 - `app.py`, `Dockerfile`, `pedidos.json`: app del reto con cambios mínimos y datos originales (no se modifican).
+- `servicios/pedidos/` y `basedatos/`: microservicio de pedidos (solo lectura) y esquema, datos iniciales y réplica de PostgreSQL.
 - `despliegue/`: `compose.yaml` y `nginx.conf` oficiales. No se levanta con `compose up` a mano: lo hace `desplegar.py`.
 - `scripts/`: `desplegar.py`, `datos.py`, `verificar_servicio.py`, `monitorear.py`, `ejecutar_local.py`.
-- `docs/`: 01 reto, 02 arquitectura, 03 decisiones, 04 seguridad y costos, 05 cómo funciona, 06 pitch, 07 plan y fases.
+- `docs/`: 01 reto, 02 arquitectura, 03 decisiones, 04 seguridad y costos, 05 cómo funciona, 06 pitch, 07 plan y fases, 08 PostgreSQL y microservicio de pedidos.
 - `evidencias/`: el prefijo del archivo es el ID de la prueba (`I05c_…`). `EVIDENCIAS.md` es la única bitácora.
 - `frontend-nodo/`: interfaz web React + Vite de solo lectura. La construye `despliegue/Dockerfile.proxy` y el proxy la sirve en `/` (D11).
 - `.github/workflows/`: `frontend.yml` (lint + build) y `contenedores.yml` (construye la referencia y hace la prueba de punta a punta de `despliegue/`).
@@ -27,7 +29,8 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 ## Comandos
 
 ```text
-python scripts/datos.py preparar
+python scripts/datos.py preparar        # crea el secreto de la base (NODO_DB_PASSWORD o pregunta)
+python scripts/datos.py respaldar | verificar | simular-error | restaurar --respaldo respaldos/<x>.dump
 python scripts/desplegar.py desplegar --version v1
 python scripts/desplegar.py rollback
 python scripts/desplegar.py estado

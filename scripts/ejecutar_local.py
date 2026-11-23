@@ -7,7 +7,8 @@ a=p.parse_args()
 root=Path(__file__).resolve().parents[1]
 spec=importlib.util.spec_from_file_location("nodo_app",root/"app.py")
 mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
-mod.DATA=root/"data/pedidos.json";mod.INSTANCE=a.id
+# Modo archivo (sin PostgreSQL): usa la copia de trabajo si existe; si no, los datos originales.
+mod.DATA=root/"data/pedidos.json" if (root/"data/pedidos.json").is_file() else root/"pedidos.json";mod.INSTANCE=a.id
 print(f"Instancia {a.id}: http://127.0.0.1:{a.puerto}/health",flush=True)
 server=mod.ThreadingHTTPServer(("127.0.0.1",a.puerto),mod.Handler)
 try: server.serve_forever()

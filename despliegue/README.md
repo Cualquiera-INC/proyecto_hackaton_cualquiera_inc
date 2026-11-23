@@ -4,6 +4,8 @@ Este es el despliegue propio del equipo. Resuelve la parte del reto que dice
 *"cuando una actualización introduce un error, las consultas dejan de responder"*.
 La configuración de `ayuda_opcional/` queda intacta como referencia.
 
+> **Stack con PostgreSQL:** este stack ya no lee `data/pedidos.json`. Suma `postgres`, el microservicio `pedidos1`/`pedidos2` y un respaldo con `pg_dump`. La actualización escalonada recorre pedidos1 → pedidos2 → app1 → app2. El mecanismo de abajo es el mismo; el detalle está en [docs/08-postgres-y-microservicio-pedidos.md](../docs/08-postgres-y-microservicio-pedidos.md).
+
 ## Qué cambia respecto a la ayuda opcional
 
 | Problema en la referencia | Solución en `despliegue/` |
@@ -40,7 +42,7 @@ Primero hay que detener el laboratorio de la ayuda opcional, porque usa el mismo
 
 ```powershell
 docker compose -f ayuda_opcional/compose.yaml down
-python scripts/datos.py preparar        # solo si aún no existe data/pedidos.json
+python scripts/datos.py preparar        # una vez: crea despliegue/secretos/db_password.txt
 ```
 
 | Acción | Comando |

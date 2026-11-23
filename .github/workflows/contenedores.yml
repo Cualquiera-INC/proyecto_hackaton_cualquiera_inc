@@ -9,6 +9,8 @@ on:
       - "ayuda_opcional/**"
       - "despliegue/**"
       - "scripts/**"
+      - "servicios/**"
+      - "basedatos/**"
       - "frontend-nodo/**"
       - ".github/workflows/contenedores.yml"
   pull_request:
@@ -19,6 +21,8 @@ on:
       - "ayuda_opcional/**"
       - "despliegue/**"
       - "scripts/**"
+      - "servicios/**"
+      - "basedatos/**"
       - "frontend-nodo/**"
       - ".github/workflows/contenedores.yml"
 
@@ -49,10 +53,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Preparar datos de trabajo
-        run: python3 scripts/datos.py preparar
+      - name: Preparar la contraseña de la base (aleatoria, solo para esta ejecución)
+        run: NODO_DB_PASSWORD="$(openssl rand -hex 16)" python3 scripts/datos.py preparar
 
-      - name: Primer despliegue (app1, app2, proxy con interfaz y respaldo)
+      - name: Primer despliegue (postgres, pedidos1/2, app1/2, proxy con interfaz y respaldo)
         run: python3 scripts/desplegar.py desplegar --version ci-${{ github.run_number }}-a
 
       - name: Reparto entre las dos instancias
@@ -68,10 +72,30 @@ jobs:
           python3 scripts/desplegar.py desplegar --version ci-${{ github.run_number }}-b
           wait $!
 
+      - name: Respaldo, daño simulado y restauración de PostgreSQL
+        run: |
+          salida="$(python3 scripts/datos.py respaldar)"; echo "$salida"
+          respaldo="${salida#Respaldo creado: }"
+          python3 scripts/datos.py simular-error
+          sleep 3   # el servicio de pedidos relee la base cada 1 s
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/health)" = 503
+          python3 scripts/datos.py restaurar --respaldo "$respaldo"
+          sleep 3
+          curl -fsS http://127.0.0.1:8080/pedidos | python3 -c "import json,sys; d=json.load(sys.stdin); assert len(d['pedidos'])==6 and d['version']=='datos-v1', d"
+
+      - name: Caída del primario de PostgreSQL (la réplica sigue atendiendo)
+        run: |
+          python3 scripts/monitorear.py --segundos 25 --salida evidencias/ci_caida_primario.json &
+          sleep 2
+          docker compose -f despliegue/compose.yaml stop postgres
+          sleep 15
+          docker compose -f despliegue/compose.yaml start postgres
+          wait $!
+
       - name: Registros (solo si algo falló)
         if: failure()
         run: docker compose -f despliegue/compose.yaml logs --tail 80
 
       - name: Apagar
         if: always()
-        run: docker compose -f despliegue/compose.yaml down
+        run: docker compose -f despliegue/compose.yaml down -v

@@ -4,6 +4,8 @@ Para entender cada pieza y poder defenderla ante el jurado. Describe el stack of
 
 ## 1. La idea en una frase
 
+> **Nota:** este documento describe la app en **modo JSON**, el de las pruebas I01–I08. Con PostgreSQL (`PEDIDOS_URL`), la app pide los datos al microservicio de pedidos y los puntos sobre "relee el archivo en cada consulta" y el RTO de 157 ms **no aplican igual**: ver [08-postgres-y-microservicio-pedidos.md](08-postgres-y-microservicio-pedidos.md). Pendiente de reescribir.
+
 Una app Python pequeña lee `pedidos.json` **en cada consulta** y responde en JSON diciendo **qué instancia** y **qué versión** contestó. Hay dos instancias detrás de NGINX, que reparte las consultas y, si una falla, reintenta en la otra. Los datos viven fuera de los contenedores y un servicio aparte los respalda cada 5 minutos.
 
 ## 2. Mapa del repositorio

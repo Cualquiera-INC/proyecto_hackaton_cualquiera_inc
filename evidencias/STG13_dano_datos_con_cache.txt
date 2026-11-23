@@ -1,0 +1,16 @@
+Respaldo creado: respaldos/20261121_164038_033951.dump
+Tabla pedidos eliminada. /health debe devolver 503.
+health tras el daño:
+{"estado": "error_datos", "instancia": "app1", "version_app": "stg-v9"} [503]
+<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx/1.28.3</center>
+</body>
+</html>
+ [502]
+Datos restaurados: version=datos-v1, pedidos=6. Verifique /health y /pedidos.
+primer /health 200 a los 3.19 s de lanzar restaurar
+{"estado": "ok", "instancia": "app1", "version_app": "stg-v9", "version_datos": "datos-v1", "servicio_datos": {"instancia": "pedidos2", "version_app": "stg-v9", "origen_datos": "base"}}
+version=datos-v1 pedidos=6

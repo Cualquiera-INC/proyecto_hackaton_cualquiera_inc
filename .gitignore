@@ -7,6 +7,8 @@ respaldos/
 # Estado local del despliegue (lo genera scripts/desplegar.py)
 despliegue/.env
 despliegue/estado.json
+# Contraseña de la base de datos (la crea scripts/datos.py preparar). NUNCA al repositorio.
+despliegue/secretos/
 # Sistema operativo
 .DS_Store
 Thumbs.db
