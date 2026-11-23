@@ -148,8 +148,10 @@ sudo docker ps; sudo docker logs --tail 50 app    # registros de la app
 sudo bash /opt/nodo-ruta/repo/despliegue/aws/respaldar.sh   # respaldo manual a S3
 ```
 
-**Probar la caida de una instancia:** `aws ec2 stop-instances --region us-east-2 --instance-ids ID` y sondear el ALB con `scripts/verificar_servicio.py` o `curl` en bucle, anotando las marcas de tiempo (el health check tarda ~10 s en sacarla; puede haber algunos 502).
+**Pruebas medidas (caida, respaldo a S3, restauracion, destruccion):** paso a paso en [PRUEBAS.md](PRUEBAS.md).
+
+**Probar la caida de una instancia (version corta):** `aws ec2 stop-instances --region us-east-2 --instance-ids ID` y sondear el ALB con `scripts/verificar_servicio.py` o `curl` en bucle, anotando las marcas de tiempo (el health check tarda ~10 s en sacarla; puede haber algunos 502).
 
 **Destruir:** primero esta pila (`delete-stack` de `nodo-ruta-computo`), luego `02` y `01` (ver arriba); si no se destruye, sigue cobrando.
 
-**Pendiente / limites:** sin HTTPS (no hay dominio); sin CloudWatch Logs (los registros se ven con `docker logs` por SSM); restaurar un respaldo desde S3 aun no tiene script; la base RDS sigue siendo punto unico de falla.
+**Pendiente / limites:** sin HTTPS (no hay dominio); sin CloudWatch Logs (los registros se ven con `docker logs` por SSM); restaurar desde S3 tiene script (`despliegue/aws/datos.sh`) pero aun no esta probado en AWS; la base RDS sigue siendo punto unico de falla.
