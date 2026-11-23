@@ -48,7 +48,7 @@ flowchart LR
 | **Acceso de GitHub a AWS sin claves** | ✅ OIDC probado (21-11): rol `github-actions-nodo-ruta`, solo `main`, sin permisos todavía |
 | **Dónde vive PostgreSQL en AWS** | ✅ Decidido (D13): 2 EC2 + RDS PostgreSQL Single-AZ (`t3.micro` o `t4g.micro`). Sin Multi-AZ en el plan gratuito |
 | Usuarios IAM para el equipo | Nadie trabaja con el usuario raíz; permisos mínimos |
-| Decidir la región | La más cercana con todo lo necesario en el plan gratuito |
+| Región | ✅ **us-east-2 (Ohio)**: es la única donde la política de la organización permite EC2, CloudFormation y RDS. Todo comando y plantilla usa `--region us-east-2` |
 | **Decidir cómo se sirve la interfaz** | (a) CloudFront + S3, que da HTTPS gratis pero suma dos servicios; o (b) la misma imagen `nodo-ruta-proxy` en cada EC2 detrás del ALB, que reutiliza lo ya probado pero no tiene HTTPS. Ver `docs/02` |
 | Registro de imágenes | Propuesta: GHCR público, publicado desde GitHub Actions (sin costo y sin secretos) |
 | Etiqueta común | `proyecto=nodo-ruta` en todo, para encontrarlo y borrarlo |
