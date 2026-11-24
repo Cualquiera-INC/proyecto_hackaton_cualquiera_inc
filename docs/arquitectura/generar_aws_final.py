@@ -25,12 +25,14 @@ def add(value, style, x, y, w, h, cid=None):
     return cid
 
 
-def edge(src, tgt, label="", dashed=False, exit=None, entry=None, color="#545B64", pts=None, both=False):
+def edge(src, tgt, label="", dashed=False, exit=None, entry=None, color="#545B64", pts=None, both=False, thin=False):
     cid = nid("e")
     st = ("edgeStyle=orthogonalEdgeStyle;rounded=1;jettySize=auto;html=1;endArrow=block;endFill=1;"
           f"strokeColor={color};strokeWidth=1.5;fontSize=10;fontColor=#232F3E;labelBackgroundColor=#FFFFFF;")
     if dashed:
         st += "dashed=1;dashPattern=6 4;"
+    if thin:
+        st = st.replace("strokeWidth=1.5","strokeWidth=1").replace("endArrow=block;endFill=1","endArrow=none")
     if both:
         st += "startArrow=block;startFill=1;"
     if exit:
@@ -95,36 +97,36 @@ usuario = shape("user", "gen", "Operaciones<br>(solo la IP de CidrAcceso)", 40, 
 
 # AWS Cloud + Region
 group("group_aws_cloud_alt", "AWS Cloud", 190, 40, 1330, 1010, "#232F3E", "#232F3E")
-group("group_region", "Región us-east-2 (Ohio)", 210, 80, 1290, 700, "#147EBA", "#147EBA", dashed=1)
+region = group("group_region", "Región us-east-2 (Ohio)", 210, 80, 1290, 700, "#147EBA", "#147EBA", dashed=1)
 
 # front: CloudFront y S3 del front
 cf = icon("cloudfront", "net", "CloudFront<br>HTTPS *.cloudfront.net<br>(Function: solo CidrAcceso)", 240, 340, 64)
 s3f = icon("s3", "sto", "S3 del front<br>privado (OAC)", 240, 120, 56, right=True)
 
 # VPC
-group("group_vpc2", "VPC 10.20.0.0/16 (nodo-ruta-red)", 420, 110, 700, 650, "#8C4FFF", "#8C4FFF")
-igw = shape("internet_gateway", "net", "Internet<br>Gateway", 440, 340, 48, right=True)
+vpc = group("group_vpc2", "VPC 10.20.0.0/16 (nodo-ruta-red)", 420, 110, 700, 650, "#8C4FFF", "#8C4FFF")
+igw = add("Internet<br>Gateway", "sketch=0;outlineConnect=0;gradientColor=none;fillColor=#8C4FFF;strokeColor=none;dashed=0;aspect=fixed;pointerEvents=1;"+LBL+"labelPosition=left;verticalLabelPosition=middle;align=right;verticalAlign=middle;spacingRight=4;shape=mxgraph.aws4.internet_gateway;", 396, 491, 48, 48)
 alb = icon("application_load_balancer", "net", "ALB (HTTP 80)<br>403 sin X-Origin-Verify", 735, 150, 56, right=True)
 
 # AZ A
 box("Zona de disponibilidad A", 560, 250, 260, 490, align="right")
-group("group_security_group", "Subred pública A", 575, 285, 230, 215, "#7AA116", "#248814", fill="#F2F8EE")
+pubA = group("group_security_group", "Subred pública A", 575, 285, 230, 215, "#7AA116", "#248814", fill="#F2F8EE")
 ec2a = icon("ec2", "comp", "EC2 A<br>app :8080 + pedidos<br>IP pública, sin NAT", 590, 325, 56, right=True)
 group("group_security_group", "Subred privada A", 575, 530, 230, 195, "#00A4A6", "#147EBA", fill="#E6F6F7")
 rds = icon("rds", "db", "RDS PostgreSQL 17<br>db.t4g.micro<br>Single-AZ", 590, 575, 56)
 # AZ B
 box("Zona de disponibilidad B", 840, 250, 260, 490, align="left")
-group("group_security_group", "Subred pública B", 855, 285, 230, 215, "#7AA116", "#248814", fill="#F2F8EE")
+pubB = group("group_security_group", "Subred pública B", 855, 285, 230, 215, "#7AA116", "#248814", fill="#F2F8EE")
 ec2b = icon("ec2", "comp", "EC2 B<br>app :8080 + pedidos<br>IP pública, sin NAT", 1010, 325, 56, left=True)
 group("group_security_group", "Subred privada B", 855, 530, 230, 195, "#00A4A6", "#147EBA", fill="#E6F6F7")
 text("Sin instancia: el <i>subnet group</i> de RDS abarca las dos zonas, pero la base corre solo en la zona A.",
      870, 640, 200, 60, 10, "fontStyle=2;")
 
 # derecha: servicios fuera de la VPC
-ssmp = icon("systems_manager", "mgmt", "SSM Parameter Store<br>SecureString: clave de la base<br>y clave de origen", 1260, 140, 56)
-s3b = icon("s3", "sto", "S3 de respaldos<br>pg_dump + sha256, versiones<br>expiración a 7 días", 1260, 325, 56)
-ssm = icon("systems_manager", "mgmt", "Systems Manager<br>Session Manager y Run Command<br>(sin SSH, sin puerto 22)", 1260, 460, 56)
-iam = icon("identity_and_access_management", "sec", "IAM: rol de instancia<br>(SSM, lectura de sus parámetros,<br>escritura en S3 de respaldos)", 1260, 620, 56)
+ssmp = icon("systems_manager", "mgmt", "SSM Parameter Store<br>SecureString: clave<br>de la base y clave de origen", 1225, 140, 56, right=True)
+s3b = icon("s3", "sto", "S3 de respaldos<br>pg_dump + sha256,<br>versiones, expiración a 7 días", 1225, 325, 56, right=True)
+ssm = icon("systems_manager", "mgmt", "Systems Manager<br>Session Manager y<br>Run Command<br>(sin SSH, sin puerto 22)", 1225, 460, 56, right=True)
+iam = icon("identity_and_access_management", "sec", "IAM: rol de instancia<br>(SSM, lectura de sus<br>parámetros, escritura<br>en S3 de respaldos)", 1225, 620, 56, right=True)
 box("Servicios regionales (fuera de la VPC)", 1200, 100, 280, 650, stroke="#879196", font="#232F3E", size=11)
 
 # CI/CD (dentro de la cuenta, bajo la región)
@@ -133,20 +135,20 @@ gh = add("GitHub Actions<br>(solo rama main)", "rounded=1;whiteSpace=wrap;html=1
 nodo = add("scripts/aws_nodo.py<br>(alternativa local)", "rounded=1;whiteSpace=wrap;html=1;fillColor=#F2F3F3;"
            "strokeColor=#879196;fontColor=#232F3E;fontSize=11;", 30, 950, 120, 50)
 rol = icon("identity_and_access_management", "sec", "Rol github-actions-nodo-ruta<br>(OIDC, sin claves)", 260, 830, 56)
-cfn = icon("cloudformation", "mgmt", "CloudFormation<br>nodo-ruta-red, -datos, -computo, -front", 520, 830, 56)
+cfn = icon("cloudformation", "mgmt", "CloudFormation<br>nodo-ruta-red, -datos,<br>-computo, -front", 520, 830, 56, right=True)
 text("Tamaño y clase de instancia según los parámetros de las plantillas. Todo con la etiqueta proyecto=nodo-ruta.",
      600, 800, 10, 10, 1, "fontColor=#FFFFFF;")  # marcador invisible para mantener la plantilla simple
 cells.pop()
 
 # leyenda
-box("Leyenda", 760, 810, 740, 200, stroke="#879196", font="#232F3E", dashed=0, fill="#FAFAFA", size=12)
+box("Leyenda", 760, 810, 740, 140, stroke="#879196", font="#232F3E", dashed=0, fill="#FAFAFA", size=12)
 text("<b>Punto único de falla:</b> RDS Single-AZ (el plan gratuito no permite Multi-AZ). Se tolera la caída de una EC2, no la de la base.<br>"
      "<b>HTTPS solo hasta CloudFront:</b> CloudFront → ALB va en HTTP, protegido con el encabezado X-Origin-Verify.<br>"
      "<b>Grupos de seguridad:</b> SgAlb (80, solo CidrAcceso y CloudFront) → SgEc2 (8080, solo desde SgAlb) → SgRds (5432, solo desde SgEc2).<br>"
      "<b>Etiqueta:</b> proyecto=nodo-ruta en todos los recursos. <b>Costo:</b> consume créditos por hora; destruir al terminar "
      "(<i>python scripts/aws_nodo.py destruir</i>).<br>"
      "<b>Línea punteada:</b> acceso de administración, secretos y respaldos. <b>Línea continua:</b> tráfico de la solicitud o del despliegue.",
-     775, 840, 710, 180, 11)
+     775, 840, 710, 100, 11)
 
 # ---------------- flechas ----------------
 edge(usuario, cf, "HTTPS", exit=(1, 0.5), entry=(0, 0.5))
@@ -155,16 +157,21 @@ edge(cf, alb, "/pedidos y /health · HTTP 80<br>+ X-Origin-Verify, sin caché", 
      pts=[(410, 358), (410, 178)])
 edge(alb, ec2a, "SgAlb → SgEc2 :8080", exit=(0.25, 1), entry=(0.5, 0), pts=[(749, 235), (618, 235)])
 edge(alb, ec2b, "", exit=(0.75, 1), entry=(0.5, 0), pts=[(777, 235), (1038, 235)])
-edge(ec2a, rds, "SgEc2 → SgRds :5432", exit=(0.5, 1), entry=(0.5, 0))
-edge(ec2b, rds, "", exit=(0.5, 1), entry=(1, 0.5), pts=[(1038, 603)])
-edge(ec2b, ssmp, "lee secretos", dashed=True, exit=(1, 0.15), entry=(0, 0.5), pts=[(1150, 342), (1150, 168)])
-edge(ec2b, s3b, "pg_dump", dashed=True, exit=(1, 0.5), entry=(0, 0.5))
-edge(ssm, ec2b, "", dashed=True, exit=(0, 0.5), entry=(1, 0.85), pts=[(1130, 488), (1130, 373)])
+edge(ec2a, rds, "", exit=(0.5, 1), entry=(0.5, 0))
+edge(ec2b, rds, "SgEc2 → SgRds :5432", exit=(0.5, 1), entry=(1, 0.5), pts=[(1038, 603)])
+def ys(y): return round((y - 110) / 650, 4)
+
+
+edge(vpc, ssmp, "lee secretos<br>(ambas EC2)", dashed=True, exit=(1, ys(168)), entry=(0, 0.5))
+edge(vpc, s3b, "pg_dump<br>(ambas EC2)", dashed=True, exit=(1, ys(353)), entry=(0, 0.5))
+edge(ssm, vpc, "sesión y comandos<br>(ambas EC2)", dashed=True, exit=(0, 0.5), entry=(1, ys(488)))
 edge(iam, ssm, "", dashed=True, exit=(0.5, 0), entry=(0.5, 1))
+edge(igw, pubA, "salida a internet:<br>imágenes, SSM", exit=(0.5, 0), entry=(0, 0.72), pts=[(420, 440)], thin=True)
+edge(igw, pubB, "", exit=(1, 0.5), entry=(0.5, 1), pts=[(970, 515)], thin=True)
 edge(gh, rol, "OIDC", exit=(1, 0.5), entry=(0, 0.5))
 edge(rol, cfn, "asume el rol", exit=(1, 0.5), entry=(0, 0.5))
 edge(nodo, cfn, "mismas plantillas", dashed=True, exit=(1, 0.5), entry=(0.5, 1), pts=[(548, 975)])
-edge(cfn, igw, "crea y actualiza<br>las 4 pilas", exit=(0.5, 0), entry=(0.5, 1), pts=[(548, 800), (464, 800)])
+edge(cfn, region, "crea y actualiza<br>las 4 pilas", exit=(0.5, 0), entry=(round((548 - 210) / 1290, 4), 1))
 
 xml = ('<mxfile host="estudIA" type="device"><diagram id="aws-final" name="AWS final">'
        '<mxGraphModel dx="1600" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" '
