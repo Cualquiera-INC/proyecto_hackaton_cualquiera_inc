@@ -266,6 +266,11 @@ Resultado observado:
 **CUMPLE** el criterio [S] (errores solo en una ventana corta alrededor de la parada, cero después, B vuelve sola antes de 270 s).
 Hallazgo honesto: el ALB **no reintenta** contra la otra instancia, así que durante ~8 s (hasta que el health check de 2 × 5 s saca a B) algunas solicitudes fallan con 502. Mejora posible: sacar la instancia del target group antes de una parada planificada o bajar el umbral del health check. Evidencias: `evidencias/AWS04_caida_instancia_*`
 
+## AWS05 — Respaldo a S3 y comprobación de integridad
+Qué queremos comprobar: que `despliegue/aws/respaldar.sh` saca un `pg_dump` de RDS, lo deja en S3 (fuera del cómputo y de la base) con su SHA-256, y que el objeto es íntegro y legible.
+Pasos (`infra/aws/PRUEBAS.md`): `respaldar.sh` en la EC2 A con `aws ssm send-command`; listar `respaldos/` en el bucket; `datos.sh comprobar` (vuelve a bajar el objeto, compara el SHA-256 y lee el índice con `pg_restore --list`).
+Resultado observado: `estado: Success` en las dos órdenes. En S3 quedaron `respaldos/20261124_013921_manual.dump` (2915 bytes) y su `.sha256`. `COMPROBADO`: mismo sha256 `ee626042…564e` y 6 objetos en el índice, con los datos de `pedidos`. Tiempo total: ~13 s, de las 20:39:20 a las 20:39:33. **CUMPLE**. Evidencia: `evidencias/AWS05_respaldo_s3.txt`
+
 # Cierre
 
 Qué funciona realmente (probado en local):
