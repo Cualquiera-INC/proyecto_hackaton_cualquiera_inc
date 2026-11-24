@@ -335,6 +335,27 @@ Resultado observado:
 
 **CUMPLE** tras corregir el permiso que faltaba. Desde GitHub, la prueba de humo no puede pasar por CloudFront (el runner no está en `CidrAcceso` → 403, esperado), así que comprueba las EC2 por SSM.
 
+## AWS10 — Destrucción completa desde GitHub Actions
+Qué queremos comprobar: que `destruir` desde Actions borra todo en orden y verifica que no quede nada cobrando.
+Pasos: Actions → "AWS Nodo Ruta" → `destruir` (confirmación `destruir`). Ejecución 45439345882.
+Resultado observado: **todo borrado en 8 min 28 s**.
+
+| Paso | Tiempo |
+|---|---|
+| Front (bucket vaciado + CloudFront) | 3 min 20 s |
+| Cómputo | 1 min 18 s |
+| Datos (respaldos vaciados con versiones + RDS) | 1 min 42 s |
+| Red | 24 s |
+| Los 2 parámetros SSM | 2 s |
+
+La ejecución terminó en **FALLO** por un **falso positivo** en la verificación final:
+- El índice de etiquetas todavía listaba `subnet-076b6f829a9446648`, pero `describe-subnets` respondió `InvalidSubnetID.NotFound`.
+- La comprobación directa dio 0 pilas, 0 VPC y 0 subredes del proyecto.
+- Las 2 instancias `terminated` y el snapshot automático de RDS quedaron como "resto esperado".
+
+Corrección (rama `fix/verificacion-destruir`): antes de marcar un ARN como pendiente, `aws_nodo.py` pregunta al servicio dueño con una llamada de lectura. Si responde NotFound, cuenta como resto del índice y no como fallo.
+**CUMPLE** (destrucción completa). La verificación quedó corregida para las próximas ejecuciones.
+
 # Cierre
 
 Qué funciona realmente (probado en local):

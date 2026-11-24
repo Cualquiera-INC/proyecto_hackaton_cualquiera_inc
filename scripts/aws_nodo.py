@@ -721,7 +721,7 @@ def recursos_etiquetados(conservar_secretos=False):
 
 
 def _no_existe(texto):
-    return any(t in texto for t in ("NotFound", "does not exist", "NoSuchBucket", "NoSuchDistribution", "Not Found", "404"))
+    return any(t in texto for t in ("NotFound", "does not exist", "NoSuchBucket", "NoSuchDistribution", "Not Found"))
 
 
 def existe_recurso(arn, region):
