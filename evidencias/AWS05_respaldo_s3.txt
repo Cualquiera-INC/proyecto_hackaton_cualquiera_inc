@@ -1,0 +1,18 @@
+2026-11-23T20:39:20 respaldar
+estado: Success
+Respaldo subido: s3://nodo-ruta-respaldos-262853426378-us-east-2/respaldos/20261124_013921_manual.dump (2915 bytes, sha256 ee626042716ca457f3b4bf7b8a3a84083d51e40f9f9317a0c91d8b87d540564e)
+
+
+2026-11-23T20:39:29 objetos en S3 (clave, tamano, fecha)
+----------------------------------------------------------------------------------
+|                                  ListObjectsV2                                 |
++------------------------------------------+-------+-----------------------------+
+|  respaldos/20261124_013921_manual.dump   |  2915 |  2026-11-24T01:39:25+00:00  |
+|  respaldos/20261124_013921_manual.sha256 |  65   |  2026-11-24T01:39:25+00:00  |
++------------------------------------------+-------+-----------------------------+
+2026-11-23T20:39:33 comprobar respaldos/20261124_013921_manual.dump
+estado: Success
+COMPROBADO respaldos/20261124_013921_manual.dump: 2915 bytes, sha256 ee626042716ca457f3b4bf7b8a3a84083d51e40f9f9317a0c91d8b87d540564e, 6 objetos en el indice
+
+
+respaldos/20261124_013921_manual.dump

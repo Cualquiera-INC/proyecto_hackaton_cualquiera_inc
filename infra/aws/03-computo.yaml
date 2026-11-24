@@ -1,0 +1,300 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Nodo Ruta - computo: 2 EC2 (app + pedidos en contenedores) en dos zonas detras de un ALB publico HTTP,
+  conectadas a RDS, sin SSH (solo SSM), con rol de minimo privilegio. Requiere las pilas de red y datos.
+
+Metadata:
+  AWSToolsMetrics:
+    AWSAgentToolkit: aws-cloudformation@3
+  com.aws.cloudformation.Context:
+    purpose: Capa de computo del despliegue de AWS (D13, D14 y D15 en docs/03-decisiones.md).
+    must:
+      - Importa red y datos; las EC2 usan SgEc2 (8080 solo desde el ALB) y el ALB usa SgAlb (80 solo desde CidrAcceso).
+      - Sin secretos en la plantilla ni en el user data; la clave se lee de SSM en la EC2 (ssm:GetParameter solo sobre su ruta).
+      - Sin IP elastica, NAT ni HTTPS (no hay dominio: pendiente documentado).
+      - Todo lleva la etiqueta proyecto=nodo-ruta.
+
+Parameters:
+  PilaRed:
+    Type: String
+    Default: nodo-ruta-red
+    Description: Nombre de la pila de red (01-red.yaml).
+  PilaDatos:
+    Type: String
+    Default: nodo-ruta-datos
+    Description: Nombre de la pila de datos (02-datos.yaml).
+  VersionGit:
+    Type: String
+    AllowedPattern: '^[A-Za-z0-9._/-]{1,100}$'
+    Description: >-
+      Etiqueta o hash de commit del repo que ejecutan las EC2 (sin valor por defecto, para que sea reproducible).
+      Debe estar publicado en GitHub. Tambien es la etiqueta de las imagenes Docker (nunca latest).
+  UrlRepo:
+    Type: String
+    Default: https://github.com/Cualquiera-INC/proyecto_hackaton_cualquiera_inc.git
+    AllowedPattern: '^https://github\.com/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+\.git$'
+    Description: Repo PUBLICO de GitHub del que las EC2 traen el codigo (sin credenciales).
+  TipoInstancia:
+    Type: String
+    Default: t3.micro
+    AllowedValues: [t3.micro, t4g.micro]
+    Description: Tipos elegibles del plan gratuito verificados en us-east-2 (t3 es x86, t4g es Arm).
+  AmiX86:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64
+    Description: Amazon Linux 2023 mas reciente (parametro publico de SSM).
+  AmiArm:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-arm64
+    Description: Amazon Linux 2023 Arm mas reciente (solo se usa con t4g.micro).
+
+Conditions:
+  EsArm: !Equals [!Ref TipoInstancia, t4g.micro]
+
+Resources:
+  RolEc2:
+    Type: AWS::IAM::Role
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Minimo privilegio. SSM para entrar sin SSH; leer solo la clave de la base; escribir/leer solo respaldos/ del bucket.
+        must:
+          - Sin comodines de recurso ni politicas FullAccess.
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: ec2.amazonaws.com }
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - !Sub "arn:${AWS::Partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
+      Policies:
+        - PolicyName: nodo-ruta-minimo
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Sid: LeerClaveDeLaBase
+                Effect: Allow
+                Action: ssm:GetParameter
+                Resource: !Sub
+                  - "arn:${AWS::Partition}:ssm:${AWS::Region}:${AWS::AccountId}:parameter${Ruta}"
+                  - Ruta: !ImportValue { "Fn::Sub": "${PilaDatos}-RutaParametroClave" }
+              - Sid: RespaldosListar
+                Effect: Allow
+                Action: s3:ListBucket
+                Resource: !ImportValue { "Fn::Sub": "${PilaDatos}-BucketArn" }
+                Condition:
+                  StringLike:
+                    s3:prefix: ["respaldos/", "respaldos/*"]
+              - Sid: RespaldosLeerYEscribir
+                Effect: Allow
+                Action: [s3:PutObject, s3:GetObject]
+                Resource: !Sub
+                  - "${Arn}/respaldos/*"
+                  - Arn: !ImportValue { "Fn::Sub": "${PilaDatos}-BucketArn" }
+      Tags:
+        - { Key: proyecto, Value: nodo-ruta }
+
+  PerfilEc2:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles: [!Ref RolEc2]
+
+  Ec2A:
+    Type: AWS::EC2::Instance
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: EC2 A en la zona de la primera subred publica. Corre app (8080) y pedidos; sin PostgreSQL local (usa RDS).
+        must:
+          - Sin SSH ni key pair; acceso solo por SSM Session Manager.
+          - IMDSv2 obligatorio con salto 1 (los contenedores no alcanzan los metadatos).
+          - Creditos de CPU en modo standard (sin cobro por exceso en t3).
+    Properties:
+      ImageId: !If [EsArm, !Ref AmiArm, !Ref AmiX86]
+      InstanceType: !Ref TipoInstancia
+      SubnetId: !Select [0, !Split [",", !ImportValue { "Fn::Sub": "${PilaRed}-SubredesPublicas" }]]
+      SecurityGroupIds:
+        - !ImportValue { "Fn::Sub": "${PilaRed}-SgEc2" }
+      IamInstanceProfile: !Ref PerfilEc2
+      CreditSpecification:
+        CPUCredits: standard
+      Monitoring: false
+      MetadataOptions:
+        HttpTokens: required
+        HttpEndpoint: enabled
+        HttpPutResponseHopLimit: 1
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            Encrypted: true
+            DeleteOnTermination: true
+      UserData:
+        Fn::Base64:
+          Fn::Sub:
+            - |
+              #!/bin/bash
+              # Arranque de la EC2 A: instala Docker y git, trae el repo en la version fija y llama a iniciar.sh.
+              set -euxo pipefail
+              exec > >(tee -a /var/log/nodo-ruta-arranque.log) 2>&1
+              dnf install -y docker git
+              systemctl enable --now docker
+              cat > /etc/nodo-ruta.env <<'EOF'
+              REGION=${AWS::Region}
+              VERSION=${VersionGit}
+              DB_HOST=${DbEndpoint}
+              DB_PORT=${DbPuerto}
+              DB_NAME=${DbNombre}
+              DB_USER=${DbUsuario}
+              RUTA_CLAVE=${RutaClave}
+              BUCKET=${Bucket}
+              EOF
+              mkdir -p /opt/nodo-ruta/repo && cd /opt/nodo-ruta/repo
+              git init -q
+              git fetch --depth 1 ${UrlRepo} ${VersionGit}
+              git checkout -q FETCH_HEAD
+              bash despliegue/aws/iniciar.sh
+            - DbEndpoint: !ImportValue { "Fn::Sub": "${PilaDatos}-DbEndpoint" }
+              DbPuerto: !ImportValue { "Fn::Sub": "${PilaDatos}-DbPuerto" }
+              DbNombre: !ImportValue { "Fn::Sub": "${PilaDatos}-DbNombre" }
+              DbUsuario: !ImportValue { "Fn::Sub": "${PilaDatos}-DbUsuario" }
+              RutaClave: !ImportValue { "Fn::Sub": "${PilaDatos}-RutaParametroClave" }
+              Bucket: !ImportValue { "Fn::Sub": "${PilaDatos}-BucketNombre" }
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-ec2a" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  Ec2B:
+    Type: AWS::EC2::Instance
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: EC2 B en la zona de la segunda subred publica. Corre app (8080) y pedidos; sin PostgreSQL local (usa RDS).
+        must:
+          - Sin SSH ni key pair; acceso solo por SSM Session Manager.
+          - IMDSv2 obligatorio con salto 1 (los contenedores no alcanzan los metadatos).
+          - Creditos de CPU en modo standard (sin cobro por exceso en t3).
+    Properties:
+      ImageId: !If [EsArm, !Ref AmiArm, !Ref AmiX86]
+      InstanceType: !Ref TipoInstancia
+      SubnetId: !Select [1, !Split [",", !ImportValue { "Fn::Sub": "${PilaRed}-SubredesPublicas" }]]
+      SecurityGroupIds:
+        - !ImportValue { "Fn::Sub": "${PilaRed}-SgEc2" }
+      IamInstanceProfile: !Ref PerfilEc2
+      CreditSpecification:
+        CPUCredits: standard
+      Monitoring: false
+      MetadataOptions:
+        HttpTokens: required
+        HttpEndpoint: enabled
+        HttpPutResponseHopLimit: 1
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            VolumeSize: 8
+            VolumeType: gp3
+            Encrypted: true
+            DeleteOnTermination: true
+      UserData:
+        Fn::Base64:
+          Fn::Sub:
+            - |
+              #!/bin/bash
+              # Arranque de la EC2 B: instala Docker y git, trae el repo en la version fija y llama a iniciar.sh.
+              set -euxo pipefail
+              exec > >(tee -a /var/log/nodo-ruta-arranque.log) 2>&1
+              dnf install -y docker git
+              systemctl enable --now docker
+              cat > /etc/nodo-ruta.env <<'EOF'
+              REGION=${AWS::Region}
+              VERSION=${VersionGit}
+              DB_HOST=${DbEndpoint}
+              DB_PORT=${DbPuerto}
+              DB_NAME=${DbNombre}
+              DB_USER=${DbUsuario}
+              RUTA_CLAVE=${RutaClave}
+              BUCKET=${Bucket}
+              EOF
+              mkdir -p /opt/nodo-ruta/repo && cd /opt/nodo-ruta/repo
+              git init -q
+              git fetch --depth 1 ${UrlRepo} ${VersionGit}
+              git checkout -q FETCH_HEAD
+              bash despliegue/aws/iniciar.sh
+            - DbEndpoint: !ImportValue { "Fn::Sub": "${PilaDatos}-DbEndpoint" }
+              DbPuerto: !ImportValue { "Fn::Sub": "${PilaDatos}-DbPuerto" }
+              DbNombre: !ImportValue { "Fn::Sub": "${PilaDatos}-DbNombre" }
+              DbUsuario: !ImportValue { "Fn::Sub": "${PilaDatos}-DbUsuario" }
+              RutaClave: !ImportValue { "Fn::Sub": "${PilaDatos}-RutaParametroClave" }
+              Bucket: !ImportValue { "Fn::Sub": "${PilaDatos}-BucketNombre" }
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-ec2b" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  Alb:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: application
+      Scheme: internet-facing
+      IpAddressType: ipv4
+      Subnets: !Split [",", !ImportValue { "Fn::Sub": "${PilaRed}-SubredesPublicas" }]
+      SecurityGroups:
+        - !ImportValue { "Fn::Sub": "${PilaRed}-SgAlb" }
+      LoadBalancerAttributes:
+        - { Key: deletion_protection.enabled, Value: "false" }
+        - { Key: routing.http.drop_invalid_header_fields.enabled, Value: "true" }
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-alb" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  GrupoDestino:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Health check corto (5 s, 2 fallos = ~10 s) para medir rapido la caida de una instancia.
+    Properties:
+      VpcId: !ImportValue { "Fn::Sub": "${PilaRed}-VpcId" }
+      Protocol: HTTP
+      Port: 8080
+      TargetType: instance
+      HealthCheckProtocol: HTTP
+      HealthCheckPath: /health
+      HealthCheckPort: traffic-port
+      HealthCheckIntervalSeconds: 5
+      HealthCheckTimeoutSeconds: 3
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
+      Matcher: { HttpCode: "200" }
+      TargetGroupAttributes:
+        - { Key: deregistration_delay.timeout_seconds, Value: "30" }
+      Targets:
+        - { Id: !Ref Ec2A, Port: 8080 }
+        - { Id: !Ref Ec2B, Port: 8080 }
+      Tags:
+        - { Key: proyecto, Value: nodo-ruta }
+
+  Listener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref Alb
+      Port: 80
+      Protocol: HTTP   # Sin HTTPS: no hay dominio ni certificado (pendiente, docs/04)
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref GrupoDestino
+
+Outputs:
+  UrlAlb:
+    Description: URL publica (solo accesible desde CidrAcceso).
+    Value: !Sub "http://${Alb.DNSName}"
+  IdInstanciaA:
+    Description: Id de la EC2 A.
+    Value: !Ref Ec2A
+  IdInstanciaB:
+    Description: Id de la EC2 B.
+    Value: !Ref Ec2B
+  ArnGrupoDestino:
+    Description: ARN del target group (para describe-target-health).
+    Value: !Ref GrupoDestino
+  ArnAlb:
+    Description: ARN del ALB.
+    Value: !Ref Alb

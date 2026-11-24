@@ -1,0 +1,29 @@
+2026-11-23T20:41:35 inicio; respaldo respaldos/20261124_013921_manual.dump
+2026-11-23T20:41:45 VERIFICAR antes
+estado: Success
+version_datos=datos-v1 pedidos=6
+
+
+2026-11-23T20:41:56 ALTERAR (DROP TABLE pedidos)
+estado: Success
+COMPROBADO respaldos/20261124_013921_manual.dump: 2915 bytes, sha256 ee626042716ca457f3b4bf7b8a3a84083d51e40f9f9317a0c91d8b87d540564e, 6 objetos en el indice
+DROP TABLE
+Tabla pedidos eliminada (dano simulado). El /health del servicio debe devolver 503.
+
+
+2026-11-23T20:42:23 /health del ALB tras alterar: 503
+2026-11-23T20:42:25 RESTAURAR
+estado: Failed
+COMPROBADO respaldos/20261124_013921_manual.dump: 2915 bytes, sha256 ee626042716ca457f3b4bf7b8a3a84083d51e40f9f9317a0c91d8b87d540564e, 6 objetos en el indice
+
+El respaldo no contiene los datos de pedidos: no se sube
+failed to run commands: exit status 1
+2026-11-23T20:42:36 restaurar terminó
+2026-11-23T20:44:59 VERIFICAR despues
+estado: Success
+La tabla pedidos no existe o la base no responde
+
+ERROR:  relation "pedidos" does not exist
+LINE 1: ... 'version') || ' pedidos=' || (SELECT count(*) FROM pedidos)
+                                                               ^
+

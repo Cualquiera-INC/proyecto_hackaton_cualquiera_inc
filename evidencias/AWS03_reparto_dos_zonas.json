@@ -1,0 +1,33 @@
+{
+  "prueba": "AWS03",
+  "fecha": "2026-11-23",
+  "region": "us-east-2",
+  "pila": "nodo-ruta-computo",
+  "plantilla": "infra/aws/03-computo.yaml",
+  "version_git": "6f5a222501b65ff185bb59ded911081da521d482",
+  "salud_target_group": {
+    "i-0a7530c48499d892b": "healthy",
+    "i-02c4d85fbe1185d0f": "healthy (tras ~8 min de arranque)"
+  },
+  "health_ejemplo": {
+    "estado": "ok",
+    "instancia": "us-east-2a-i-0a7530c48499d892b",
+    "version_app": "6f5a222501b65ff185bb59ded911081da521d482",
+    "version_datos": "datos-v1",
+    "servicio_datos": {
+      "instancia": "pedidos-us-east-2a-i-0a7530c48499d892b",
+      "origen_datos": "base"
+    }
+  },
+  "reparto_8_solicitudes": [
+    "2b",
+    "2b",
+    "2a",
+    "2a",
+    "2b",
+    "2b",
+    "2a",
+    "2a"
+  ],
+  "observacion": "La primera ronda (6 solicitudes) solo respondio 2a: la EC2 B seguia construyendo imagenes y el ALB la tenia unhealthy. Con ambas healthy el ALB reparte entre las dos zonas."
+}

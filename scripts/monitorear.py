@@ -6,6 +6,9 @@ errores hubo y en qué momento cambió la versión que responde.
 
   python scripts/monitorear.py --segundos 90 --salida evidencias/despliegue_v2.json
 
+La URL puede ser cualquiera (p. ej. el ALB de AWS: http://DNS/pedidos); la instancia sale del JSON.
+El resumen incluye, por instancia, su primera/última respuesta y su mayor silencio.
+
 Se detiene al cumplir el tiempo o con Ctrl+C (la evidencia se guarda igual).
 Código de salida 0 si no hubo ningún error.
 """
@@ -58,6 +61,23 @@ errores = [r for r in rows if r.get("http") != 200]
 por_version = collections.Counter(r.get("version_app") for r in rows if r.get("http") == 200)
 por_instancia = collections.Counter(f"{r.get('instancia')}@{r.get('version_app')}" for r in rows if r.get("http") == 200)
 lat = sorted(r["milisegundos"] for r in rows if r.get("http") == 200)
+
+
+def silencios():
+    """Por instancia: primera y última respuesta y su mayor silencio (útil cuando una cae y vuelve)."""
+    fechas = collections.defaultdict(list)
+    for r in rows:
+        if r.get("http") == 200 and r.get("instancia"):
+            fechas[r["instancia"]].append(r["fecha"])
+    salida = {}
+    for inst, lista in sorted(fechas.items()):
+        mayor = {"segundos": 0.0, "desde": None, "hasta": None}
+        for antes, despues in zip(lista, lista[1:]):
+            seg = (datetime.datetime.fromisoformat(despues) - datetime.datetime.fromisoformat(antes)).total_seconds()
+            if seg > mayor["segundos"]:
+                mayor = {"segundos": round(seg, 1), "desde": antes, "hasta": despues}
+        salida[inst] = {"respuestas": len(lista), "primera": lista[0], "ultima": lista[-1], "mayor_silencio": mayor}
+    return salida
 resumen = {
     "url": a.url,
     "resultado": "SIN_CAIDA" if rows and not errores else "CON_ERRORES",
@@ -68,6 +88,7 @@ resumen = {
     "respuestas_por_instancia": dict(por_instancia),
     "latencia_ms": {"max": lat[-1], "p95": lat[int(len(lat) * 0.95) - 1] if len(lat) > 1 else lat[0],
                     "mediana": lat[len(lat) // 2]} if lat else {},
+    "instancias": silencios(),
     "primer_error": errores[0]["fecha"] if errores else None,
     "ultimo_error": errores[-1]["fecha"] if errores else None,
 }

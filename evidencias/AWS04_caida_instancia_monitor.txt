@@ -1,0 +1,52 @@
+Monitoreando http://nodo-rut-Alb-kgaVDc2qaYOi-180377821.us-east-2.elb.amazonaws.com/pedidos durante 270 s (Ctrl+C para terminar antes)...
+  2026-11-23T20:25:51.323 respondiendo: {'us-east-2a-i-0595561ca670bc592': 'd7b0acd55cce3434eb0b03bb20bb576d6bb3d901'}
+  2026-11-23T20:25:52.079 respondiendo: {'us-east-2a-i-0595561ca670bc592': 'd7b0acd55cce3434eb0b03bb20bb576d6bb3d901', 'us-east-2b-i-09231cd2d9334ea7d': 'd7b0acd55cce3434eb0b03bb20bb576d6bb3d901'}
+  2026-11-23T20:26:13.119 ERROR http=502 HTTP Error 502: Bad Gateway
+  2026-11-23T20:26:16.589 ERROR http=502 HTTP Error 502: Bad Gateway
+  2026-11-23T20:26:17.287 ERROR http=502 HTTP Error 502: Bad Gateway
+  2026-11-23T20:26:19.410 ERROR http=502 HTTP Error 502: Bad Gateway
+  2026-11-23T20:26:20.820 ERROR http=None timed out
+{
+  "url": "http://nodo-rut-Alb-kgaVDc2qaYOi-180377821.us-east-2.elb.amazonaws.com/pedidos",
+  "resultado": "CON_ERRORES",
+  "consultas": 299,
+  "errores": 5,
+  "duracion_s": 270.7,
+  "respuestas_por_version": {
+    "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 294
+  },
+  "respuestas_por_instancia": {
+    "us-east-2a-i-0595561ca670bc592@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 192,
+    "us-east-2b-i-09231cd2d9334ea7d@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 102
+  },
+  "latencia_ms": {
+    "max": 2239.5,
+    "p95": 1214.4,
+    "mediana": 217.4
+  },
+  "instancias": {
+    "us-east-2a-i-0595561ca670bc592": {
+      "respuestas": 192,
+      "primera": "2026-11-23T20:25:51.323",
+      "ultima": "2026-11-23T20:30:21.341",
+      "mayor_silencio": {
+        "segundos": 6.3,
+        "desde": "2026-11-23T20:26:20.096",
+        "hasta": "2026-11-23T20:26:26.415"
+      }
+    },
+    "us-east-2b-i-09231cd2d9334ea7d": {
+      "respuestas": 102,
+      "primera": "2026-11-23T20:25:52.079",
+      "ultima": "2026-11-23T20:30:20.618",
+      "mayor_silencio": {
+        "segundos": 90.5,
+        "desde": "2026-11-23T20:26:10.045",
+        "hasta": "2026-11-23T20:27:40.555"
+      }
+    }
+  },
+  "primer_error": "2026-11-23T20:26:13.119",
+  "ultimo_error": "2026-11-23T20:26:20.820"
+}
+Evidencia guardada en evidencias/AWS04_caida_instancia_monitor.json

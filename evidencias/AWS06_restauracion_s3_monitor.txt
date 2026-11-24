@@ -1,0 +1,227 @@
+Monitoreando http://nodo-rut-Alb-kgaVDc2qaYOi-180377821.us-east-2.elb.amazonaws.com/health durante 200 s (Ctrl+C para terminar antes)...
+  2026-11-23T20:41:35.491 respondiendo: {'us-east-2a-i-0595561ca670bc592': 'd7b0acd55cce3434eb0b03bb20bb576d6bb3d901'}
+  2026-11-23T20:41:40.357 respondiendo: {'us-east-2a-i-0595561ca670bc592': 'd7b0acd55cce3434eb0b03bb20bb576d6bb3d901', 'us-east-2b-i-09231cd2d9334ea7d': 'd7b0acd55cce3434eb0b03bb20bb576d6bb3d901'}
+  2026-11-23T20:42:00.416 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:01.130 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:02.093 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:03.107 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:03.846 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:04.583 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:05.263 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:05.966 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:06.686 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:07.376 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:08.079 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:08.799 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:09.540 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:10.221 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:10.927 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:11.606 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:12.322 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:13.047 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:14.760 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:15.499 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:16.226 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:17.211 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:17.911 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:18.631 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:19.672 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:20.362 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:21.381 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:22.128 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:24.156 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:25.581 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:26.287 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:27.020 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:27.764 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:28.460 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:29.491 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:30.500 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:31.201 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:31.972 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:32.706 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:34.475 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:35.223 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:35.933 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:36.689 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:38.465 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:39.214 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:39.931 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:42.659 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:43.418 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:44.136 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:45.172 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:46.885 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:48.921 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:49.931 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:51.634 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:52.623 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:54.359 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:55.059 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:55.758 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:56.450 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:57.156 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:57.872 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:58.554 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:42:59.344 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:00.047 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:00.808 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:01.515 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:02.235 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:04.127 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:04.820 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:05.525 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:06.229 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:06.928 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:07.636 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:08.355 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:10.048 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:11.814 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:12.528 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:14.213 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:14.946 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:16.515 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:17.230 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:17.932 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:18.641 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:20.377 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:21.073 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:22.039 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:22.781 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:23.507 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:24.224 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:24.946 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:25.651 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:26.330 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:27.827 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:28.519 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:29.233 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:29.967 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:30.700 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:31.418 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:32.162 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:32.882 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:33.615 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:34.314 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:35.000 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:36.492 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:38.212 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:38.927 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:39.642 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:40.380 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:41.107 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:41.804 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:43.522 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:45.242 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:45.953 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:46.664 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:48.361 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:49.337 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:50.073 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:50.795 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:51.537 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:52.253 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:52.966 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:53.668 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:54.394 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:55.131 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:56.217 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:56.935 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:57.902 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:58.609 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:43:59.327 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:01.354 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:02.071 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:02.789 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:04.260 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:04.993 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:06.709 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:08.699 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:09.657 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:11.393 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:12.113 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:13.787 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:15.514 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:16.240 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:17.245 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:18.376 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:19.109 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:19.813 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:21.532 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:23.223 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:23.925 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:24.627 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:25.387 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:26.108 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:26.810 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:28.827 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:29.527 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:30.232 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:30.944 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:31.644 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:32.375 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:33.381 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:34.102 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:35.819 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:36.539 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:37.236 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:37.957 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:39.969 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:40.666 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:41.689 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:44.405 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:45.121 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:46.848 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:47.593 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:48.582 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:49.308 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:50.047 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:51.059 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:51.771 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:52.757 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:53.503 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:44:54.199 ERROR http=503 HTTP Error 503: Service Unavailable
+{
+  "url": "http://nodo-rut-Alb-kgaVDc2qaYOi-180377821.us-east-2.elb.amazonaws.com/health",
+  "resultado": "CON_ERRORES",
+  "consultas": 197,
+  "errores": 180,
+  "duracion_s": 203.7,
+  "respuestas_por_version": {
+    "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 17
+  },
+  "respuestas_por_instancia": {
+    "us-east-2a-i-0595561ca670bc592@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 9,
+    "us-east-2b-i-09231cd2d9334ea7d@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 8
+  },
+  "latencia_ms": {
+    "max": 4362.3,
+    "p95": 4261.6,
+    "mediana": 223.8
+  },
+  "instancias": {
+    "us-east-2a-i-0595561ca670bc592": {
+      "respuestas": 9,
+      "primera": "2026-11-23T20:41:35.491",
+      "ultima": "2026-11-23T20:41:59.717",
+      "mayor_silencio": {
+        "segundos": 6.5,
+        "desde": "2026-11-23T20:41:51.508",
+        "hasta": "2026-11-23T20:41:58.036"
+      }
+    },
+    "us-east-2b-i-09231cd2d9334ea7d": {
+      "respuestas": 8,
+      "primera": "2026-11-23T20:41:40.357",
+      "ultima": "2026-11-23T20:41:57.289",
+      "mayor_silencio": {
+        "segundos": 4.8,
+        "desde": "2026-11-23T20:41:52.522",
+        "hasta": "2026-11-23T20:41:57.289"
+      }
+    }
+  },
+  "primer_error": "2026-11-23T20:42:00.416",
+  "ultimo_error": "2026-11-23T20:44:54.199"
+}
+Evidencia guardada en evidencias/AWS06_restauracion_s3_monitor.json

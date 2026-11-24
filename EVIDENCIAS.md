@@ -250,6 +250,38 @@ Qué queremos comprobar: que la SCP deja crear RDS y S3 en us-east-2 y que la co
 Pasos: crear el parámetro SecureString `/nodo-ruta/db/password` (a mano, con `read -s`); `create-stack` de `nodo-ruta-datos`; `wait stack-create-complete`; `describe-stacks`.
 Resultado observado: **CREATE_COMPLETE** en ~13 min. RDS PostgreSQL 17 (`db.t4g.micro`, Single-AZ, cifrada, sin acceso público) y bucket de respaldos creados. **CUMPLE**. Evidencia: `evidencias/AWS02_pila_datos.json`. Costo: RDS consume créditos mientras exista.
 
+## AWS03 — Reparto entre dos zonas detrás del ALB
+Qué queremos comprobar: que el ALB reparte entre las 2 EC2 (una por zona), que la app lee de RDS y que cada respuesta identifica la instancia.
+Pasos: `create-stack` de `nodo-ruta-computo` (versión git `6f5a222`); esperar el arranque; consultar `/health` del ALB varias veces; `describe-target-health`.
+Resultado observado: **CREATE_COMPLETE**; `/health` → `estado: ok`, `origen_datos: base` (RDS con los 6 pedidos cargados). Al principio solo respondía 2a: la EC2 B tardó ~8 min en construir las imágenes y estuvo `unhealthy` mientras tanto (el ALB no le mandó tráfico). Con ambas `healthy`, 8 solicitudes: 4 a `us-east-2a` y 4 a `us-east-2b`. **CUMPLE**. Evidencia: `evidencias/AWS03_reparto_dos_zonas.json`
+
+## AWS04 — Caída de una instancia (EC2 B) y recuperación
+Qué queremos comprobar: qué ve un cliente si una de las dos EC2 se detiene, cuánto tarda el ALB en sacarla y si vuelve sola al arrancarla.
+Pasos (`infra/aws/PRUEBAS.md`): `monitorear.py` contra `/pedidos` del ALB durante 270 s cada 0,5 s; a los 20 s `stop-instances` de B; 30 s detenida; `start-instances`; un bucle anota la salud del target group cada ~2 s. Versión `d7b0acd`.
+Resultado observado:
+- **299 consultas, 5 errores (1,7 %)**: 4 × 502 y 1 *timeout*, todos entre **20:26:13,1 y 20:26:20,8**, es decir de 2,1 s a 9,8 s después de `STOP_B enviado` (20:26:11). **Después, 0 errores**, también cuando B volvió.
+- El ALB marcó a B `unhealthy` en la lectura de las **20:26:24** (≤13 s tras la parada; el bucle muestrea cada ~2 s). Desde el último error, todo lo atendió A.
+- B volvió **sola**: primera respuesta a las **20:27:40,6**, **40,6 s** después de `START_B enviado` (22 s después de `running`), sin tocar nada más. Los contenedores arrancaron por `--restart unless-stopped`. B estuvo 90,5 s sin responder en total.
+- Latencia: mediana 217 ms, p95 1214 ms, máx. 2240 ms.
+**CUMPLE** el criterio [S] (errores solo en una ventana corta alrededor de la parada, cero después, B vuelve sola antes de 270 s).
+Hallazgo honesto: el ALB **no reintenta** contra la otra instancia, así que durante ~8 s (hasta que el health check de 2 × 5 s saca a B) algunas solicitudes fallan con 502. Mejora posible: sacar la instancia del target group antes de una parada planificada o bajar el umbral del health check. Evidencias: `evidencias/AWS04_caida_instancia_*`
+
+## AWS05 — Respaldo a S3 y comprobación de integridad
+Qué queremos comprobar: que `despliegue/aws/respaldar.sh` saca un `pg_dump` de RDS, lo deja en S3 (fuera del cómputo y de la base) con su SHA-256, y que el objeto es íntegro y legible.
+Pasos (`infra/aws/PRUEBAS.md`): `respaldar.sh` en la EC2 A con `aws ssm send-command`; listar `respaldos/` en el bucket; `datos.sh comprobar` (vuelve a bajar el objeto, compara el SHA-256 y lee el índice con `pg_restore --list`).
+Resultado observado: `estado: Success` en las dos órdenes. En S3 quedaron `respaldos/20261124_013921_manual.dump` (2915 bytes) y su `.sha256`. `COMPROBADO`: mismo sha256 `ee626042…564e` y 6 objetos en el índice, con los datos de `pedidos`. Tiempo total: ~13 s, de las 20:39:20 a las 20:39:33. **CUMPLE**. Evidencia: `evidencias/AWS05_respaldo_s3.txt`
+
+## AWS06 — Alteración simulada y restauración desde S3 (primer intento, FALLÓ)
+Qué queremos comprobar: que un daño en los datos se detecta y que se restaura desde S3, midiendo el tiempo de recuperación.
+Pasos: monitor sobre `/health` del ALB 200 s; `datos.sh verificar` → `alterar` (DROP TABLE pedidos, con el respaldo de AWS05 comprobado antes) → `/health` → `restaurar`.
+Resultado observado: `verificar` antes: `datos-v1 pedidos=6`. Tras alterar, `/health` del ALB → **503** (el daño se detecta y no se tapa). **`restaurar` falló** (`estado: Failed`): antes de restaurar guarda una copia `prerestauracion` del estado actual, y `respaldar.sh` se negó a subirla porque exige la tabla `pedidos`, que es justo lo que faltaba. No se tocó la base. El servicio quedó en 503: **180 errores de 197** entre 20:42:00 y el final del monitor. **NO CUMPLE**.
+Corrección: commit `166ca8a`. La copia `prerestauracion` ya no exige `pedidos`, aunque sí que `pg_restore` pueda leerla. Evidencia: `evidencias/AWS06_restauracion_s3*`
+
+## AWS06b — Restauración desde S3 con la corrección
+Pasos: actualizar el repo de la EC2 A a `166ca8a` por SSM; monitor sobre `/health` 75 s; `datos.sh restaurar respaldos/20261124_013921_manual.dump`; `verificar`; listar el bucket.
+Resultado observado: `/health` antes: **503**. `RESTAURAR` a las **20:50:20**: respaldo comprobado (mismo sha256), copia `20261124_015025_prerestauracion.dump` subida a S3, `Restaurado desde ...`, `datos-v1 pedidos=6` (iguales que antes del daño). **Primer 200 a las 20:50:28,6 → recuperación en 8,6 s** medida desde la orden, incluida la latencia de SSM. Los 11 errores son todos anteriores (último a las 20:50:27,9) y **después hay 0 errores**, con 34 respuestas de cada zona. SSM informó el fin a las 20:50:33. **CUMPLE**.
+Lectura honesta: la recuperación con el procedimiento correcto tarda segundos, pero el incidente completo duró **~8,5 min** (20:42:00 → 20:50:28) por el defecto del script. Ensayar la restauración antes de necesitarla es lo que lo descubrió. Evidencia: `evidencias/AWS06b_restauracion_s3*`
+
 # Cierre
 
 Qué funciona realmente (probado en local):

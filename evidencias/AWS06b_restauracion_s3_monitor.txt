@@ -1,0 +1,58 @@
+Monitoreando http://nodo-rut-Alb-kgaVDc2qaYOi-180377821.us-east-2.elb.amazonaws.com/health durante 75 s (Ctrl+C para terminar antes)...
+  2026-11-23T20:50:15.069 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:18.232 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:20.196 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:21.909 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:22.646 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:23.337 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:24.045 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:24.749 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:26.450 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:27.159 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:27.887 ERROR http=503 HTTP Error 503: Service Unavailable
+  2026-11-23T20:50:28.617 respondiendo: {'us-east-2b-i-09231cd2d9334ea7d': 'd7b0acd55cce3434eb0b03bb20bb576d6bb3d901'}
+  2026-11-23T20:50:30.357 respondiendo: {'us-east-2a-i-0595561ca670bc592': 'd7b0acd55cce3434eb0b03bb20bb576d6bb3d901', 'us-east-2b-i-09231cd2d9334ea7d': 'd7b0acd55cce3434eb0b03bb20bb576d6bb3d901'}
+{
+  "url": "http://nodo-rut-Alb-kgaVDc2qaYOi-180377821.us-east-2.elb.amazonaws.com/health",
+  "resultado": "CON_ERRORES",
+  "consultas": 79,
+  "errores": 11,
+  "duracion_s": 75.4,
+  "respuestas_por_version": {
+    "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 68
+  },
+  "respuestas_por_instancia": {
+    "us-east-2b-i-09231cd2d9334ea7d@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 34,
+    "us-east-2a-i-0595561ca670bc592@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 34
+  },
+  "latencia_ms": {
+    "max": 3183.4,
+    "p95": 1229.2,
+    "mediana": 216.5
+  },
+  "instancias": {
+    "us-east-2a-i-0595561ca670bc592": {
+      "respuestas": 34,
+      "primera": "2026-11-23T20:50:30.357",
+      "ultima": "2026-11-23T20:51:29.404",
+      "mayor_silencio": {
+        "segundos": 4.4,
+        "desde": "2026-11-23T20:50:39.126",
+        "hasta": "2026-11-23T20:50:43.527"
+      }
+    },
+    "us-east-2b-i-09231cd2d9334ea7d": {
+      "respuestas": 34,
+      "primera": "2026-11-23T20:50:28.617",
+      "ultima": "2026-11-23T20:51:28.707",
+      "mayor_silencio": {
+        "segundos": 4.7,
+        "desde": "2026-11-23T20:51:23.974",
+        "hasta": "2026-11-23T20:51:28.707"
+      }
+    }
+  },
+  "primer_error": "2026-11-23T20:50:15.069",
+  "ultimo_error": "2026-11-23T20:50:27.887"
+}
+Evidencia guardada en evidencias/AWS06b_restauracion_s3_monitor.json
