@@ -720,10 +720,75 @@ def recursos_etiquetados(conservar_secretos=False):
     return pendientes, permanentes
 
 
+def _no_existe(texto):
+    return any(t in texto for t in ("NotFound", "does not exist", "NoSuchBucket", "NoSuchDistribution", "Not Found"))
+
+
+def existe_recurso(arn, region):
+    """True si el recurso del ARN existe, False si ya no existe, None si no se sabe (tipo no reconocido o sin dato).
+
+    El índice de etiquetas tarda en olvidar lo borrado: antes de marcar un ARN como pendiente se pregunta al
+    servicio dueño con una llamada de lectura. Solo un NotFound claro cuenta como 'ya no existe'."""
+    partes = arn.split(":", 5)
+    if len(partes) < 6:
+        return None
+    servicio, recurso = partes[2], partes[5]
+    ultimo = recurso.split("/")[-1]
+    try:
+        if servicio == "ec2":
+            tipo, _, ident = recurso.partition("/")
+            llamada = {"subnet": ("describe-subnets", "--subnet-ids"), "vpc": ("describe-vpcs", "--vpc-ids"),
+                       "security-group": ("describe-security-groups", "--group-ids"),
+                       "internet-gateway": ("describe-internet-gateways", "--internet-gateway-ids"),
+                       "route-table": ("describe-route-tables", "--route-table-ids"),
+                       "network-interface": ("describe-network-interfaces", "--network-interface-ids"),
+                       "volume": ("describe-volumes", "--volume-ids"),
+                       "instance": ("describe-instances", "--instance-ids")}.get(tipo)
+            if not llamada:
+                return None
+            r = aws("ec2", llamada[0], llamada[1], ident, region=region) or {}
+            if tipo == "instance":
+                return any(i["State"]["Name"] != "terminated" for x in r.get("Reservations", []) for i in x["Instances"])
+            if tipo == "volume":
+                return any(v.get("State") != "deleted" for v in r.get("Volumes", []))
+            return any(isinstance(v, list) and v for v in r.values())
+        if servicio == "elasticloadbalancing":
+            if recurso.startswith("loadbalancer/"):
+                aws("elbv2", "describe-load-balancers", "--load-balancer-arns", arn, region=region)
+            elif recurso.startswith("targetgroup/"):
+                aws("elbv2", "describe-target-groups", "--target-group-arns", arn, region=region)
+            else:
+                return None
+            return True
+        if servicio == "rds":
+            tipo, _, ident = recurso.partition(":")
+            if tipo == "db":
+                aws("rds", "describe-db-instances", "--db-instance-identifier", ident, region=region)
+            elif tipo == "subgrp":
+                aws("rds", "describe-db-subnet-groups", "--db-subnet-group-name", ident, region=region)
+            else:
+                return None
+            return True
+        if servicio == "s3" and not partes[3] and "/" not in recurso:
+            aws("s3api", "head-bucket", "--bucket", recurso, region=region)
+            return True
+        if servicio == "cloudfront" and recurso.startswith("distribution/"):
+            aws("cloudfront", "get-distribution", "--id", ultimo, "--query", "Distribution.Id", region=region)
+            return True
+        if servicio == "ssm" and recurso.startswith("parameter/"):
+            r = aws("ssm", "describe-parameters", "--parameter-filters",
+                    f"Key=Name,Option=Equals,Values=/{recurso[len('parameter/'):]}", region=region) or {}
+            return bool(r.get("Parameters"))
+    except ErrorAws as e:
+        return False if _no_existe(e.stderr) else None
+    return None
+
+
 def restos_esperados(pendientes):
     """Separa de 'pendientes' lo que AWS limpia solo y no es del despliegue.
 
     - Instancias EC2 en estado terminated (salen del índice de etiquetas en ~1 h).
+    - ARN que el índice de etiquetas aún lista pero cuyo servicio responde NotFound (existe_recurso() es False).
     - Snapshots automáticos de RDS (arn ...:snapshot:rds:...): no se pueden borrar a mano y RDS los
       elimina cuando vence su retención; quedan como pendiente de verificar.
     Devuelve (pendientes_reales, esperados)."""
@@ -743,6 +808,10 @@ def restos_esperados(pendientes):
     for p in pendientes:
         if ":snapshot:rds:" in p or any(f":instance/{i}" in p for i in terminadas):
             esperados.append(p)
+            continue
+        arn, _, resto = p.partition("  [")
+        if existe_recurso(arn, resto.rstrip("]") or REGION) is False:     # el índice de etiquetas aún lo lista
+            esperados.append(f"{p}  (resto del índice: ya no existe)")
         else:
             reales.append(p)
     return reales, esperados
