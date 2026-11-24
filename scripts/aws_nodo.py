@@ -11,6 +11,9 @@ Uso:
   python scripts/aws_nodo.py destruir [--si] [--conservar-secretos] [--evidencia AWS09]
   python scripts/aws_nodo.py --simular desplegar      (solo lecturas; muestra lo que ejecutaría)
 
+En GitHub Actions (.github/workflows/aws.yml) se usa con --cidr, --si y --evidencia; ahí la prueba de
+humo se hace por SSM en las EC2 (el runner no es la IP de CidrAcceso), también con --humo-remoto.
+
 Requisitos: AWS CLI v2 con credenciales activas, git, y npm (para construir el front).
 Solo biblioteca estándar; llama al AWS CLI con subprocess (sin bash), así que corre igual en
 macOS, Windows y Linux.
@@ -563,6 +566,50 @@ def prueba_humo(url):
         socket.getaddrinfo = _getaddrinfo
 
 
+def en_actions():
+    """True dentro de GitHub Actions: el runner no tiene la IP de CidrAcceso, así que CloudFront le da 403."""
+    return os.environ.get("GITHUB_ACTIONS") == "true"
+
+
+def prueba_humo_remota(url, ids):
+    """Prueba de humo cuando quien la corre NO es la IP permitida (GitHub Actions o --humo-remoto).
+
+    1) Desde aquí: CloudFront debe responder (200 si esta IP casualmente está permitida; 403 si no, que
+       además comprueba que la restricción por IP funciona).
+    2) Por SSM, en cada EC2: /health (estado ok) y /pedidos (6 pedidos) contra el puerto 8080 local."""
+    url = url.rstrip("/")
+    socket.getaddrinfo = _solo_ipv4
+    try:
+        def raiz():
+            c, _, _ = http_get(url + "/")
+            if c not in (200, 403):
+                raise Fallo(f"CloudFront devolvió {c} (se esperaba 200 o 403)")
+            return c
+        c = con_reintentos("GET / (CloudFront)", raiz)
+        log(f"   CloudFront responde {c} a esta IP ({'permitida' if c == 200 else 'no está en CidrAcceso: es lo esperado'})")
+    finally:
+        socket.getaddrinfo = _getaddrinfo
+    cmd = ("curl -fsS http://127.0.0.1:8080/health; echo; "
+           "curl -fsS http://127.0.0.1:8080/pedidos | python3 -c "
+           "\"import json,sys; print('PEDIDOS', len(json.load(sys.stdin)['pedidos']))\"")
+    for instancia in ids:
+        estado, salida, error = ssm_ejecutar(instancia, cmd)
+        log(f"   {instancia}: {estado} {salida.strip()} {error.strip()}".rstrip())
+        if estado != "Success" or "PEDIDOS 6" not in salida or '"estado"' not in salida or "ok" not in salida.split("PEDIDOS")[0]:
+            raise Fallo(f"la prueba local por SSM falló en {instancia}")
+
+
+def comprobar_servicio(a):
+    """Prueba de humo por CloudFront o, si no se puede (Actions), por SSM en cada EC2."""
+    url = salidas(PILA_FRONT)["UrlFront"]
+    if getattr(a, "humo_remoto", False) or en_actions():
+        c = salidas(PILA_COMPUTO)
+        prueba_humo_remota(url, [c["IdInstanciaA"], c["IdInstanciaB"]])
+    else:
+        prueba_humo(url)
+    return url
+
+
 def ssm_ejecutar(instancia, comando, timeout=420):
     """Ejecuta un comando como root en una EC2 por SSM y devuelve (estado, salida, error)."""
     log(f"   SSM en {instancia}: {comando}")
@@ -673,8 +720,37 @@ def recursos_etiquetados(conservar_secretos=False):
     return pendientes, permanentes
 
 
+def restos_esperados(pendientes):
+    """Separa de 'pendientes' lo que AWS limpia solo y no es del despliegue.
+
+    - Instancias EC2 en estado terminated (salen del índice de etiquetas en ~1 h).
+    - Snapshots automáticos de RDS (arn ...:snapshot:rds:...): no se pueden borrar a mano y RDS los
+      elimina cuando vence su retención; quedan como pendiente de verificar.
+    Devuelve (pendientes_reales, esperados)."""
+    ids = [p.split("instance/")[1].split()[0] for p in pendientes if ":instance/" in p]
+    terminadas = set()
+    for i in ids:
+        try:      # una vez purgada, EC2 ya no la lista (o responde NotFound): solo queda su rastro en el índice
+            vivas = aws("ec2", "describe-instances", "--instance-ids", i, "--query",
+                        "Reservations[].Instances[?State.Name!='terminated'].InstanceId[]") or []
+        except ErrorAws as e:
+            if "NotFound" not in e.stderr:
+                continue                           # sin dato: se deja como pendiente
+            vivas = []
+        if not vivas:
+            terminadas.add(i)
+    reales, esperados = [], []
+    for p in pendientes:
+        if ":snapshot:rds:" in p or any(f":instance/{i}" in p for i in terminadas):
+            esperados.append(p)
+        else:
+            reales.append(p)
+    return reales, esperados
+
+
 def verificar_destruccion(conservar_secretos):
     pendientes, permanentes = recursos_etiquetados(conservar_secretos)
+    pendientes, esperados = restos_esperados(pendientes)
     if SIMULAR:
         log(f"   [simular] hoy hay {len(pendientes)} recursos con {ETIQUETA}; tras destruir se exigiría 0")
         return
@@ -685,8 +761,11 @@ def verificar_destruccion(conservar_secretos):
             log(f"   quedan {len(pendientes)} recursos en el índice de etiquetas; reintento en 20 s (el índice tarda en actualizarse)")
             time.sleep(20)
             pendientes, permanentes = recursos_etiquetados(conservar_secretos)
+            pendientes, esperados = restos_esperados(pendientes)
     for p in permanentes:
         log(f"   permanente (a propósito): {p}")
+    for p in esperados:
+        log(f"   resto esperado (AWS lo limpia solo; verificar más tarde): {p}")
     if pendientes:
         for p in pendientes:
             log(f"   PENDIENTE: {p}")
@@ -731,6 +810,7 @@ def cmd_estado(a):
     for n in sorted(presentes - {SSM_CLAVE_DB, SSM_CLAVE_ORIGEN}):
         log(f"   {n:<32} presente (extra)")
     pendientes, _ = recursos_etiquetados()
+    pendientes, _ = restos_esperados(pendientes)
     log(f"== Recursos con {ETIQUETA}: {len(pendientes)} (sin contar los permanentes)")
     for p in pendientes[:15]:
         log(f"   {p}")
@@ -806,8 +886,7 @@ def cmd_desplegar(a):
         if SIMULAR:
             log("   [simular] GET / (200 HTML), /pedidos (200 con 6 pedidos) y /health alternando entre las dos zonas")
         else:
-            url = salidas(PILA_FRONT)["UrlFront"]
-            prueba_humo(url)
+            url = comprobar_servicio(a)
             log(f"   Listo: {url}")
 
 
@@ -819,7 +898,7 @@ def cmd_probar(a):
         if SIMULAR:
             log(f"   [simular] GET {url}/, /pedidos y /health")
         else:
-            prueba_humo(url)
+            comprobar_servicio(a)
     with paso("2/2 Respaldo a S3 y comprobación (por SSM, sin pruebas destructivas)"):
         prueba_respaldo()
     log("   Las pruebas de caída de una instancia y de restauración siguen en infra/aws/PRUEBAS.md.")
@@ -896,8 +975,12 @@ def main():
     d.add_argument("--version", help="commit a desplegar (por defecto origin/main)")
     d.add_argument("--permitir-reemplazo", action="store_true",
                    help="acepta cambios que reemplazan recursos (EC2, grupos de seguridad...); por defecto se aborta")
+    d.add_argument("--humo-remoto", action="store_true",
+                   help="la prueba de humo se hace por SSM en las EC2 (automático dentro de GitHub Actions)")
     d.add_argument("--permitir-sucio", action="store_true", help="acepta cambios sin confirmar en archivos desplegados")
-    sub.add_parser("probar", parents=[comun], help="prueba de humo y respaldo a S3 (sin pruebas destructivas)")
+    p = sub.add_parser("probar", parents=[comun], help="prueba de humo y respaldo a S3 (sin pruebas destructivas)")
+    p.add_argument("--humo-remoto", action="store_true",
+                   help="la prueba de humo se hace por SSM en las EC2 (automático dentro de GitHub Actions)")
     x = sub.add_parser("destruir", parents=[comun], help="borra todo y verifica que no queda nada")
     x.add_argument("--si", action="store_true", help="no pide confirmación")
     x.add_argument("--conservar-secretos", action="store_true", help="no borra los parámetros SSM")
@@ -910,8 +993,8 @@ def main():
     if os.environ.get("AWS_REGION") not in (None, REGION) or os.environ.get("AWS_DEFAULT_REGION") not in (None, REGION):
         print(f"Aviso: se ignora la región del entorno; este script usa solo {REGION}.")
     ruta_evidencia = None
-    if a.evidencia and a.accion != "estado":
-        nombre = {"desplegar": "despliegue", "probar": "prueba", "destruir": "destruccion"}[a.accion]
+    if a.evidencia:
+        nombre = {"estado": "estado", "desplegar": "despliegue", "probar": "prueba", "destruir": "destruccion"}[a.accion]
         ruta_evidencia = RAIZ / "evidencias" / f"{a.evidencia}_{nombre}_{datetime.date.today():%Y-%m-%d}.txt"
         if ruta_evidencia.exists():
             ap.error(f"{ruta_evidencia} ya existe; usa otro prefijo para conservar la evidencia anterior")
