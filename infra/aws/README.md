@@ -8,7 +8,8 @@ Todo va en **us-east-2 (Ohio)**: es la unica region que permite la politica de l
 |---|---|---|---|
 | `01-red.yaml` | **desplegada** como `nodo-ruta-red` (23-11, evidencia AWS01) | VPC propia (`10.20.0.0/16`), 2 subredes publicas (ALB y EC2) y 2 privadas (RDS) en 2 zonas, Internet Gateway, tablas de rutas y los grupos de seguridad ALB -> EC2 (8080) -> RDS (5432) | **Gratis** (sin NAT Gateway ni IP elasticas) |
 | `02-datos.yaml` | **desplegada** como `nodo-ruta-datos` (23-11, evidencia AWS02) | RDS PostgreSQL 17 Single-AZ (`db.t4g.micro`, 20 GB gp2, cifrada, sin acceso publico) en las subredes privadas y bucket S3 de respaldos (versiones, cifrado, expiracion a 7 dias) | **RDS y S3 consumen creditos** (ver nota de costo) |
-| `03-computo.yaml` | validada, **sin desplegar** | 2 EC2 (app + pedidos en contenedores), ALB HTTP, target group con health check a `/health`, rol IAM de minimo privilegio con SSM | **EC2, ALB e IPv4 publicas consumen creditos** (ver nota de costo) |
+| `03-computo.yaml` | **desplegada** como `nodo-ruta-computo`; D16 la actualiza (listener 403 + reglas, ver abajo) | 2 EC2 (app + pedidos en contenedores), ALB HTTP, target group con health check a `/health`, rol IAM de minimo privilegio con SSM | **EC2, ALB e IPv4 publicas consumen creditos** (ver nota de costo) |
+| `04-front.yaml` | escrita y validada con ValidateTemplate, **sin desplegar** (D16) | Bucket S3 privado + distribucion de CloudFront (HTTPS) que sirve la interfaz y envia `/pedidos` y `/health` al ALB, con una CloudFront Function que solo deja pasar a `CidrAcceso` | **Dentro del plan gratuito de CloudFront** (ver `docs/04`); el bucket cuesta centavos |
 
 Las EC2 van en subredes publicas con IP publica (para bajar imagenes y usar SSM sin NAT) pero su grupo de seguridad solo acepta el puerto 8080 desde el ALB y no tiene SSH. Las plantillas siguientes toman los valores con `Fn::ImportValue` de los exports `<nombre-de-la-pila>-VpcId`, `-SubredesPublicas`, `-SubredesPrivadas` (listas separadas por coma; usar `Fn::Split`), `-SgAlb`, `-SgEc2` y `-SgRds`.
 
@@ -17,6 +18,7 @@ Las EC2 van en subredes publicas con IP publica (para bajar imagenes y usar SSM 
 1. `01-red.yaml` (nombre de pila sugerido: `nodo-ruta-red`)
 2. `02-datos.yaml`
 3. `03-computo.yaml`
+4. `04-front.yaml` (pila `nodo-ruta-front`, importa `nodo-ruta-computo-DnsAlb`)
 
 Para destruir, en orden inverso (una pila no se puede borrar mientras otra importe sus exports).
 
@@ -121,6 +123,7 @@ aws cloudformation validate-template --region us-east-2 --template-body file://i
 aws cloudformation create-stack --region us-east-2 --stack-name nodo-ruta-computo \
   --template-body file://infra/aws/03-computo.yaml \
   --parameters ParameterKey=VersionGit,ParameterValue=HASH_DEL_COMMIT \
+    ParameterKey=ClaveOrigen,ParameterValue=$CLAVE_ORIGEN ParameterKey=CidrAcceso,ParameterValue=TU_IP/32 \
   --capabilities CAPABILITY_IAM --tags Key=proyecto,Value=nodo-ruta
 aws cloudformation wait stack-create-complete --region us-east-2 --stack-name nodo-ruta-computo
 
@@ -137,7 +140,7 @@ curl -s http://DNS_DEL_ALB/health          # repetir: "instancia" alterna entre 
 curl -s http://DNS_DEL_ALB/pedidos
 ```
 
-Solo responde a `CidrAcceso` (la IP de la pila de red). Si el ALB no contesta, revisar que tu IP no haya cambiado.
+Solo responde a `CidrAcceso` (la IP de la pila de red). Si el ALB no contesta, revisar que tu IP no haya cambiado. Desde D16 el listener devuelve **403** por defecto: pasa quien trae el encabezado `X-Origin-Verify` (CloudFront) o llega desde `CidrAcceso`, asi que estas pruebas directas siguen funcionando. `ClaveOrigen` es un parametro nuevo y obligatorio (ver la pila del front: se genera con `openssl rand -hex 24`, no se guarda en ningun archivo).
 
 **Entrar a una EC2 (sin SSH, por SSM Session Manager)** (necesita el plugin de Session Manager en tu equipo):
 
@@ -152,6 +155,94 @@ sudo bash /opt/nodo-ruta/repo/despliegue/aws/respaldar.sh   # respaldo manual a 
 
 **Probar la caida de una instancia (version corta):** `aws ec2 stop-instances --region us-east-2 --instance-ids ID` y sondear el ALB con `scripts/verificar_servicio.py` o `curl` en bucle, anotando las marcas de tiempo (el health check tarda ~10 s en sacarla; puede haber algunos 502).
 
-**Destruir:** primero esta pila (`delete-stack` de `nodo-ruta-computo`), luego `02` y `01` (ver arriba); si no se destruye, sigue cobrando.
+**Destruir:** primero `nodo-ruta-front` (vaciando su bucket, ver AWS07 en PRUEBAS.md), luego esta pila (`nodo-ruta-computo`), luego `02` y `01`; si no se destruye, sigue cobrando.
 
-**Pendiente / limites:** sin HTTPS (no hay dominio); sin CloudWatch Logs (los registros se ven con `docker logs` por SSM); restaurar desde S3 tiene script (`despliegue/aws/datos.sh`) pero aun no esta probado en AWS; la base RDS sigue siendo punto unico de falla.
+**Pendiente / limites:** HTTPS solo entre el visitante y CloudFront (de CloudFront al ALB va en HTTP, D16); sin CloudWatch Logs (los registros se ven con `docker logs` por SSM); restaurar desde S3 tiene script (`despliegue/aws/datos.sh`) pero aun no esta probado en AWS; la base RDS sigue siendo punto unico de falla.
+
+## Pila del front (`04-front.yaml`, pila `nodo-ruta-front`) - D16
+
+Sirve la interfaz (`frontend-nodo/`) desde un bucket S3 privado a traves de CloudFront y envia `/pedidos` y `/health` al ALB, con un solo dominio `https://<id>.cloudfront.net`. **Estado: escrita y validada, sin desplegar.** Cambia tambien `01-red.yaml` (el grupo del ALB acepta la prefix list de CloudFront en el puerto 80) y `03-computo.yaml` (listener con 403 por defecto, regla por clave de origen y regla por IP, salida `DnsAlb`). Las dos son **actualizaciones in situ** de pilas existentes: no reemplazan el ALB, el target group ni las EC2.
+
+**Que propiedades podrian causar reemplazo y como se evita:**
+
+- `SgAlb`: solo cambia `SecurityGroupIngress` (sin interrupcion). `GroupDescription` y `VpcId` no se tocan (cambiarlos reemplazaria el grupo y arrastraria al ALB y a las EC2).
+- `Listener`: solo cambia `DefaultActions` (sin interrupcion); las reglas son recursos nuevos.
+- Las EC2 no cambian, **salvo que `AmiX86`/`AmiArm` se vuelvan a resolver** a una AMI mas nueva (parametros de SSM): eso cambiaria `ImageId` y reemplazaria las EC2. Por eso la actualizacion pasa `UsePreviousValue` en **todos** los parametros viejos, y antes se revisa el conjunto de cambios (Replacement debe ser `False` o vacio).
+
+Los bloques se pegan en zsh de macOS desde la raiz del repo. Cada uno depende del anterior (misma terminal).
+
+**a) Preparar la terminal.** `ClaveOrigen` vive solo en la variable de la terminal; si cierras la terminal se pierde, pero las pilas la recuerdan (en futuras actualizaciones usa `UsePreviousValue`). `CIDR` se toma de la pila de red, para usar el mismo valor en las tres.
+
+```bash
+cd ~/Develop/proyecto_hackaton_cualquiera_inc
+export AWS_DEFAULT_REGION=us-east-2
+marca() { date +%Y-%m-%dT%H:%M:%S; }
+salida() { aws cloudformation describe-stacks --stack-name "$1" --query "Stacks[0].Outputs[?OutputKey=='$2'].OutputValue" --output text; }
+CLAVE_ORIGEN=$(openssl rand -hex 24)
+CIDR=$(aws cloudformation describe-stacks --stack-name nodo-ruta-red --query "Stacks[0].Parameters[?ParameterKey=='CidrAcceso'].ParameterValue" --output text)
+EC2_A_ANTES=$(salida nodo-ruta-computo IdInstanciaA)
+EC2_B_ANTES=$(salida nodo-ruta-computo IdInstanciaB)
+echo "clave de ${#CLAVE_ORIGEN} caracteres; CIDR=$CIDR; EC2 $EC2_A_ANTES $EC2_B_ANTES"
+```
+
+Debe decir 48 caracteres, tu IP con `/32` y dos ids de EC2. Si algo sale vacio, no sigas.
+
+**b) Actualizar la red** (agrega la regla de la prefix list; `pl-b6a144df` es la de us-east-2):
+
+```bash
+aws cloudformation update-stack --stack-name nodo-ruta-red --template-body file://infra/aws/01-red.yaml --parameters ParameterKey=CidrAcceso,UsePreviousValue=true ParameterKey=CidrVpc,UsePreviousValue=true ParameterKey=PrefixListCloudFront,ParameterValue=pl-b6a144df
+aws cloudformation wait stack-update-complete --stack-name nodo-ruta-red
+aws ec2 describe-security-groups --group-ids $(salida nodo-ruta-red SgAlb) --query "SecurityGroups[0].IpPermissions[].[FromPort,IpRanges[0].CidrIp,PrefixListIds[0].PrefixListId]" --output text
+```
+
+Deben verse dos reglas de puerto 80: tu CIDR y la prefix list. Si `update-stack` falla por el limite de reglas del grupo, no hay cambios (la pila revierte sola).
+
+**c) Revisar y actualizar el computo.** Primero un conjunto de cambios solo para mirar (no modifica nada); la ultima columna debe ser `False` para los recursos existentes y solo aparecer `Add` para las dos reglas:
+
+```bash
+PARAMS_COMPUTO="ParameterKey=PilaRed,UsePreviousValue=true ParameterKey=PilaDatos,UsePreviousValue=true ParameterKey=VersionGit,UsePreviousValue=true ParameterKey=UrlRepo,UsePreviousValue=true ParameterKey=TipoInstancia,UsePreviousValue=true ParameterKey=AmiX86,UsePreviousValue=true ParameterKey=AmiArm,UsePreviousValue=true ParameterKey=CidrAcceso,ParameterValue=$CIDR"
+aws cloudformation create-change-set --stack-name nodo-ruta-computo --change-set-name d16-revision --template-body file://infra/aws/03-computo.yaml --capabilities CAPABILITY_IAM --parameters ${=PARAMS_COMPUTO} ParameterKey=ClaveOrigen,ParameterValue=$CLAVE_ORIGEN
+aws cloudformation wait change-set-create-complete --stack-name nodo-ruta-computo --change-set-name d16-revision
+aws cloudformation describe-change-set --stack-name nodo-ruta-computo --change-set-name d16-revision --query "Changes[].ResourceChange.[LogicalResourceId,Action,Replacement]" --output text
+```
+
+Esperado: `Listener Modify False`, `ReglaOrigenCloudFront Add`, `ReglaIpPermitida Add`. **Si aparece `True`, `Conditional` o alguna EC2 (`Ec2A`, `Ec2B`), NO continues**: borra el conjunto con `aws cloudformation delete-change-set --stack-name nodo-ruta-computo --change-set-name d16-revision` y avisa. Si todo esta bien, borrar el conjunto de revision y actualizar de verdad:
+
+```bash
+aws cloudformation delete-change-set --stack-name nodo-ruta-computo --change-set-name d16-revision
+aws cloudformation update-stack --stack-name nodo-ruta-computo --template-body file://infra/aws/03-computo.yaml --capabilities CAPABILITY_IAM --parameters ${=PARAMS_COMPUTO} ParameterKey=ClaveOrigen,ParameterValue=$CLAVE_ORIGEN
+aws cloudformation wait stack-update-complete --stack-name nodo-ruta-computo
+echo "A: $EC2_A_ANTES -> $(salida nodo-ruta-computo IdInstanciaA)"
+echo "B: $EC2_B_ANTES -> $(salida nodo-ruta-computo IdInstanciaB)"
+ALB=$(salida nodo-ruta-computo UrlAlb)
+curl -s -o /dev/null -w "ALB directo /pedidos: %{http_code}\n" "$ALB/pedidos"
+curl -s -o /dev/null -w "ALB directo /health: %{http_code}\n" "$ALB/health"
+```
+
+Los ids de antes y despues deben ser **iguales** (las EC2 no se reemplazaron) y los dos `curl` deben dar 200 (entras por la regla de tu IP).
+**d) Crear el front** midiendo cuanto tarda la distribucion (CloudFront suele tardar varios minutos; se guarda la salida como evidencia):
+
+```bash
+P=evidencias/AWS08_front_creacion
+echo "$(marca) crear nodo-ruta-front" | tee "$P".txt
+aws cloudformation create-stack --stack-name nodo-ruta-front --template-body file://infra/aws/04-front.yaml --parameters ParameterKey=ClaveOrigen,ParameterValue=$CLAVE_ORIGEN ParameterKey=CidrAcceso,ParameterValue=$CIDR --tags Key=proyecto,Value=nodo-ruta
+aws cloudformation wait stack-create-complete --stack-name nodo-ruta-front
+echo "$(marca) front lista (CREATE_COMPLETE)" | tee -a "$P".txt
+aws cloudformation describe-stacks --stack-name nodo-ruta-front --query "Stacks[0].Outputs[].[OutputKey,OutputValue]" --output text | tee -a "$P".txt
+```
+
+Si falla (la politica de la organizacion nunca se probo contra CloudFront), mira el motivo con el bloque siguiente, borra la pila fallida y reporta el error tal cual:
+
+```bash
+aws cloudformation describe-stack-events --stack-name nodo-ruta-front --query "StackEvents[?contains(ResourceStatus,'FAILED')].[LogicalResourceId,ResourceStatusReason]" --output text
+```
+
+**e) Publicar la interfaz.** El script construye con Node (`npm ci` y `npm run build`, con `VITE_API_URL` vacio), sube `assets/` con cache de un anio, sube el resto con `no-cache` e invalida `/index.html` y `/`. Con `--simular` solo lee las salidas de la pila y muestra los comandos:
+
+```bash
+python3 scripts/publicar_front.py 2>&1 | tee evidencias/AWS08_publicacion.txt
+```
+
+**f) Comprobar** con la seccion **AWS08** de [PRUEBAS.md](PRUEBAS.md). Si cambia tu IP, hay que actualizar las **tres** pilas con el nuevo `CidrAcceso` (y la regla de la funcion se actualiza sola con la pila del front).
+
+**Limites reconocidos (D16):** el tramo CloudFront -> ALB va en HTTP; el ALB queda abierto a todas las IP de CloudFront (el grupo de seguridad no distingue a cual distribucion) y se mitiga con la clave `X-Origin-Verify` mas la funcion de IP en el borde; la clave es visible para quien pueda leer las reglas del ALB. `SgAlb` queda con 56 de 60 reglas posibles (la prefix list pesa 55): no se le pueden agregar mas reglas sin pedir cuota.
