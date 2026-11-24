@@ -1,0 +1,172 @@
+name: AWS Nodo Ruta
+
+# Solo se lanza a mano (Actions > "AWS Nodo Ruta" > Run workflow) y solo desde main:
+# el rol de AWS github-actions-nodo-ruta confía únicamente en esa rama (OIDC, sin claves guardadas).
+# Corre scripts/aws_nodo.py, el mismo que se usa en local. Detalles: infra/aws/README.md,
+# sección "Despliegue desde GitHub Actions". Política del rol: infra/aws/iam/.
+on:
+  workflow_dispatch:
+    inputs:
+      accion:
+        description: "Qué hacer en AWS (us-east-2)"
+        type: choice
+        required: true
+        default: estado
+        options:
+          - estado
+          - desplegar
+          - probar
+          - destruir
+      cidr:
+        description: "desplegar: tu IP pública con /32 (ej. 203.0.113.7/32). Es la única que podrá entrar a la app. No se acepta 0.0.0.0/0"
+        type: string
+        required: false
+      version:
+        description: "desplegar: commit a desplegar (opcional; por defecto el de main). Debe estar en GitHub"
+        type: string
+        required: false
+      confirmacion:
+        description: "destruir: escribe exactamente  destruir  para confirmar"
+        type: string
+        required: false
+
+permissions:
+  id-token: write # permite pedir el pase firmado (OIDC) a GitHub
+  contents: read
+
+# Una sola ejecución contra AWS a la vez; la que está en curso NO se cancela (cancelar a medias
+# dejaría pilas en *_IN_PROGRESS). Las demás esperan su turno.
+concurrency:
+  group: aws-nodo-ruta
+  cancel-in-progress: false
+
+jobs:
+  aws:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90 # desplegar tarda ~45 min (RDS, CloudFront, 2 EC2); destruir ~10 min
+    defaults:
+      run:
+        shell: bash
+    env:
+      ACCION: ${{ inputs.accion }}
+      CIDR: ${{ inputs.cidr }}
+      VERSION: ${{ inputs.version }}
+      CONFIRMACION: ${{ inputs.confirmacion }}
+      EVIDENCIA: GHA${{ github.run_id }}
+    steps:
+      # Las entradas llegan por variables de entorno (nunca dentro del script) para evitar inyección.
+      - name: Validar entradas
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "::error::Este workflow solo corre desde main (el rol de AWS solo confía en esa rama). Rama actual: $GITHUB_REF"
+            exit 1
+          fi
+          if [ "$ACCION" = "desplegar" ]; then
+            if ! [[ "$CIDR" =~ ^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})/32$ ]]; then
+              echo "::error::cidr obligatorio para desplegar, con formato A.B.C.D/32 (ej. 203.0.113.7/32)"
+              exit 1
+            fi
+            for octeto in "${BASH_REMATCH[@]:1}"; do
+              if [ "$((10#$octeto))" -gt 255 ]; then
+                echo "::error::cidr inválido: un octeto supera 255"
+                exit 1
+              fi
+            done
+            if [ "$CIDR" = "0.0.0.0/32" ]; then
+              echo "::error::cidr inválido (0.0.0.0). Usa tu IP pública con /32"
+              exit 1
+            fi
+            if [ -n "$VERSION" ] && ! [[ "$VERSION" =~ ^[0-9a-f]{7,40}$ ]]; then
+              echo "::error::version debe ser un commit (7 a 40 caracteres hexadecimales) o quedar vacía"
+              exit 1
+            fi
+          fi
+          if [ "$ACCION" = "destruir" ] && [ "$CONFIRMACION" != "destruir" ]; then
+            echo "::error::Para destruir hay que escribir exactamente 'destruir' en el campo confirmacion. No se borró nada."
+            exit 1
+          fi
+
+      - name: Checkout (historial completo para comprobar origin/main)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Asumir el rol de AWS por OIDC
+        id: credenciales
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+          aws-region: us-east-2
+          role-duration-seconds: 3600 # máximo del rol (MaxSessionDuration = 3600)
+
+      - name: Setup Node.js (para construir el front)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend-nodo/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Quién soy para AWS
+        run: aws sts get-caller-identity --query Arn --output text
+
+      - name: Ejecutar aws_nodo.py
+        id: ejecutar
+        run: |
+          set -euo pipefail
+          case "$ACCION" in
+            estado)
+              python scripts/aws_nodo.py estado --evidencia "$EVIDENCIA"
+              ;;
+            desplegar)
+              args=(--cidr "$CIDR" --evidencia "$EVIDENCIA")
+              if [ -n "$VERSION" ]; then args+=(--version "$VERSION"); fi
+              python scripts/aws_nodo.py desplegar "${args[@]}"
+              ;;
+            probar)
+              python scripts/aws_nodo.py probar --evidencia "$EVIDENCIA"
+              ;;
+            destruir)
+              # --si: sin pregunta interactiva (la confirmación ya se validó arriba)
+              python scripts/aws_nodo.py destruir --si --evidencia "$EVIDENCIA"
+              ;;
+            *)
+              echo "::error::acción desconocida: $ACCION"
+              exit 2
+              ;;
+          esac
+
+      - name: Subir la bitácora
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bitacora-aws-${{ github.run_id }}
+          path: evidencias/GHA${{ github.run_id }}_*.txt
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Resumen de la ejecución
+        if: ${{ always() && steps.credenciales.outcome == 'success' }}
+        run: |
+          {
+            echo "## AWS Nodo Ruta: $ACCION"
+            echo
+            echo "- Resultado: **${{ steps.ejecutar.outcome }}**"
+            echo "- Commit del workflow: \`$GITHUB_SHA\`"
+            if [ "$ACCION" = "desplegar" ] && [ -n "$VERSION" ]; then echo "- Versión desplegada: \`$VERSION\`"; fi
+            url=$(aws cloudformation describe-stacks --stack-name nodo-ruta-front \
+              --query "Stacks[0].Outputs[?OutputKey=='UrlFront'].OutputValue" --output text 2>/dev/null || true)
+            if [ -n "$url" ] && [ "$url" != "None" ]; then echo "- CloudFront: $url"; else echo "- CloudFront: (no hay pila nodo-ruta-front)"; fi
+            echo "- Bitácora completa: artifact \`bitacora-aws-${{ github.run_id }}\`"
+            echo
+            f=$(ls evidencias/GHA${{ github.run_id }}_*.txt 2>/dev/null | head -1 || true)
+            if [ -n "$f" ]; then
+              echo '```text'
+              if [ "$ACCION" = "estado" ]; then cat "$f"; else awk '/\] Resumen/{p=1} p' "$f"; fi
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
