@@ -57,6 +57,7 @@ jobs:
       # Las entradas llegan por variables de entorno (nunca dentro del script) para evitar inyección.
       - name: Validar entradas
         run: |
+          if [ -n "$CIDR" ]; then echo "::add-mask::$CIDR"; echo "::add-mask::${CIDR%/32}"; fi
           if [ "$GITHUB_REF" != "refs/heads/main" ]; then
             echo "::error::Este workflow solo corre desde main (el rol de AWS solo confía en esa rama). Rama actual: $GITHUB_REF"
             exit 1
