@@ -1,0 +1,35 @@
+2026-11-23T21:47:51 https://d13o4owza45505.cloudfront.net
+interfaz /: 200 text/html
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Nodo Ruta — consulta de estado de entregas" />
+    <ti
+http -> https en /health: 301 https://d13o4owza45505.cloudfront.net/health
+/pedidos por CloudFront: 200 application/json; charset=utf-8
+{"estado": "ok", "instancia": "us-east-2a-i-0595561ca670bc592", "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901", "version_datos": "datos-v1", "servicio_datos": {"instancia": "pedidos-us-east
+{"estado": "ok", "instancia": "us-east-2b-i-09231cd2d9334ea7d", "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901", "version_datos": "datos-v1", "servicio_datos": {"instancia": "pedidos-us-east
+{"estado": "ok", "instancia": "us-east-2a-i-0595561ca670bc592", "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901", "version_datos": "datos-v1", "servicio_datos": {"instancia": "pedidos-us-east
+{"estado": "ok", "instancia": "us-east-2b-i-09231cd2d9334ea7d", "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901", "version_datos": "datos-v1", "servicio_datos": {"instancia": "pedidos-us-east
+{"estado": "ok", "instancia": "us-east-2a-i-0595561ca670bc592", "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901", "version_datos": "datos-v1", "servicio_datos": {"instancia": "pedidos-us-east
+{"estado": "ok", "instancia": "us-east-2b-i-09231cd2d9334ea7d", "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901", "version_datos": "datos-v1", "servicio_datos": {"instancia": "pedidos-us-east
+x-cache: Error from cloudfront
+cache-control: public,max-age=31536000,immutable
+x-cache: Miss from cloudfront
+x-cache: Hit from cloudfront
+ALB directo /pedidos sin encabezado (IP permitida): 200
+fixed-response	403
+1	http-header
+2	source-ip
+default	None
+2026-11-23T21:48:03 fin
+--- verificacion del x-cache de la API con GET (HEAD no lo implementa app.py)
+HTTP/2 200 
+x-cache: Miss from cloudfront
+x-cache: Miss from cloudfront
+HEAD a /pedidos: 501
+HEAD al ALB directo: 501
+pedidos en /pedidos: 6

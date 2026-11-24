@@ -80,7 +80,7 @@ flowchart LR
     E2 --> CW
 ```
 
-Con la interfaz (D16, plantilla `04-front.yaml`, **sin desplegar**) el punto de entrada pasa a ser CloudFront:
+Con la interfaz (D16, plantilla `04-front.yaml`, **desplegada y probada**, AWS08) el punto de entrada pasa a ser CloudFront:
 
 ```mermaid
 flowchart LR
@@ -147,7 +147,7 @@ El ALB **no reintenta** en otra instancia cuando una conexión falla, como sí h
 | Registro de imagen | GHCR público / ECR | GHCR público: sin costo y sin secretos en la imagen |
 | Cómo se crea la infraestructura | Consola / scripts / CloudFormation | 🟢 **CloudFormation** en `infra/aws/` (D14): crear y **destruir** con una pila |
 | Intervalo de sincronización con S3 | 5–30 s | 10 s; cada revisión es una solicitud a S3, así que también cuenta como costo |
-| HTTPS e interfaz | Sin dominio / CloudFront delante del ALB y del S3 de la interfaz | 🟡 **CloudFront + S3** (D16): `https://*.cloudfront.net`; plantilla escrita y validada, sin desplegar |
+| HTTPS e interfaz | Sin dominio / CloudFront delante del ALB y del S3 de la interfaz | 🟢 **CloudFront + S3** (D16): `https://*.cloudfront.net`; desplegado y probado (AWS08) |
 
 ## 3. Probado vs. diseñado
 
@@ -167,5 +167,5 @@ El ALB **no reintenta** en otra instancia cuando una conexión falla, como sí h
 | Tolerancia a la caída de una **máquina** | ⏳ Diseño AWS, por probar |
 | Health check activo | ⏳ Diseño AWS (ALB) |
 | Respaldos fuera del computador | ⏳ Diseño AWS (S3) |
-| HTTPS al visitante (CloudFront) | 🟡 Plantilla escrita y validada (D16), sin desplegar; CloudFront→ALB va en HTTP |
+| HTTPS al visitante (CloudFront) | 🟢 Probado (AWS08: 301 http→https, 200 por CloudFront); CloudFront→ALB va en HTTP |
 | Tolerancia a la caída de una región | ❌ Fuera de alcance (el reto no lo exige) |

@@ -9,7 +9,7 @@ Todo va en **us-east-2 (Ohio)**: es la unica region que permite la politica de l
 | `01-red.yaml` | **desplegada** como `nodo-ruta-red` (23-11, evidencia AWS01) | VPC propia (`10.20.0.0/16`), 2 subredes publicas (ALB y EC2) y 2 privadas (RDS) en 2 zonas, Internet Gateway, tablas de rutas y los grupos de seguridad ALB -> EC2 (8080) -> RDS (5432) | **Gratis** (sin NAT Gateway ni IP elasticas) |
 | `02-datos.yaml` | **desplegada** como `nodo-ruta-datos` (23-11, evidencia AWS02) | RDS PostgreSQL 17 Single-AZ (`db.t4g.micro`, 20 GB gp2, cifrada, sin acceso publico) en las subredes privadas y bucket S3 de respaldos (versiones, cifrado, expiracion a 7 dias) | **RDS y S3 consumen creditos** (ver nota de costo) |
 | `03-computo.yaml` | **desplegada** como `nodo-ruta-computo`; D16 la actualiza (listener 403 + reglas, ver abajo) | 2 EC2 (app + pedidos en contenedores), ALB HTTP, target group con health check a `/health`, rol IAM de minimo privilegio con SSM | **EC2, ALB e IPv4 publicas consumen creditos** (ver nota de costo) |
-| `04-front.yaml` | escrita y validada con ValidateTemplate, **sin desplegar** (D16) | Bucket S3 privado + distribucion de CloudFront (HTTPS) que sirve la interfaz y envia `/pedidos` y `/health` al ALB, con una CloudFront Function que solo deja pasar a `CidrAcceso` | **Dentro del plan gratuito de CloudFront** (ver `docs/04`); el bucket cuesta centavos |
+| `04-front.yaml` | **desplegada** como `nodo-ruta-front` (23-11, evidencia AWS08; distribucion creada en 6 min 54 s) | Bucket S3 privado + distribucion de CloudFront (HTTPS) que sirve la interfaz y envia `/pedidos` y `/health` al ALB, con una CloudFront Function que solo deja pasar a `CidrAcceso` | **Dentro del plan gratuito de CloudFront** (ver `docs/04`); el bucket cuesta centavos |
 
 Las EC2 van en subredes publicas con IP publica (para bajar imagenes y usar SSM sin NAT) pero su grupo de seguridad solo acepta el puerto 8080 desde el ALB y no tiene SSH. Las plantillas siguientes toman los valores con `Fn::ImportValue` de los exports `<nombre-de-la-pila>-VpcId`, `-SubredesPublicas`, `-SubredesPrivadas` (listas separadas por coma; usar `Fn::Split`), `-SgAlb`, `-SgEc2` y `-SgRds`.
 
@@ -157,11 +157,11 @@ sudo bash /opt/nodo-ruta/repo/despliegue/aws/respaldar.sh   # respaldo manual a 
 
 **Destruir:** primero `nodo-ruta-front` (vaciando su bucket, ver AWS07 en PRUEBAS.md), luego esta pila (`nodo-ruta-computo`), luego `02` y `01`; si no se destruye, sigue cobrando.
 
-**Pendiente / limites:** HTTPS solo entre el visitante y CloudFront (de CloudFront al ALB va en HTTP, D16); sin CloudWatch Logs (los registros se ven con `docker logs` por SSM); restaurar desde S3 tiene script (`despliegue/aws/datos.sh`) pero aun no esta probado en AWS; la base RDS sigue siendo punto unico de falla.
+**Pendiente / limites:** HTTPS solo entre el visitante y CloudFront (de CloudFront al ALB va en HTTP, D16); sin CloudWatch Logs (los registros se ven con `docker logs` por SSM); restaurar desde S3 con `despliegue/aws/datos.sh` esta probado en AWS (AWS06b: 8,6 s); la base RDS sigue siendo punto unico de falla.
 
 ## Pila del front (`04-front.yaml`, pila `nodo-ruta-front`) - D16
 
-Sirve la interfaz (`frontend-nodo/`) desde un bucket S3 privado a traves de CloudFront y envia `/pedidos` y `/health` al ALB, con un solo dominio `https://<id>.cloudfront.net`. **Estado: escrita y validada, sin desplegar.** Cambia tambien `01-red.yaml` (el grupo del ALB acepta la prefix list de CloudFront en el puerto 80) y `03-computo.yaml` (listener con 403 por defecto, regla por clave de origen y regla por IP, salida `DnsAlb`). Las dos son **actualizaciones in situ** de pilas existentes: no reemplazan el ALB, el target group ni las EC2.
+Sirve la interfaz (`frontend-nodo/`) desde un bucket S3 privado a traves de CloudFront y envia `/pedidos` y `/health` al ALB, con un solo dominio `https://<id>.cloudfront.net`. **Estado: desplegada y probada (AWS08, 23-11).** Cambia tambien `01-red.yaml` (el grupo del ALB acepta la prefix list de CloudFront en el puerto 80) y `03-computo.yaml` (listener con 403 por defecto, regla por clave de origen y regla por IP, salida `DnsAlb`). Las dos son **actualizaciones in situ** de pilas existentes: no reemplazan el ALB, el target group ni las EC2.
 
 **Que propiedades podrian causar reemplazo y como se evita:**
 
