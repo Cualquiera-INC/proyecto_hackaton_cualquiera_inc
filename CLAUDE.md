@@ -21,6 +21,7 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 - `servicios/pedidos/` y `basedatos/`: microservicio de pedidos (solo lectura) y esquema, datos iniciales y réplica de PostgreSQL.
 - `despliegue/`: `compose.yaml` y `nginx.conf` oficiales. No se levanta con `compose up` a mano: lo hace `desplegar.py`.
 - `scripts/`: `aws_nodo.py` (AWS), `desplegar.py`, `datos.py`, `verificar_servicio.py`, `monitorear.py`, `ejecutar_local.py`.
+- `docs/arquitectura/`: diagrama AWS final con íconos oficiales (`aws-final.drawio`, `aws-final.png`) y su generador `generar_aws_final.py`.
 - `docs/`: 01 reto, 02 arquitectura, 03 decisiones, 04 seguridad y costos, 05 cómo funciona, 06 pitch, 07 plan y fases, 08 PostgreSQL y microservicio de pedidos, 09 guion del video en AWS.
 - `evidencias/`: el prefijo del archivo es el ID de la prueba (`I05c_…`). `EVIDENCIAS.md` es la única bitácora.
 - `frontend-nodo/`: interfaz web React + Vite de solo lectura. La construye `despliegue/Dockerfile.proxy` y el proxy la sirve en `/` (D11).

@@ -53,9 +53,17 @@ flowchart LR
 
 **Puntos únicos de falla en local:** el computador (primario y réplica comparten máquina), el proxy y la carpeta de respaldos en el mismo disco. Se tolera la caída de una instancia y de una base, no la de la máquina. Por eso esto es **tolerancia a la caída de una instancia**, no alta disponibilidad.
 
-## 2. AWS, plan gratuito (diseño, por probar)
+## 2. AWS, plan gratuito (desplegado y probado en parte; ver la sección 3)
 
 **Objetivo:** demostrar algo que en local es imposible: **apagar una máquina entera** y que el servicio siga respondiendo.
+
+### Diagrama final (lo desplegado, con íconos de AWS)
+
+![Arquitectura AWS final de Nodo Ruta](arquitectura/aws-final.png)
+
+Muestra lo que describen las plantillas `infra/aws/01-red.yaml` a `04-front.yaml`: CloudFront con su función de IP y dos orígenes (S3 privado y ALB), la VPC en `us-east-2` con dos zonas, las dos EC2 en subredes públicas (sin NAT), RDS en subred privada, los grupos de seguridad, los servicios fuera de la VPC (S3 de respaldos, Parameter Store, Systems Manager, IAM) y el camino de despliegue (GitHub Actions por OIDC y `scripts/aws_nodo.py` hacia CloudFormation).
+
+El archivo editable es [`arquitectura/aws-final.drawio`](arquitectura/aws-final.drawio): se abre en draw.io, o se regenera con `python docs/arquitectura/generar_aws_final.py` (si lo editas a mano, no regeneres). Los Mermaid de abajo son versiones simplificadas.
 
 ```mermaid
 flowchart LR
@@ -76,8 +84,6 @@ flowchart LR
     E2 --> RDS
     S3[("S3 con versiones<br/>respaldos pg_dump")]
     RDS -.->|"respaldo"| S3
-    E1 --> CW[CloudWatch Logs]
-    E2 --> CW
 ```
 
 Con la interfaz (D16, plantilla `04-front.yaml`, **desplegada y probada**, AWS08) el punto de entrada pasa a ser CloudFront:
@@ -99,7 +105,7 @@ flowchart LR
 | Instancias | 2 contenedores en un PC | **2 EC2**, una por zona | Tolera la caída de una máquina |
 | Datos | PostgreSQL primario + réplica | **RDS PostgreSQL** (Single-AZ) | No dependen de ninguna EC2; sin operar la base |
 | Respaldos | `pg_dump` en `respaldos/` | **Snapshots de RDS + `pg_dump` en S3 con versiones** | El respaldo vive fuera del cómputo |
-| Registros | `docker compose logs` | **CloudWatch Logs** | Centralizados |
+| Registros | `docker compose logs` | `docker logs` en cada EC2, vía Session Manager (CloudWatch Logs no está desplegado) | Sin agente extra |
 | Exposición | Solo `127.0.0.1:8080` | Security groups: EC2 solo acepta tráfico del ALB | Misma idea |
 | Acceso de administración | — | **Session Manager** (sin SSH abierto) | Sin puerto 22 |
 
