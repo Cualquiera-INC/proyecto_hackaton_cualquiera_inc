@@ -255,6 +255,17 @@ Qué queremos comprobar: que el ALB reparte entre las 2 EC2 (una por zona), que 
 Pasos: `create-stack` de `nodo-ruta-computo` (versión git `6f5a222`); esperar el arranque; consultar `/health` del ALB varias veces; `describe-target-health`.
 Resultado observado: **CREATE_COMPLETE**; `/health` → `estado: ok`, `origen_datos: base` (RDS con los 6 pedidos cargados). Al principio solo respondía 2a: la EC2 B tardó ~8 min en construir las imágenes y estuvo `unhealthy` mientras tanto (el ALB no le mandó tráfico). Con ambas `healthy`, 8 solicitudes: 4 a `us-east-2a` y 4 a `us-east-2b`. **CUMPLE**. Evidencia: `evidencias/AWS03_reparto_dos_zonas.json`
 
+## AWS04 — Caída de una instancia (EC2 B) y recuperación
+Qué queremos comprobar: qué ve un cliente si una de las dos EC2 se detiene, cuánto tarda el ALB en sacarla y si vuelve sola al arrancarla.
+Pasos (`infra/aws/PRUEBAS.md`): `monitorear.py` contra `/pedidos` del ALB durante 270 s cada 0,5 s; a los 20 s `stop-instances` de B; 30 s detenida; `start-instances`; un bucle anota la salud del target group cada ~2 s. Versión `d7b0acd`.
+Resultado observado:
+- **299 consultas, 5 errores (1,7 %)**: 4 × 502 y 1 *timeout*, todos entre **20:26:13,1 y 20:26:20,8**, es decir de 2,1 s a 9,8 s después de `STOP_B enviado` (20:26:11). **Después, 0 errores**, también cuando B volvió.
+- El ALB marcó a B `unhealthy` en la lectura de las **20:26:24** (≤13 s tras la parada; el bucle muestrea cada ~2 s). Desde el último error, todo lo atendió A.
+- B volvió **sola**: primera respuesta a las **20:27:40,6**, **40,6 s** después de `START_B enviado` (22 s después de `running`), sin tocar nada más. Los contenedores arrancaron por `--restart unless-stopped`. B estuvo 90,5 s sin responder en total.
+- Latencia: mediana 217 ms, p95 1214 ms, máx. 2240 ms.
+**CUMPLE** el criterio [S] (errores solo en una ventana corta alrededor de la parada, cero después, B vuelve sola antes de 270 s).
+Hallazgo honesto: el ALB **no reintenta** contra la otra instancia, así que durante ~8 s (hasta que el health check de 2 × 5 s saca a B) algunas solicitudes fallan con 502. Mejora posible: sacar la instancia del target group antes de una parada planificada o bajar el umbral del health check. Evidencias: `evidencias/AWS04_caida_instancia_*`
+
 # Cierre
 
 Qué funciona realmente (probado en local):

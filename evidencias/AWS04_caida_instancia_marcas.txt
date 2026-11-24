@@ -1,0 +1,8 @@
+2026-11-23T20:25:51 inicio; B=i-09231cd2d9334ea7d
+2026-11-23T20:26:11 STOP_B enviado
+stopping
+2026-11-23T20:26:30 B en estado stopped
+2026-11-23T20:27:00 START_B enviado
+pending
+2026-11-23T20:27:18 B en estado running
+2026-11-23T20:30:22 fin

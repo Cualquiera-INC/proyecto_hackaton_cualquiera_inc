@@ -1,0 +1,2726 @@
+{
+  "url": "http://nodo-rut-Alb-kgaVDc2qaYOi-180377821.us-east-2.elb.amazonaws.com/pedidos",
+  "resultado": "CON_ERRORES",
+  "consultas": 299,
+  "errores": 5,
+  "duracion_s": 270.7,
+  "respuestas_por_version": {
+    "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 294
+  },
+  "respuestas_por_instancia": {
+    "us-east-2a-i-0595561ca670bc592@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 192,
+    "us-east-2b-i-09231cd2d9334ea7d@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 102
+  },
+  "latencia_ms": {
+    "max": 2239.5,
+    "p95": 1214.4,
+    "mediana": 217.4
+  },
+  "instancias": {
+    "us-east-2a-i-0595561ca670bc592": {
+      "respuestas": 192,
+      "primera": "2026-11-23T20:25:51.323",
+      "ultima": "2026-11-23T20:30:21.341",
+      "mayor_silencio": {
+        "segundos": 6.3,
+        "desde": "2026-11-23T20:26:20.096",
+        "hasta": "2026-11-23T20:26:26.415"
+      }
+    },
+    "us-east-2b-i-09231cd2d9334ea7d": {
+      "respuestas": 102,
+      "primera": "2026-11-23T20:25:52.079",
+      "ultima": "2026-11-23T20:30:20.618",
+      "mayor_silencio": {
+        "segundos": 90.5,
+        "desde": "2026-11-23T20:26:10.045",
+        "hasta": "2026-11-23T20:27:40.555"
+      }
+    }
+  },
+  "primer_error": "2026-11-23T20:26:13.119",
+  "ultimo_error": "2026-11-23T20:26:20.820",
+  "detalle": [
+    {
+      "consulta": 1,
+      "fecha": "2026-11-23T20:25:51.323",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 251.1
+    },
+    {
+      "consulta": 2,
+      "fecha": "2026-11-23T20:25:52.079",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 185.4
+    },
+    {
+      "consulta": 3,
+      "fecha": "2026-11-23T20:25:52.769",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 175.8
+    },
+    {
+      "consulta": 4,
+      "fecha": "2026-11-23T20:25:53.449",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1211.9
+    },
+    {
+      "consulta": 5,
+      "fecha": "2026-11-23T20:25:55.161",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 216.1
+    },
+    {
+      "consulta": 6,
+      "fecha": "2026-11-23T20:25:55.882",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 192.6
+    },
+    {
+      "consulta": 7,
+      "fecha": "2026-11-23T20:25:56.579",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 217.6
+    },
+    {
+      "consulta": 8,
+      "fecha": "2026-11-23T20:25:57.302",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 206.0
+    },
+    {
+      "consulta": 9,
+      "fecha": "2026-11-23T20:25:58.013",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 223.3
+    },
+    {
+      "consulta": 10,
+      "fecha": "2026-11-23T20:25:58.737",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 182.5
+    },
+    {
+      "consulta": 11,
+      "fecha": "2026-11-23T20:25:59.424",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 218.2
+    },
+    {
+      "consulta": 12,
+      "fecha": "2026-11-23T20:26:00.142",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 211.3
+    },
+    {
+      "consulta": 13,
+      "fecha": "2026-11-23T20:26:00.858",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 205.8
+    },
+    {
+      "consulta": 14,
+      "fecha": "2026-11-23T20:26:01.567",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 214.2
+    },
+    {
+      "consulta": 15,
+      "fecha": "2026-11-23T20:26:02.287",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 526.3
+    },
+    {
+      "consulta": 16,
+      "fecha": "2026-11-23T20:26:03.316",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 205.2
+    },
+    {
+      "consulta": 17,
+      "fecha": "2026-11-23T20:26:04.024",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 210.9
+    },
+    {
+      "consulta": 18,
+      "fecha": "2026-11-23T20:26:04.737",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 213.0
+    },
+    {
+      "consulta": 19,
+      "fecha": "2026-11-23T20:26:05.452",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 206.6
+    },
+    {
+      "consulta": 20,
+      "fecha": "2026-11-23T20:26:06.160",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 231.1
+    },
+    {
+      "consulta": 21,
+      "fecha": "2026-11-23T20:26:06.891",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 197.3
+    },
+    {
+      "consulta": 22,
+      "fecha": "2026-11-23T20:26:07.594",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 215.6
+    },
+    {
+      "consulta": 23,
+      "fecha": "2026-11-23T20:26:08.311",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 525.5
+    },
+    {
+      "consulta": 24,
+      "fecha": "2026-11-23T20:26:09.340",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 199.7
+    },
+    {
+      "consulta": 25,
+      "fecha": "2026-11-23T20:26:10.045",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 213.1
+    },
+    {
+      "consulta": 26,
+      "fecha": "2026-11-23T20:26:10.761",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 169.4
+    },
+    {
+      "consulta": 27,
+      "fecha": "2026-11-23T20:26:11.435",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1179.1
+    },
+    {
+      "consulta": 28,
+      "fecha": "2026-11-23T20:26:13.119",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 2215.0
+    },
+    {
+      "consulta": 29,
+      "fecha": "2026-11-23T20:26:15.839",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 246.1
+    },
+    {
+      "consulta": 30,
+      "fecha": "2026-11-23T20:26:16.589",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 192.9
+    },
+    {
+      "consulta": 31,
+      "fecha": "2026-11-23T20:26:17.287",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 227.8
+    },
+    {
+      "consulta": 32,
+      "fecha": "2026-11-23T20:26:18.019",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 189.6
+    },
+    {
+      "consulta": 33,
+      "fecha": "2026-11-23T20:26:18.713",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 191.6
+    },
+    {
+      "consulta": 34,
+      "fecha": "2026-11-23T20:26:19.410",
+      "http": 502,
+      "error": "HTTP Error 502: Bad Gateway",
+      "milisegundos": 181.0
+    },
+    {
+      "consulta": 35,
+      "fecha": "2026-11-23T20:26:20.096",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 219.8
+    },
+    {
+      "consulta": 36,
+      "fecha": "2026-11-23T20:26:20.820",
+      "http": null,
+      "error": "timed out",
+      "milisegundos": 5091.7
+    },
+    {
+      "consulta": 37,
+      "fecha": "2026-11-23T20:26:26.415",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 191.5
+    },
+    {
+      "consulta": 38,
+      "fecha": "2026-11-23T20:26:27.112",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 208.2
+    },
+    {
+      "consulta": 39,
+      "fecha": "2026-11-23T20:26:27.825",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 185.6
+    },
+    {
+      "consulta": 40,
+      "fecha": "2026-11-23T20:26:28.515",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 194.6
+    },
+    {
+      "consulta": 41,
+      "fecha": "2026-11-23T20:26:29.215",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 232.0
+    },
+    {
+      "consulta": 42,
+      "fecha": "2026-11-23T20:26:29.952",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 211.0
+    },
+    {
+      "consulta": 43,
+      "fecha": "2026-11-23T20:26:30.668",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 210.1
+    },
+    {
+      "consulta": 44,
+      "fecha": "2026-11-23T20:26:31.379",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 232.9
+    },
+    {
+      "consulta": 45,
+      "fecha": "2026-11-23T20:26:32.117",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 214.4
+    },
+    {
+      "consulta": 46,
+      "fecha": "2026-11-23T20:26:32.836",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 195.1
+    },
+    {
+      "consulta": 47,
+      "fecha": "2026-11-23T20:26:33.536",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 229.9
+    },
+    {
+      "consulta": 48,
+      "fecha": "2026-11-23T20:26:34.270",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 203.1
+    },
+    {
+      "consulta": 49,
+      "fecha": "2026-11-23T20:26:34.978",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 185.8
+    },
+    {
+      "consulta": 50,
+      "fecha": "2026-11-23T20:26:35.664",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1197.9
+    },
+    {
+      "consulta": 51,
+      "fecha": "2026-11-23T20:26:37.366",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 194.8
+    },
+    {
+      "consulta": 52,
+      "fecha": "2026-11-23T20:26:38.065",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 210.4
+    },
+    {
+      "consulta": 53,
+      "fecha": "2026-11-23T20:26:38.781",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 209.0
+    },
+    {
+      "consulta": 54,
+      "fecha": "2026-11-23T20:26:39.495",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 211.6
+    },
+    {
+      "consulta": 55,
+      "fecha": "2026-11-23T20:26:40.211",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 210.5
+    },
+    {
+      "consulta": 56,
+      "fecha": "2026-11-23T20:26:40.925",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 187.1
+    },
+    {
+      "consulta": 57,
+      "fecha": "2026-11-23T20:26:41.614",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 247.4
+    },
+    {
+      "consulta": 58,
+      "fecha": "2026-11-23T20:26:42.365",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 184.7
+    },
+    {
+      "consulta": 59,
+      "fecha": "2026-11-23T20:26:43.052",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 201.9
+    },
+    {
+      "consulta": 60,
+      "fecha": "2026-11-23T20:26:43.759",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 198.5
+    },
+    {
+      "consulta": 61,
+      "fecha": "2026-11-23T20:26:44.461",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 464.2
+    },
+    {
+      "consulta": 62,
+      "fecha": "2026-11-23T20:26:45.430",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 560.2
+    },
+    {
+      "consulta": 63,
+      "fecha": "2026-11-23T20:26:46.492",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 208.3
+    },
+    {
+      "consulta": 64,
+      "fecha": "2026-11-23T20:26:47.206",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 234.1
+    },
+    {
+      "consulta": 65,
+      "fecha": "2026-11-23T20:26:47.944",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 236.3
+    },
+    {
+      "consulta": 66,
+      "fecha": "2026-11-23T20:26:48.685",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1194.8
+    },
+    {
+      "consulta": 67,
+      "fecha": "2026-11-23T20:26:50.383",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 237.2
+    },
+    {
+      "consulta": 68,
+      "fecha": "2026-11-23T20:26:51.124",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 199.5
+    },
+    {
+      "consulta": 69,
+      "fecha": "2026-11-23T20:26:51.825",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 179.0
+    },
+    {
+      "consulta": 70,
+      "fecha": "2026-11-23T20:26:52.509",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 237.2
+    },
+    {
+      "consulta": 71,
+      "fecha": "2026-11-23T20:26:53.252",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 213.4
+    },
+    {
+      "consulta": 72,
+      "fecha": "2026-11-23T20:26:53.966",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 204.0
+    },
+    {
+      "consulta": 73,
+      "fecha": "2026-11-23T20:26:54.674",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 205.3
+    },
+    {
+      "consulta": 74,
+      "fecha": "2026-11-23T20:26:55.384",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 213.4
+    },
+    {
+      "consulta": 75,
+      "fecha": "2026-11-23T20:26:56.103",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 210.1
+    },
+    {
+      "consulta": 76,
+      "fecha": "2026-11-23T20:26:56.818",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 193.0
+    },
+    {
+      "consulta": 77,
+      "fecha": "2026-11-23T20:26:57.512",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 232.2
+    },
+    {
+      "consulta": 78,
+      "fecha": "2026-11-23T20:26:58.246",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 222.7
+    },
+    {
+      "consulta": 79,
+      "fecha": "2026-11-23T20:26:58.969",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 212.3
+    },
+    {
+      "consulta": 80,
+      "fecha": "2026-11-23T20:26:59.686",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 188.6
+    },
+    {
+      "consulta": 81,
+      "fecha": "2026-11-23T20:27:00.380",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 192.9
+    },
+    {
+      "consulta": 82,
+      "fecha": "2026-11-23T20:27:01.078",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 249.3
+    },
+    {
+      "consulta": 83,
+      "fecha": "2026-11-23T20:27:01.832",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 217.4
+    },
+    {
+      "consulta": 84,
+      "fecha": "2026-11-23T20:27:02.554",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 523.7
+    },
+    {
+      "consulta": 85,
+      "fecha": "2026-11-23T20:27:03.582",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 200.8
+    },
+    {
+      "consulta": 86,
+      "fecha": "2026-11-23T20:27:04.288",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 207.5
+    },
+    {
+      "consulta": 87,
+      "fecha": "2026-11-23T20:27:04.998",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 549.3
+    },
+    {
+      "consulta": 88,
+      "fecha": "2026-11-23T20:27:06.051",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1479.8
+    },
+    {
+      "consulta": 89,
+      "fecha": "2026-11-23T20:27:08.036",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 498.9
+    },
+    {
+      "consulta": 90,
+      "fecha": "2026-11-23T20:27:09.040",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 209.4
+    },
+    {
+      "consulta": 91,
+      "fecha": "2026-11-23T20:27:09.754",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 493.3
+    },
+    {
+      "consulta": 92,
+      "fecha": "2026-11-23T20:27:10.751",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 229.3
+    },
+    {
+      "consulta": 93,
+      "fecha": "2026-11-23T20:27:11.484",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 191.3
+    },
+    {
+      "consulta": 94,
+      "fecha": "2026-11-23T20:27:12.178",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1498.8
+    },
+    {
+      "consulta": 95,
+      "fecha": "2026-11-23T20:27:14.182",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 214.8
+    },
+    {
+      "consulta": 96,
+      "fecha": "2026-11-23T20:27:14.900",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 531.0
+    },
+    {
+      "consulta": 97,
+      "fecha": "2026-11-23T20:27:15.933",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 542.8
+    },
+    {
+      "consulta": 98,
+      "fecha": "2026-11-23T20:27:16.981",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 187.6
+    },
+    {
+      "consulta": 99,
+      "fecha": "2026-11-23T20:27:17.673",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 201.5
+    },
+    {
+      "consulta": 100,
+      "fecha": "2026-11-23T20:27:18.380",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 224.2
+    },
+    {
+      "consulta": 101,
+      "fecha": "2026-11-23T20:27:19.109",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 192.9
+    },
+    {
+      "consulta": 102,
+      "fecha": "2026-11-23T20:27:19.807",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 215.4
+    },
+    {
+      "consulta": 103,
+      "fecha": "2026-11-23T20:27:20.525",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 546.3
+    },
+    {
+      "consulta": 104,
+      "fecha": "2026-11-23T20:27:21.576",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 520.6
+    },
+    {
+      "consulta": 105,
+      "fecha": "2026-11-23T20:27:22.600",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 210.5
+    },
+    {
+      "consulta": 106,
+      "fecha": "2026-11-23T20:27:23.314",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 187.2
+    },
+    {
+      "consulta": 107,
+      "fecha": "2026-11-23T20:27:24.002",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1265.3
+    },
+    {
+      "consulta": 108,
+      "fecha": "2026-11-23T20:27:25.772",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1535.1
+    },
+    {
+      "consulta": 109,
+      "fecha": "2026-11-23T20:27:27.811",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 207.6
+    },
+    {
+      "consulta": 110,
+      "fecha": "2026-11-23T20:27:28.520",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 203.5
+    },
+    {
+      "consulta": 111,
+      "fecha": "2026-11-23T20:27:29.229",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 2239.5
+    },
+    {
+      "consulta": 112,
+      "fecha": "2026-11-23T20:27:31.972",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 195.2
+    },
+    {
+      "consulta": 113,
+      "fecha": "2026-11-23T20:27:32.668",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 474.3
+    },
+    {
+      "consulta": 114,
+      "fecha": "2026-11-23T20:27:33.647",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 207.1
+    },
+    {
+      "consulta": 115,
+      "fecha": "2026-11-23T20:27:34.360",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 184.8
+    },
+    {
+      "consulta": 116,
+      "fecha": "2026-11-23T20:27:35.049",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 188.4
+    },
+    {
+      "consulta": 117,
+      "fecha": "2026-11-23T20:27:35.738",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 522.5
+    },
+    {
+      "consulta": 118,
+      "fecha": "2026-11-23T20:27:36.766",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 183.0
+    },
+    {
+      "consulta": 119,
+      "fecha": "2026-11-23T20:27:37.449",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 205.3
+    },
+    {
+      "consulta": 120,
+      "fecha": "2026-11-23T20:27:38.159",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 212.3
+    },
+    {
+      "consulta": 121,
+      "fecha": "2026-11-23T20:27:38.877",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1174.4
+    },
+    {
+      "consulta": 122,
+      "fecha": "2026-11-23T20:27:40.555",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 199.1
+    },
+    {
+      "consulta": 123,
+      "fecha": "2026-11-23T20:27:41.255",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 180.1
+    },
+    {
+      "consulta": 124,
+      "fecha": "2026-11-23T20:27:41.941",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 227.8
+    },
+    {
+      "consulta": 125,
+      "fecha": "2026-11-23T20:27:42.672",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1488.9
+    },
+    {
+      "consulta": 126,
+      "fecha": "2026-11-23T20:27:44.666",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 184.9
+    },
+    {
+      "consulta": 127,
+      "fecha": "2026-11-23T20:27:45.356",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 194.8
+    },
+    {
+      "consulta": 128,
+      "fecha": "2026-11-23T20:27:46.056",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 183.4
+    },
+    {
+      "consulta": 129,
+      "fecha": "2026-11-23T20:27:46.744",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 216.5
+    },
+    {
+      "consulta": 130,
+      "fecha": "2026-11-23T20:27:47.466",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 220.8
+    },
+    {
+      "consulta": 131,
+      "fecha": "2026-11-23T20:27:48.190",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 233.4
+    },
+    {
+      "consulta": 132,
+      "fecha": "2026-11-23T20:27:48.926",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 217.7
+    },
+    {
+      "consulta": 133,
+      "fecha": "2026-11-23T20:27:49.648",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 199.5
+    },
+    {
+      "consulta": 134,
+      "fecha": "2026-11-23T20:27:50.353",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 213.8
+    },
+    {
+      "consulta": 135,
+      "fecha": "2026-11-23T20:27:51.068",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 221.7
+    },
+    {
+      "consulta": 136,
+      "fecha": "2026-11-23T20:27:51.790",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 184.9
+    },
+    {
+      "consulta": 137,
+      "fecha": "2026-11-23T20:27:52.480",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 200.4
+    },
+    {
+      "consulta": 138,
+      "fecha": "2026-11-23T20:27:53.186",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 192.0
+    },
+    {
+      "consulta": 139,
+      "fecha": "2026-11-23T20:27:53.881",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 246.5
+    },
+    {
+      "consulta": 140,
+      "fecha": "2026-11-23T20:27:54.632",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 198.7
+    },
+    {
+      "consulta": 141,
+      "fecha": "2026-11-23T20:27:55.333",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 552.2
+    },
+    {
+      "consulta": 142,
+      "fecha": "2026-11-23T20:27:56.389",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 227.0
+    },
+    {
+      "consulta": 143,
+      "fecha": "2026-11-23T20:27:57.120",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 210.5
+    },
+    {
+      "consulta": 144,
+      "fecha": "2026-11-23T20:27:57.832",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 234.2
+    },
+    {
+      "consulta": 145,
+      "fecha": "2026-11-23T20:27:58.571",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 209.8
+    },
+    {
+      "consulta": 146,
+      "fecha": "2026-11-23T20:27:59.284",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 198.1
+    },
+    {
+      "consulta": 147,
+      "fecha": "2026-11-23T20:27:59.984",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 199.5
+    },
+    {
+      "consulta": 148,
+      "fecha": "2026-11-23T20:28:00.687",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 186.2
+    },
+    {
+      "consulta": 149,
+      "fecha": "2026-11-23T20:28:01.375",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 229.6
+    },
+    {
+      "consulta": 150,
+      "fecha": "2026-11-23T20:28:02.106",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 237.3
+    },
+    {
+      "consulta": 151,
+      "fecha": "2026-11-23T20:28:02.845",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 225.0
+    },
+    {
+      "consulta": 152,
+      "fecha": "2026-11-23T20:28:03.575",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 191.8
+    },
+    {
+      "consulta": 153,
+      "fecha": "2026-11-23T20:28:04.272",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 501.7
+    },
+    {
+      "consulta": 154,
+      "fecha": "2026-11-23T20:28:05.275",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 492.6
+    },
+    {
+      "consulta": 155,
+      "fecha": "2026-11-23T20:28:06.271",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 192.8
+    },
+    {
+      "consulta": 156,
+      "fecha": "2026-11-23T20:28:06.964",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 214.9
+    },
+    {
+      "consulta": 157,
+      "fecha": "2026-11-23T20:28:07.684",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 224.0
+    },
+    {
+      "consulta": 158,
+      "fecha": "2026-11-23T20:28:08.413",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1198.1
+    },
+    {
+      "consulta": 159,
+      "fecha": "2026-11-23T20:28:10.114",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 495.1
+    },
+    {
+      "consulta": 160,
+      "fecha": "2026-11-23T20:28:11.114",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 225.7
+    },
+    {
+      "consulta": 161,
+      "fecha": "2026-11-23T20:28:11.841",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 189.6
+    },
+    {
+      "consulta": 162,
+      "fecha": "2026-11-23T20:28:12.535",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 197.6
+    },
+    {
+      "consulta": 163,
+      "fecha": "2026-11-23T20:28:13.238",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 225.0
+    },
+    {
+      "consulta": 164,
+      "fecha": "2026-11-23T20:28:13.963",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 476.5
+    },
+    {
+      "consulta": 165,
+      "fecha": "2026-11-23T20:28:14.942",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 201.2
+    },
+    {
+      "consulta": 166,
+      "fecha": "2026-11-23T20:28:15.648",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 194.5
+    },
+    {
+      "consulta": 167,
+      "fecha": "2026-11-23T20:28:16.344",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 231.0
+    },
+    {
+      "consulta": 168,
+      "fecha": "2026-11-23T20:28:17.077",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 524.0
+    },
+    {
+      "consulta": 169,
+      "fecha": "2026-11-23T20:28:18.101",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 187.7
+    },
+    {
+      "consulta": 170,
+      "fecha": "2026-11-23T20:28:18.794",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 216.9
+    },
+    {
+      "consulta": 171,
+      "fecha": "2026-11-23T20:28:19.512",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 207.9
+    },
+    {
+      "consulta": 172,
+      "fecha": "2026-11-23T20:28:20.225",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 974.5
+    },
+    {
+      "consulta": 173,
+      "fecha": "2026-11-23T20:28:21.699",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 198.3
+    },
+    {
+      "consulta": 174,
+      "fecha": "2026-11-23T20:28:22.403",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 455.2
+    },
+    {
+      "consulta": 175,
+      "fecha": "2026-11-23T20:28:23.363",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 223.8
+    },
+    {
+      "consulta": 176,
+      "fecha": "2026-11-23T20:28:24.089",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 218.7
+    },
+    {
+      "consulta": 177,
+      "fecha": "2026-11-23T20:28:24.813",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 222.4
+    },
+    {
+      "consulta": 178,
+      "fecha": "2026-11-23T20:28:25.540",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 209.7
+    },
+    {
+      "consulta": 179,
+      "fecha": "2026-11-23T20:28:26.251",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 215.0
+    },
+    {
+      "consulta": 180,
+      "fecha": "2026-11-23T20:28:26.971",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1206.6
+    },
+    {
+      "consulta": 181,
+      "fecha": "2026-11-23T20:28:28.683",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 178.5
+    },
+    {
+      "consulta": 182,
+      "fecha": "2026-11-23T20:28:29.364",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 219.0
+    },
+    {
+      "consulta": 183,
+      "fecha": "2026-11-23T20:28:30.088",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 212.7
+    },
+    {
+      "consulta": 184,
+      "fecha": "2026-11-23T20:28:30.802",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 225.3
+    },
+    {
+      "consulta": 185,
+      "fecha": "2026-11-23T20:28:31.527",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 483.1
+    },
+    {
+      "consulta": 186,
+      "fecha": "2026-11-23T20:28:32.514",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 190.0
+    },
+    {
+      "consulta": 187,
+      "fecha": "2026-11-23T20:28:33.204",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1215.1
+    },
+    {
+      "consulta": 188,
+      "fecha": "2026-11-23T20:28:34.924",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 212.4
+    },
+    {
+      "consulta": 189,
+      "fecha": "2026-11-23T20:28:35.641",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 218.7
+    },
+    {
+      "consulta": 190,
+      "fecha": "2026-11-23T20:28:36.365",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 200.8
+    },
+    {
+      "consulta": 191,
+      "fecha": "2026-11-23T20:28:37.067",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 250.4
+    },
+    {
+      "consulta": 192,
+      "fecha": "2026-11-23T20:28:37.822",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1194.3
+    },
+    {
+      "consulta": 193,
+      "fecha": "2026-11-23T20:28:39.516",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 342.3
+    },
+    {
+      "consulta": 194,
+      "fecha": "2026-11-23T20:28:40.364",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1193.8
+    },
+    {
+      "consulta": 195,
+      "fecha": "2026-11-23T20:28:42.058",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 231.1
+    },
+    {
+      "consulta": 196,
+      "fecha": "2026-11-23T20:28:42.794",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 185.3
+    },
+    {
+      "consulta": 197,
+      "fecha": "2026-11-23T20:28:43.482",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 226.2
+    },
+    {
+      "consulta": 198,
+      "fecha": "2026-11-23T20:28:44.209",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 208.2
+    },
+    {
+      "consulta": 199,
+      "fecha": "2026-11-23T20:28:44.922",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1198.1
+    },
+    {
+      "consulta": 200,
+      "fecha": "2026-11-23T20:28:46.625",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1230.3
+    },
+    {
+      "consulta": 201,
+      "fecha": "2026-11-23T20:28:48.360",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 218.5
+    },
+    {
+      "consulta": 202,
+      "fecha": "2026-11-23T20:28:49.084",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 202.1
+    },
+    {
+      "consulta": 203,
+      "fecha": "2026-11-23T20:28:49.791",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 202.7
+    },
+    {
+      "consulta": 204,
+      "fecha": "2026-11-23T20:28:50.499",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 231.7
+    },
+    {
+      "consulta": 205,
+      "fecha": "2026-11-23T20:28:51.232",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 180.3
+    },
+    {
+      "consulta": 206,
+      "fecha": "2026-11-23T20:28:51.914",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 186.9
+    },
+    {
+      "consulta": 207,
+      "fecha": "2026-11-23T20:28:52.606",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 184.9
+    },
+    {
+      "consulta": 208,
+      "fecha": "2026-11-23T20:28:53.293",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1214.5
+    },
+    {
+      "consulta": 209,
+      "fecha": "2026-11-23T20:28:55.012",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 209.4
+    },
+    {
+      "consulta": 210,
+      "fecha": "2026-11-23T20:28:55.723",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1069.6
+    },
+    {
+      "consulta": 211,
+      "fecha": "2026-11-23T20:28:57.297",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1205.7
+    },
+    {
+      "consulta": 212,
+      "fecha": "2026-11-23T20:28:59.008",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 202.8
+    },
+    {
+      "consulta": 213,
+      "fecha": "2026-11-23T20:28:59.716",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1190.8
+    },
+    {
+      "consulta": 214,
+      "fecha": "2026-11-23T20:29:01.412",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 2194.7
+    },
+    {
+      "consulta": 215,
+      "fecha": "2026-11-23T20:29:04.111",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1210.7
+    },
+    {
+      "consulta": 216,
+      "fecha": "2026-11-23T20:29:05.827",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 228.1
+    },
+    {
+      "consulta": 217,
+      "fecha": "2026-11-23T20:29:06.560",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 181.6
+    },
+    {
+      "consulta": 218,
+      "fecha": "2026-11-23T20:29:07.247",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 517.2
+    },
+    {
+      "consulta": 219,
+      "fecha": "2026-11-23T20:29:08.267",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1214.4
+    },
+    {
+      "consulta": 220,
+      "fecha": "2026-11-23T20:29:09.987",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 181.4
+    },
+    {
+      "consulta": 221,
+      "fecha": "2026-11-23T20:29:10.669",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 520.4
+    },
+    {
+      "consulta": 222,
+      "fecha": "2026-11-23T20:29:11.694",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 186.3
+    },
+    {
+      "consulta": 223,
+      "fecha": "2026-11-23T20:29:12.385",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 478.3
+    },
+    {
+      "consulta": 224,
+      "fecha": "2026-11-23T20:29:13.368",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 189.5
+    },
+    {
+      "consulta": 225,
+      "fecha": "2026-11-23T20:29:14.059",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 215.5
+    },
+    {
+      "consulta": 226,
+      "fecha": "2026-11-23T20:29:14.779",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 218.2
+    },
+    {
+      "consulta": 227,
+      "fecha": "2026-11-23T20:29:15.498",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 197.9
+    },
+    {
+      "consulta": 228,
+      "fecha": "2026-11-23T20:29:16.200",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 215.5
+    },
+    {
+      "consulta": 229,
+      "fecha": "2026-11-23T20:29:16.916",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 200.6
+    },
+    {
+      "consulta": 230,
+      "fecha": "2026-11-23T20:29:17.620",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 225.1
+    },
+    {
+      "consulta": 231,
+      "fecha": "2026-11-23T20:29:18.350",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 224.9
+    },
+    {
+      "consulta": 232,
+      "fecha": "2026-11-23T20:29:19.080",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 237.9
+    },
+    {
+      "consulta": 233,
+      "fecha": "2026-11-23T20:29:19.821",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 181.7
+    },
+    {
+      "consulta": 234,
+      "fecha": "2026-11-23T20:29:20.508",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 199.9
+    },
+    {
+      "consulta": 235,
+      "fecha": "2026-11-23T20:29:21.213",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 214.5
+    },
+    {
+      "consulta": 236,
+      "fecha": "2026-11-23T20:29:21.932",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 510.7
+    },
+    {
+      "consulta": 237,
+      "fecha": "2026-11-23T20:29:22.946",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 187.1
+    },
+    {
+      "consulta": 238,
+      "fecha": "2026-11-23T20:29:23.638",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 180.2
+    },
+    {
+      "consulta": 239,
+      "fecha": "2026-11-23T20:29:24.319",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 227.5
+    },
+    {
+      "consulta": 240,
+      "fecha": "2026-11-23T20:29:25.051",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 215.7
+    },
+    {
+      "consulta": 241,
+      "fecha": "2026-11-23T20:29:25.772",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 200.6
+    },
+    {
+      "consulta": 242,
+      "fecha": "2026-11-23T20:29:26.477",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 256.5
+    },
+    {
+      "consulta": 243,
+      "fecha": "2026-11-23T20:29:27.238",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 280.4
+    },
+    {
+      "consulta": 244,
+      "fecha": "2026-11-23T20:29:28.023",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 935.6
+    },
+    {
+      "consulta": 245,
+      "fecha": "2026-11-23T20:29:29.463",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 319.2
+    },
+    {
+      "consulta": 246,
+      "fecha": "2026-11-23T20:29:30.285",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 203.3
+    },
+    {
+      "consulta": 247,
+      "fecha": "2026-11-23T20:29:30.992",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 194.9
+    },
+    {
+      "consulta": 248,
+      "fecha": "2026-11-23T20:29:31.689",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 217.1
+    },
+    {
+      "consulta": 249,
+      "fecha": "2026-11-23T20:29:32.409",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 188.1
+    },
+    {
+      "consulta": 250,
+      "fecha": "2026-11-23T20:29:33.100",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 216.7
+    },
+    {
+      "consulta": 251,
+      "fecha": "2026-11-23T20:29:33.822",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 225.9
+    },
+    {
+      "consulta": 252,
+      "fecha": "2026-11-23T20:29:34.553",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 224.9
+    },
+    {
+      "consulta": 253,
+      "fecha": "2026-11-23T20:29:35.283",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 525.6
+    },
+    {
+      "consulta": 254,
+      "fecha": "2026-11-23T20:29:36.314",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 194.5
+    },
+    {
+      "consulta": 255,
+      "fecha": "2026-11-23T20:29:37.013",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1964.0
+    },
+    {
+      "consulta": 256,
+      "fecha": "2026-11-23T20:29:39.479",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 246.4
+    },
+    {
+      "consulta": 257,
+      "fecha": "2026-11-23T20:29:40.226",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 214.2
+    },
+    {
+      "consulta": 258,
+      "fecha": "2026-11-23T20:29:40.944",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1228.9
+    },
+    {
+      "consulta": 259,
+      "fecha": "2026-11-23T20:29:42.678",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 333.5
+    },
+    {
+      "consulta": 260,
+      "fecha": "2026-11-23T20:29:43.516",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 198.9
+    },
+    {
+      "consulta": 261,
+      "fecha": "2026-11-23T20:29:44.216",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 369.2
+    },
+    {
+      "consulta": 262,
+      "fecha": "2026-11-23T20:29:45.088",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 260.2
+    },
+    {
+      "consulta": 263,
+      "fecha": "2026-11-23T20:29:45.852",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 213.0
+    },
+    {
+      "consulta": 264,
+      "fecha": "2026-11-23T20:29:46.570",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 219.1
+    },
+    {
+      "consulta": 265,
+      "fecha": "2026-11-23T20:29:47.290",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 307.6
+    },
+    {
+      "consulta": 266,
+      "fecha": "2026-11-23T20:29:48.102",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 206.9
+    },
+    {
+      "consulta": 267,
+      "fecha": "2026-11-23T20:29:48.814",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 199.2
+    },
+    {
+      "consulta": 268,
+      "fecha": "2026-11-23T20:29:49.517",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1208.3
+    },
+    {
+      "consulta": 269,
+      "fecha": "2026-11-23T20:29:51.229",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 690.7
+    },
+    {
+      "consulta": 270,
+      "fecha": "2026-11-23T20:29:52.425",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 399.6
+    },
+    {
+      "consulta": 271,
+      "fecha": "2026-11-23T20:29:53.327",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 286.9
+    },
+    {
+      "consulta": 272,
+      "fecha": "2026-11-23T20:29:54.115",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 248.5
+    },
+    {
+      "consulta": 273,
+      "fecha": "2026-11-23T20:29:54.869",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 310.0
+    },
+    {
+      "consulta": 274,
+      "fecha": "2026-11-23T20:29:55.680",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 316.3
+    },
+    {
+      "consulta": 275,
+      "fecha": "2026-11-23T20:29:56.501",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1239.9
+    },
+    {
+      "consulta": 276,
+      "fecha": "2026-11-23T20:29:58.246",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 204.7
+    },
+    {
+      "consulta": 277,
+      "fecha": "2026-11-23T20:29:58.956",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 212.6
+    },
+    {
+      "consulta": 278,
+      "fecha": "2026-11-23T20:29:59.669",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 220.9
+    },
+    {
+      "consulta": 279,
+      "fecha": "2026-11-23T20:30:00.395",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 620.2
+    },
+    {
+      "consulta": 280,
+      "fecha": "2026-11-23T20:30:01.518",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 253.6
+    },
+    {
+      "consulta": 281,
+      "fecha": "2026-11-23T20:30:02.274",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 492.6
+    },
+    {
+      "consulta": 282,
+      "fecha": "2026-11-23T20:30:03.267",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1023.9
+    },
+    {
+      "consulta": 283,
+      "fecha": "2026-11-23T20:30:04.796",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 296.8
+    },
+    {
+      "consulta": 284,
+      "fecha": "2026-11-23T20:30:05.593",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 233.7
+    },
+    {
+      "consulta": 285,
+      "fecha": "2026-11-23T20:30:06.330",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 179.8
+    },
+    {
+      "consulta": 286,
+      "fecha": "2026-11-23T20:30:07.014",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 181.6
+    },
+    {
+      "consulta": 287,
+      "fecha": "2026-11-23T20:30:07.701",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 369.9
+    },
+    {
+      "consulta": 288,
+      "fecha": "2026-11-23T20:30:08.576",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 568.3
+    },
+    {
+      "consulta": 289,
+      "fecha": "2026-11-23T20:30:09.646",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 276.9
+    },
+    {
+      "consulta": 290,
+      "fecha": "2026-11-23T20:30:10.426",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 828.9
+    },
+    {
+      "consulta": 291,
+      "fecha": "2026-11-23T20:30:11.760",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 240.9
+    },
+    {
+      "consulta": 292,
+      "fecha": "2026-11-23T20:30:12.506",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1518.6
+    },
+    {
+      "consulta": 293,
+      "fecha": "2026-11-23T20:30:14.581",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 547.1
+    },
+    {
+      "consulta": 294,
+      "fecha": "2026-11-23T20:30:15.632",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 169.6
+    },
+    {
+      "consulta": 295,
+      "fecha": "2026-11-23T20:30:16.307",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 176.0
+    },
+    {
+      "consulta": 296,
+      "fecha": "2026-11-23T20:30:16.988",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1078.2
+    },
+    {
+      "consulta": 297,
+      "fecha": "2026-11-23T20:30:18.567",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1546.5
+    },
+    {
+      "consulta": 298,
+      "fecha": "2026-11-23T20:30:20.618",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 217.5
+    },
+    {
+      "consulta": 299,
+      "fecha": "2026-11-23T20:30:21.341",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 255.7
+    }
+  ]
+}
