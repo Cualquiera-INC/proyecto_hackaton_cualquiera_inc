@@ -99,6 +99,22 @@ Hay que decidir cómo se sirve `frontend-nodo/` en AWS (D11). La interfaz es de 
 - **Límites:** la prefix list pesa 55 de las 60 reglas del grupo del ALB; solo IPv4 y puerto 80. Las actualizaciones de red y cómputo son in situ (sin reemplazar ALB, target group ni EC2); el riesgo de reemplazo está en las AMI de SSM, por eso se usa `UsePreviousValue`.
 - **Probado vs. diseñado:** ver AWS08 en `infra/aws/PRUEBAS.md`. Hasta ejecutarla todo esto es solo diseño validado con `ValidateTemplate`.
 
+## D17 · Despliegue automatizado con un script: `scripts/aws_nodo.py` 🟡 (24-11, escrito; probado solo en simulación y con lecturas)
+Desplegar en AWS eran ~10 bloques de comandos pegados a mano (contraseña en SSM, cuatro pilas en orden, clave de origen, `UsePreviousValue`, publicar el front, esperar al target group, probar, destruir vaciando buckets). Opciones:
+
+| Opción | A favor | En contra |
+|---|---|---|
+| Seguir con los bloques de README y PRUEBAS | Nada nuevo que mantener | Fácil equivocarse (orden, parámetros, secretos en la terminal); no reproducible |
+| **Script en Python (biblioteca estándar) que llama al AWS CLI** 🟡 | Un comando, igual en macOS, Windows y Linux, sin dependencias; mismo estilo que `desplegar.py` | Un script más que mantener; no sustituye a CloudFormation, lo orquesta |
+| GitHub Actions con OIDC | Despliegue desde el repo, sin claves en equipos | Exige dar permisos de despliegue al rol `github-actions-nodo-ruta` (hoy sin permisos) |
+
+**Se implementó la segunda** (`desplegar`, `estado`, `probar`, `destruir` y `--simular`; uso en `infra/aws/README.md`). Decisiones de diseño:
+- **Idempotencia y seguridad de las actualizaciones:** las pilas existentes se actualizan con un change set que se revisa antes de ejecutar; si algo se reemplazaría (típico: AMI de SSM re-resuelta o un nuevo `VersionGit`) se aborta. Es el mismo control que se hacía a mano para D16.
+- **Secretos:** `secrets.token_hex`, solo si faltan en SSM, y por archivos temporales 0600. La clave de origen queda en SSM (`/nodo-ruta/front/clave-origen`) para poder repetir el despliegue.
+- **Supuestos:** el commit a desplegar debe estar en GitHub (las EC2 lo clonan); la API de etiquetas (`tag:GetResources`) está bloqueada por la SCP en us-east-1, por eso la verificación de CloudFront usa `list-distributions`.
+- **Probado vs. diseñado:** la lógica de pilas, change sets y vaciado de buckets se probó contra respuestas simuladas, y `estado` y `--simular` contra la cuenta real (solo lecturas). **Falta** una ejecución real de `desplegar`, `probar` y `destruir` (se hace en la próxima prueba en AWS); hasta entonces es solo diseño con pruebas parciales.
+- **Siguiente paso, pendiente de decisión:** GitHub Actions con OIDC que ejecute este mismo script. Requiere dar permisos de despliegue (CloudFormation, EC2, RDS, ELB, S3, CloudFront, IAM, SSM) al rol `github-actions-nodo-ruta`, que hoy no tiene ninguno; es una decisión de seguridad del equipo (mínimo privilegio, solo `main`, quizá con aprobación manual).
+
 ## Pendientes medidos (mejoras para el siguiente PR)
 
 | Mejora | Por qué | Estado |
