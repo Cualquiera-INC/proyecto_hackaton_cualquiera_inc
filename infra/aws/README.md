@@ -23,6 +23,26 @@ Que hace `desplegar`, en orden: (1) prechequeos: identidad, git sin cambios pend
 - **Fallos.** Se imprimen los eventos `FAILED` de la pila (recurso y motivo) y el codigo de salida es 1.
 - **Destruccion.** Vacia el bucket del front, borra 04, 03, vacia el bucket de respaldos **con versiones y marcas de borrado**, borra 02, 01 y los parametros SSM, y verifica que no quede nada con `proyecto=nodo-ruta`. Se puede repetir si algo fallo a medias. La API de etiquetas esta bloqueada por la politica de la organizacion en us-east-1: ahi se revisan las distribuciones de CloudFront con `list-distributions`. Quedan a proposito el rol `github-actions-nodo-ruta` y el proveedor OIDC.
 
+## Despliegue desde GitHub Actions
+
+El workflow `.github/workflows/aws.yml` ejecuta este mismo script sin claves guardadas: GitHub pide un pase OIDC y asume el rol `github-actions-nodo-ruta` (ARN en la variable del repo `AWS_ROLE_ARN`). Los permisos del rol estan en [iam/politica-github-actions.json](iam/README.md) y **hay que aplicarlos una vez a mano** (el rol hoy no tiene ninguno); sin eso el workflow falla en el primer comando.
+
+**Como lanzarlo:** pestaña *Actions* > *AWS Nodo Ruta* > *Run workflow*, con la rama `main` (solo corre desde ahi: el rol confia unicamente en `main`, asi que primero hay que integrar los cambios).
+
+| Entrada | Uso |
+|---|---|
+| `accion` | `estado`, `desplegar`, `probar` o `destruir` |
+| `cidr` | Obligatorio para `desplegar`: **tu IP publica con `/32`** (la ves en https://checkip.amazonaws.com; ej. `203.0.113.7/32`). Es la unica que podra abrir la app por CloudFront o el ALB. Se rechaza `0.0.0.0/0` y cualquier formato distinto. **No es la IP del runner** |
+| `version` | Opcional: commit a desplegar (por defecto el de `main`). Debe estar en GitHub, las EC2 lo clonan |
+| `confirmacion` | Para `destruir`: escribir exactamente `destruir` |
+
+- **Cuanto tarda:** `desplegar` ~45 min (RDS ~13 min y CloudFront ~7 min); `destruir` ~10 min; `estado` y `probar`, pocos minutos. El limite del job es 90 min. La sesion de AWS dura **1 hora como maximo** (`MaxSessionDuration` del rol = 3600): si un despliegue pasara de ahi, fallaria por credenciales vencidas; las pilas siguen en AWS, se repite `desplegar` y continua (es idempotente).
+- **Una ejecucion a la vez:** `concurrency: aws-nodo-ruta`, sin cancelar la que esta en curso.
+- **Prueba de humo:** el runner no es tu IP, asi que CloudFront le responde 403 (eso comprueba la restriccion). Por eso, dentro de Actions la comprobacion de `/health` y `/pedidos` se hace por SSM en cada EC2 (`--humo-remoto`, automatico con `GITHUB_ACTIONS`).
+- **Resultado:** resumen en la pagina de la ejecucion (URL de CloudFront y estado) y la bitacora con marcas de tiempo como artifact `bitacora-aws-<id>` (30 dias).
+- **Cuidado:** el repo es publico, asi que tu IP y el id de cuenta aparecen en los registros y en el artifact. AWS ya oculta el id de cuenta en el registro; la IP no se oculta.
+- `destruir` ya no cuenta como pendientes las instancias `terminated` ni el snapshot automatico de RDS (AWS los limpia solo; ver AWS07): los lista como "resto esperado".
+
 Las pruebas de caida de una instancia y de restauracion siguen siendo manuales (PRUEBAS.md). Lo que sigue en este documento son los **pasos manuales, como referencia** de lo que automatiza el script.
 
 ## Que crea cada plantilla

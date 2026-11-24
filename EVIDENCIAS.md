@@ -282,6 +282,18 @@ Pasos: actualizar el repo de la EC2 A a `166ca8a` por SSM; monitor sobre `/healt
 Resultado observado: `/health` antes: **503**. `RESTAURAR` a las **20:50:20**: respaldo comprobado (mismo sha256), copia `20261124_015025_prerestauracion.dump` subida a S3, `Restaurado desde ...`, `datos-v1 pedidos=6` (iguales que antes del daño). **Primer 200 a las 20:50:28,6 → recuperación en 8,6 s** medida desde la orden, incluida la latencia de SSM. Los 11 errores son todos anteriores (último a las 20:50:27,9) y **después hay 0 errores**, con 34 respuestas de cada zona. SSM informó el fin a las 20:50:33. **CUMPLE**.
 Lectura honesta: la recuperación con el procedimiento correcto tarda segundos, pero el incidente completo duró **~8,5 min** (20:42:00 → 20:50:28) por el defecto del script. Ensayar la restauración antes de necesitarla es lo que lo descubrió. Evidencia: `evidencias/AWS06b_restauracion_s3*`
 
+## AWS07 — Destrucción completa y verificación
+Qué queremos comprobar: que se puede borrar todo lo de AWS con las pilas en orden inverso, sin dejar recursos que sigan consumiendo créditos, y medir cuánto tarda.
+Pasos: vaciar el bucket del front (con versiones) y borrar `nodo-ruta-front`; borrar `nodo-ruta-computo`; vaciar el bucket de respaldos (con versiones) y borrar `nodo-ruta-datos`; borrar `nodo-ruta-red`; borrar el parámetro SSM; listar lo que quede con la etiqueta `proyecto=nodo-ruta` y las pilas.
+Resultado observado:
+- **Duración total: unos 9 min**, de las **22:01:53 a las 22:11:02**. Por pila: front 3 min 49 s, cómputo 1 min 37 s, datos 2 min 9 s, red 37 s.
+- Los dos buckets se vaciaron con sus versiones y se borró el parámetro SSM. **No queda ninguna pila `nodo-ruta-*`**.
+- Restos en la API de etiquetas (us-east-2):
+  - Cuatro instancias EC2 ya en `terminated`. Es normal: salen del índice en ~1 h.
+  - Un snapshot automático de RDS (`rds:nodo-ruta-datos-pg-2026-11-24-01-06`). **No se puede borrar a mano** (`automated snapshots cannot be deleted`) y no hay copias automáticas retenidas; se espera que RDS lo elimine solo. **Pendiente de verificar** (en una consulta posterior el índice ya no lo mostraba, sin que lo hayamos confirmado en RDS).
+- Hallazgo: la SCP de la organización **niega `tag:GetResources` en us-east-1** (la revisión de CloudFront allí se hace con `list-distributions`).
+**CUMPLE**, con la observación del snapshot automático de RDS por verificar. Evidencia: `evidencias/AWS07_destruccion.txt`
+
 ## AWS08 — Interfaz y API por CloudFront (D16)
 Qué queremos comprobar: que la interfaz se sirve por HTTPS desde S3 a través de CloudFront, que `/pedidos` y `/health` llegan al ALB sin caché y repartidas entre las dos zonas, y que los cambios de red y cómputo no reemplazaron recursos.
 Pasos (`infra/aws/README.md`, "Pila del front"):
