@@ -1,0 +1,19 @@
+2026-11-23T22:01:53 inicio AWS07
+2026-11-23T22:02:20 bucket nodo-ruta-front-bucketfront-i7k9whjcor9j vaciado
+2026-11-23T22:02:20 borrando nodo-ruta-front
+2026-11-23T22:06:09 nodo-ruta-front borrada
+2026-11-23T22:06:09 borrando nodo-ruta-computo
+2026-11-23T22:07:46 nodo-ruta-computo borrada
+2026-11-23T22:08:11 bucket nodo-ruta-respaldos-262853426378-us-east-2 vaciado
+2026-11-23T22:08:11 borrando nodo-ruta-datos
+2026-11-23T22:10:20 nodo-ruta-datos borrada
+2026-11-23T22:10:20 borrando nodo-ruta-red
+2026-11-23T22:10:57 nodo-ruta-red borrada
+2026-11-23T22:10:59 parametro SSM borrado
+--- pilas que quedan:
+--- recursos con proyecto=nodo-ruta (us-east-2):
+arn:aws:rds:us-east-2:262853426378:snapshot:rds:nodo-ruta-datos-pg-2026-11-24-01-06	arn:aws:ec2:us-east-2:262853426378:instance/i-0595561ca670bc592	arn:aws:ec2:us-east-2:262853426378:instance/i-02c4d85fbe1185d0f	arn:aws:ec2:us-east-2:262853426378:instance/i-09231cd2d9334ea7d	arn:aws:ec2:us-east-2:262853426378:instance/i-0a7530c48499d892b
+--- recursos con proyecto=nodo-ruta (us-east-1, CloudFront):
+
+aws: [ERROR]: An error occurred (AccessDeniedException) when calling the GetResources operation: User: arn:aws:sts::262853426378:assumed-role/AccountFullAccessRole/04982478-f0a1-706b-361c-97ea6b5a616b is not authorized to perform: tag:GetResources with an explicit deny in a service control policy: arn:aws:organizations::975779326094:policy/o-czfy9hrojn/service_control_policy/p-c8mykusj
+2026-11-23T22:11:02 fin AWS07

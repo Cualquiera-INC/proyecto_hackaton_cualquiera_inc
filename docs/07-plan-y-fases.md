@@ -1,6 +1,6 @@
 # 07 · Estado y próximas fases
 
-> Actualizado el 21-11-2026. Cuando se cierre una tarea, márquenla aquí en el mismo PR.
+> Actualizado el 24-11-2026. Cuando se cierre una tarea, márquenla aquí en el mismo PR.
 
 ## Lo que tenemos (probado en local)
 
@@ -45,7 +45,7 @@ flowchart LR
 | Tarea | Detalle |
 |---|---|
 | **Alerta de presupuesto** | ✅ Hecha (21-11): `nodo-ruta-mensual`, USD 5 al mes sin contar créditos, avisos al 50 % y al 100 % |
-| **Acceso de GitHub a AWS sin claves** | ✅ OIDC probado (21-11): rol `github-actions-nodo-ruta`, solo `main`, sin permisos todavía |
+| **Acceso de GitHub a AWS sin claves** | ✅ OIDC probado (21-11): rol `github-actions-nodo-ruta`, solo `main`. Política de despliegue escrita y validada (`infra/aws/iam/`), **sin aplicar** |
 | **Dónde vive PostgreSQL en AWS** | ✅ Decidido (D13): 2 EC2 + RDS PostgreSQL Single-AZ (`t3.micro` o `t4g.micro`). Sin Multi-AZ en el plan gratuito |
 | Usuarios IAM para el equipo | Nadie trabaja con el usuario raíz; permisos mínimos |
 | Región | ✅ **us-east-2 (Ohio)**: es la única donde la política de la organización permite EC2, CloudFormation y RDS. Todo comando y plantilla usa `--region us-east-2` |
@@ -67,6 +67,8 @@ Plantillas de **CloudFormation** en `infra/aws/` para crear y destruir con una p
 7. CloudFront + S3 para la interfaz (D16, `04-front.yaml`; pruebas en AWS08).
 
 **Avance (23-11):** plantilla de red `infra/aws/01-red.yaml` escrita, validada y **desplegada** en us-east-2 como pila `nodo-ruta-red` (CREATE_COMPLETE, evidencia AWS01). Instrucciones en `infra/aws/README.md`. **Avance (23-11, rama `feat/infra-datos`):** `infra/aws/02-datos.yaml` (RDS PostgreSQL 17 Single-AZ, bucket S3 de respaldos, contrasena en SSM SecureString) escrita, validada y **desplegada** como pila `nodo-ruta-datos` (CREATE_COMPLETE, evidencia AWS02; RDS consume creditos mientras exista). **Avance (23-11, rama `feat/infra-computo`):** `infra/aws/03-computo.yaml` (2 EC2 por zona, ALB HTTP con health check a `/health` cada 5 s, rol de mínimo privilegio, sin SSH) escrita y **validada** con ValidateTemplate (después desplegada y probada). **Avance (23-11, rama `feat/infra-front`):** D16, `infra/aws/04-front.yaml` (S3 privado + CloudFront), regla de la prefix list en `01-red.yaml`, listener con 403 y reglas en `03-computo.yaml` y `scripts/publicar_front.py`; **desplegadas y probadas** (red y cómputo actualizados sin reemplazar recursos; front en `https://<id>.cloudfront.net`, evidencia AWS08). Carga inicial de la base y respaldo manual a S3 en `despliegue/aws/` y `basedatos/aws/` (D15).
+
+**Avance (24-11, rama `feat/despliegue-automatico`):** D17, `scripts/aws_nodo.py` (`desplegar`, `estado`, `probar`, `destruir`, `--simular`) reemplaza los bloques manuales de `infra/aws/README.md` y `PRUEBAS.md`. **Probado solo con lecturas y respuestas simuladas; falta la primera ejecución real** (crear, probar y destruir en una misma sesión, con `--evidencia`). **GitHub Actions aceptado (D17):** `.github/workflows/aws.yml` ejecuta el script con OIDC y la política del rol está versionada en `infra/aws/iam/`, **pero aún no está aplicada** (hay que correr `aws iam put-role-policy`, ver su README) **ni el workflow se ha ejecutado**, y solo correrá desde `main`.
 
 > Los puntos 1, 3 y 4 asumían los datos como JSON en S3. Con D13 cambian: S3 solo guarda respaldos, las EC2 corren `app` + `pedidos` sin sincronizar nada y se suma una instancia RDS en subred privada (con su grupo de seguridad). Esta lista se reescribe al empezar las plantillas de CloudFormation.
 

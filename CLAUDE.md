@@ -20,7 +20,7 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 - `app.py`, `Dockerfile`, `pedidos.json`: app del reto con cambios mínimos y datos originales (no se modifican).
 - `servicios/pedidos/` y `basedatos/`: microservicio de pedidos (solo lectura) y esquema, datos iniciales y réplica de PostgreSQL.
 - `despliegue/`: `compose.yaml` y `nginx.conf` oficiales. No se levanta con `compose up` a mano: lo hace `desplegar.py`.
-- `scripts/`: `desplegar.py`, `datos.py`, `verificar_servicio.py`, `monitorear.py`, `ejecutar_local.py`.
+- `scripts/`: `aws_nodo.py` (AWS), `desplegar.py`, `datos.py`, `verificar_servicio.py`, `monitorear.py`, `ejecutar_local.py`.
 - `docs/`: 01 reto, 02 arquitectura, 03 decisiones, 04 seguridad y costos, 05 cómo funciona, 06 pitch, 07 plan y fases, 08 PostgreSQL y microservicio de pedidos.
 - `evidencias/`: el prefijo del archivo es el ID de la prueba (`I05c_…`). `EVIDENCIAS.md` es la única bitácora.
 - `frontend-nodo/`: interfaz web React + Vite de solo lectura. La construye `despliegue/Dockerfile.proxy` y el proxy la sirve en `/` (D11).
@@ -35,6 +35,7 @@ python scripts/datos.py respaldar | verificar | simular-error | restaurar --resp
 python scripts/desplegar.py desplegar --version v1
 python scripts/desplegar.py rollback
 python scripts/desplegar.py estado
+python scripts/aws_nodo.py estado | desplegar | probar | destruir   # AWS en un comando (--simular = solo lecturas; D17)
 python scripts/verificar_servicio.py --esperadas app1,app2 --salida evidencias/<ID>_<nombre>.json
 python scripts/monitorear.py --segundos 120 --salida evidencias/<ID>_<nombre>.json
 docker compose -f despliegue/compose.yaml ps | logs --tail 50 | down

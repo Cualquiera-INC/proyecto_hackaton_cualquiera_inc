@@ -2,6 +2,49 @@
 
 Todo va en **us-east-2 (Ohio)**: es la unica region que permite la politica de la organizacion (EC2, CloudFormation, RDS, ELB, ECS). Cada comando lleva `--region us-east-2`. Decisiones: D13 y D14 en `docs/03-decisiones.md`; diagrama en `docs/02-arquitectura.md`.
 
+## Despliegue en un comando
+
+`scripts/aws_nodo.py` automatiza todo lo de este documento y de [PRUEBAS.md](PRUEBAS.md) (D17): secretos en SSM, las 4 pilas en orden, el front, la espera a que el ALB vea sanas las 2 EC2, la prueba de humo y la destruccion. Solo usa la biblioteca estandar de Python y llama al AWS CLI (macOS, Windows y Linux; sin bash). Requiere AWS CLI v2 con credenciales activas, `git` y `npm`. La region es siempre us-east-2.
+
+```bash
+python scripts/aws_nodo.py estado                       # pilas, URLs, salud del target group, parametros SSM, aviso de costo
+python scripts/aws_nodo.py desplegar                    # crea o actualiza todo y prueba (RDS y CloudFront tardan varios minutos; el script mide cada paso)
+python scripts/aws_nodo.py probar                       # humo + respaldo a S3 por SSM (sin pruebas destructivas)
+python scripts/aws_nodo.py destruir                     # pide escribir "destruir"; --si lo omite
+python scripts/aws_nodo.py --simular desplegar          # solo lecturas: muestra lo que ejecutaria
+```
+
+Opciones utiles: `desplegar --cidr X.X.X.X/32` (por defecto tu IP publica), `--version COMMIT` (por defecto `origin/main`; debe estar en GitHub porque las EC2 lo clonan), `--permitir-reemplazo`, `--evidencia AWS09` (guarda la bitacora con marcas de tiempo en `evidencias/AWS09_despliegue_<fecha>.txt`; tambien en `probar` y `destruir`) y `destruir --conservar-secretos`.
+
+Que hace `desplegar`, en orden: (1) prechequeos: identidad, git sin cambios pendientes en lo que se despliega y commit publicado en GitHub; (2) `CidrAcceso`; (3) secretos `/nodo-ruta/db/password` y `/nodo-ruta/front/clave-origen` en SSM SecureString, **creados solo si faltan** y nunca impresos; (4) pilas 01, 02, 03, 04; (5) espera a que los 2 destinos esten `healthy` (maximo 15 min); (6) `scripts/publicar_front.py`; (7) prueba de humo por CloudFront (`/` HTML, `/pedidos` con 6 pedidos, `/health` desde las dos zonas). Termina con la duracion de cada paso y el total.
+
+- **Idempotente.** Repetirlo no rompe nada: si una pila no existe se crea; si existe se actualiza con un conjunto de cambios (change set) y **se aborta si algun recurso se reemplazaria** (Replacement `True` o `Conditional`: por ejemplo una AMI mas nueva o un `--version` distinto cambian el user data de las EC2) salvo `--permitir-reemplazo`. "Sin cambios" cuenta como exito. Una pila en `ROLLBACK_COMPLETE` se borra y se recrea. En las actualizaciones, los parametros que no cambian usan `UsePreviousValue`.
+- **Secretos.** Se pasan a CloudFormation y a SSM por archivos temporales con permisos 0600 en el directorio temporal del sistema, que se borran al terminar: no quedan en la linea de comandos, en el historial ni en el repo. La clave de origen vive en SSM, asi que `desplegar` puede repetirse desde otra terminal.
+- **Fallos.** Se imprimen los eventos `FAILED` de la pila (recurso y motivo) y el codigo de salida es 1.
+- **Destruccion.** Vacia el bucket del front, borra 04, 03, vacia el bucket de respaldos **con versiones y marcas de borrado**, borra 02, 01 y los parametros SSM, y verifica que no quede nada con `proyecto=nodo-ruta`. Se puede repetir si algo fallo a medias. La API de etiquetas esta bloqueada por la politica de la organizacion en us-east-1: ahi se revisan las distribuciones de CloudFront con `list-distributions`. Quedan a proposito el rol `github-actions-nodo-ruta` y el proveedor OIDC.
+
+## Despliegue desde GitHub Actions
+
+El workflow `.github/workflows/aws.yml` ejecuta este mismo script sin claves guardadas: GitHub pide un pase OIDC y asume el rol `github-actions-nodo-ruta` (ARN en la variable del repo `AWS_ROLE_ARN`). Los permisos del rol estan en [iam/politica-github-actions.json](iam/README.md) y **hay que aplicarlos una vez a mano** (el rol hoy no tiene ninguno); sin eso el workflow falla en el primer comando.
+
+**Como lanzarlo:** pestaña *Actions* > *AWS Nodo Ruta* > *Run workflow*, con la rama `main` (solo corre desde ahi: el rol confia unicamente en `main`, asi que primero hay que integrar los cambios).
+
+| Entrada | Uso |
+|---|---|
+| `accion` | `estado`, `desplegar`, `probar` o `destruir` |
+| `cidr` | Obligatorio para `desplegar`: **tu IP publica con `/32`** (la ves en https://checkip.amazonaws.com; ej. `203.0.113.7/32`). Es la unica que podra abrir la app por CloudFront o el ALB. Se rechaza `0.0.0.0/0` y cualquier formato distinto. **No es la IP del runner** |
+| `version` | Opcional: commit a desplegar (por defecto el de `main`). Debe estar en GitHub, las EC2 lo clonan |
+| `confirmacion` | Para `destruir`: escribir exactamente `destruir` |
+
+- **Cuanto tarda:** `desplegar` ~45 min (RDS ~13 min y CloudFront ~7 min); `destruir` ~10 min; `estado` y `probar`, pocos minutos. El limite del job es 90 min. La sesion de AWS dura **1 hora como maximo** (`MaxSessionDuration` del rol = 3600): si un despliegue pasara de ahi, fallaria por credenciales vencidas; las pilas siguen en AWS, se repite `desplegar` y continua (es idempotente).
+- **Una ejecucion a la vez:** `concurrency: aws-nodo-ruta`, sin cancelar la que esta en curso.
+- **Prueba de humo:** el runner no es tu IP, asi que CloudFront le responde 403 (eso comprueba la restriccion). Por eso, dentro de Actions la comprobacion de `/health` y `/pedidos` se hace por SSM en cada EC2 (`--humo-remoto`, automatico con `GITHUB_ACTIONS`).
+- **Resultado:** resumen en la pagina de la ejecucion (URL de CloudFront y estado) y la bitacora con marcas de tiempo como artifact `bitacora-aws-<id>` (30 dias).
+- **Cuidado:** el repo es publico, asi que tu IP y el id de cuenta aparecen en los registros y en el artifact. AWS ya oculta el id de cuenta en el registro; la IP no se oculta.
+- `destruir` ya no cuenta como pendientes las instancias `terminated` ni el snapshot automatico de RDS (AWS los limpia solo; ver AWS07): los lista como "resto esperado".
+
+Las pruebas de caida de una instancia y de restauracion siguen siendo manuales (PRUEBAS.md). Lo que sigue en este documento son los **pasos manuales, como referencia** de lo que automatiza el script.
+
 ## Que crea cada plantilla
 
 | Plantilla | Estado | Crea | Costo |

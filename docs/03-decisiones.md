@@ -99,6 +99,24 @@ Hay que decidir cómo se sirve `frontend-nodo/` en AWS (D11). La interfaz es de 
 - **Límites:** la prefix list pesa 55 de las 60 reglas del grupo del ALB; solo IPv4 y puerto 80. Las actualizaciones de red y cómputo son in situ (sin reemplazar ALB, target group ni EC2); el riesgo de reemplazo está en las AMI de SSM, por eso se usa `UsePreviousValue`.
 - **Probado vs. diseñado:** ver AWS08 en `infra/aws/PRUEBAS.md`. Hasta ejecutarla todo esto es solo diseño validado con `ValidateTemplate`.
 
+## D17 · Despliegue automatizado con un script: `scripts/aws_nodo.py` y GitHub Actions 🟢 (24-11; script aceptado; Actions aceptado y política versionada, **sin aplicar ni ejecutar**)
+Desplegar en AWS eran ~10 bloques de comandos pegados a mano (contraseña en SSM, cuatro pilas en orden, clave de origen, `UsePreviousValue`, publicar el front, esperar al target group, probar, destruir vaciando buckets). Opciones:
+
+| Opción | A favor | En contra |
+|---|---|---|
+| Seguir con los bloques de README y PRUEBAS | Nada nuevo que mantener | Fácil equivocarse (orden, parámetros, secretos en la terminal); no reproducible |
+| **Script en Python (biblioteca estándar) que llama al AWS CLI** 🟡 | Un comando, igual en macOS, Windows y Linux, sin dependencias; mismo estilo que `desplegar.py` | Un script más que mantener; no sustituye a CloudFormation, lo orquesta |
+| **GitHub Actions con OIDC que ejecuta el script** 🟢 | Despliegue desde el repo, sin claves en equipos, con bitácora como artifact | Exige dar permisos de despliegue al rol `github-actions-nodo-ruta` (hoy sin permisos); solo corre desde `main` |
+
+**Se implementó la segunda** (`desplegar`, `estado`, `probar`, `destruir` y `--simular`; uso en `infra/aws/README.md`). Decisiones de diseño:
+- **Idempotencia y seguridad de las actualizaciones:** las pilas existentes se actualizan con un change set que se revisa antes de ejecutar; si algo se reemplazaría (típico: AMI de SSM re-resuelta o un nuevo `VersionGit`) se aborta. Es el mismo control que se hacía a mano para D16.
+- **Secretos:** `secrets.token_hex`, solo si faltan en SSM, y por archivos temporales 0600. La clave de origen queda en SSM (`/nodo-ruta/front/clave-origen`) para poder repetir el despliegue.
+- **Supuestos:** el commit a desplegar debe estar en GitHub (las EC2 lo clonan); la API de etiquetas (`tag:GetResources`) está bloqueada por la SCP en us-east-1, por eso la verificación de CloudFront usa `list-distributions`.
+- **Probado vs. diseñado:** la lógica de pilas, change sets y vaciado de buckets se probó contra respuestas simuladas, y `estado` y `--simular` contra la cuenta real (solo lecturas). **Falta** una ejecución real de `desplegar`, `probar` y `destruir` (se hace en la próxima prueba en AWS); hasta entonces es solo diseño con pruebas parciales.
+- **Actions (aceptado):** `.github/workflows/aws.yml` (`workflow_dispatch` con `accion`, `cidr`, `version`, `confirmacion`) asume el rol por OIDC y llama al script. Solo corre desde `main` (el rol confía solo en esa rama), una ejecución a la vez, sin cancelar la que está en curso. En Actions la prueba de humo va por SSM en las EC2, porque el runner no es la IP de `CidrAcceso`.
+- **Política del rol, versionada y sin aplicar:** `infra/aws/iam/politica-github-actions.json` (bloques explicados en su README). Mínimo privilegio razonable: CloudFormation solo `nodo-ruta-*`, IAM solo roles y perfiles `nodo-ruta-computo-*` con `PassRole` solo a EC2, SSM `/nodo-ruta/*`, `SendCommand` solo a instancias con `proyecto=nodo-ruta`, región us-east-2; sin `*:*` ni `iam:*`. Pasó `ValidatePolicy` sin hallazgos, pero **no se ha ejecutado nunca**: pueden faltar permisos en la primera corrida.
+- **Riesgos que se reconocen:** quien lance el workflow puede crear recursos de pago (se mitiga con `main` solamente y la alerta de presupuesto); la sesión OIDC dura como máximo 1 h (`MaxSessionDuration`), justa para un despliegue de ~45 min; el repo es público, así que la IP de `cidr` queda visible en registros y artifact.
+
 ## Pendientes medidos (mejoras para el siguiente PR)
 
 | Mejora | Por qué | Estado |
