@@ -1,0 +1,734 @@
+{
+  "url": "http://nodo-rut-Alb-kgaVDc2qaYOi-180377821.us-east-2.elb.amazonaws.com/health",
+  "resultado": "CON_ERRORES",
+  "consultas": 79,
+  "errores": 11,
+  "duracion_s": 75.4,
+  "respuestas_por_version": {
+    "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 68
+  },
+  "respuestas_por_instancia": {
+    "us-east-2b-i-09231cd2d9334ea7d@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 34,
+    "us-east-2a-i-0595561ca670bc592@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 34
+  },
+  "latencia_ms": {
+    "max": 3183.4,
+    "p95": 1229.2,
+    "mediana": 216.5
+  },
+  "instancias": {
+    "us-east-2a-i-0595561ca670bc592": {
+      "respuestas": 34,
+      "primera": "2026-11-23T20:50:30.357",
+      "ultima": "2026-11-23T20:51:29.404",
+      "mayor_silencio": {
+        "segundos": 4.4,
+        "desde": "2026-11-23T20:50:39.126",
+        "hasta": "2026-11-23T20:50:43.527"
+      }
+    },
+    "us-east-2b-i-09231cd2d9334ea7d": {
+      "respuestas": 34,
+      "primera": "2026-11-23T20:50:28.617",
+      "ultima": "2026-11-23T20:51:28.707",
+      "mayor_silencio": {
+        "segundos": 4.7,
+        "desde": "2026-11-23T20:51:23.974",
+        "hasta": "2026-11-23T20:51:28.707"
+      }
+    }
+  },
+  "primer_error": "2026-11-23T20:50:15.069",
+  "ultimo_error": "2026-11-23T20:50:27.887",
+  "detalle": [
+    {
+      "consulta": 1,
+      "fecha": "2026-11-23T20:50:15.069",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 2663.0
+    },
+    {
+      "consulta": 2,
+      "fecha": "2026-11-23T20:50:18.232",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1458.7
+    },
+    {
+      "consulta": 3,
+      "fecha": "2026-11-23T20:50:20.196",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1207.5
+    },
+    {
+      "consulta": 4,
+      "fecha": "2026-11-23T20:50:21.909",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 232.3
+    },
+    {
+      "consulta": 5,
+      "fecha": "2026-11-23T20:50:22.646",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 187.7
+    },
+    {
+      "consulta": 6,
+      "fecha": "2026-11-23T20:50:23.337",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 203.8
+    },
+    {
+      "consulta": 7,
+      "fecha": "2026-11-23T20:50:24.045",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 199.7
+    },
+    {
+      "consulta": 8,
+      "fecha": "2026-11-23T20:50:24.749",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1195.8
+    },
+    {
+      "consulta": 9,
+      "fecha": "2026-11-23T20:50:26.450",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 208.6
+    },
+    {
+      "consulta": 10,
+      "fecha": "2026-11-23T20:50:27.159",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 223.2
+    },
+    {
+      "consulta": 11,
+      "fecha": "2026-11-23T20:50:27.887",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 224.8
+    },
+    {
+      "consulta": 12,
+      "fecha": "2026-11-23T20:50:28.617",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 521.0
+    },
+    {
+      "consulta": 13,
+      "fecha": "2026-11-23T20:50:29.643",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 208.5
+    },
+    {
+      "consulta": 14,
+      "fecha": "2026-11-23T20:50:30.357",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 226.0
+    },
+    {
+      "consulta": 15,
+      "fecha": "2026-11-23T20:50:31.083",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 197.3
+    },
+    {
+      "consulta": 16,
+      "fecha": "2026-11-23T20:50:31.781",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1229.4
+    },
+    {
+      "consulta": 17,
+      "fecha": "2026-11-23T20:50:33.515",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 546.3
+    },
+    {
+      "consulta": 18,
+      "fecha": "2026-11-23T20:50:34.566",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 488.0
+    },
+    {
+      "consulta": 19,
+      "fecha": "2026-11-23T20:50:35.559",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 210.3
+    },
+    {
+      "consulta": 20,
+      "fecha": "2026-11-23T20:50:36.274",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 223.8
+    },
+    {
+      "consulta": 21,
+      "fecha": "2026-11-23T20:50:37.000",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 204.8
+    },
+    {
+      "consulta": 22,
+      "fecha": "2026-11-23T20:50:37.710",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 187.0
+    },
+    {
+      "consulta": 23,
+      "fecha": "2026-11-23T20:50:38.397",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 223.8
+    },
+    {
+      "consulta": 24,
+      "fecha": "2026-11-23T20:50:39.126",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 208.5
+    },
+    {
+      "consulta": 25,
+      "fecha": "2026-11-23T20:50:39.839",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 3183.4
+    },
+    {
+      "consulta": 26,
+      "fecha": "2026-11-23T20:50:43.527",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 204.9
+    },
+    {
+      "consulta": 27,
+      "fecha": "2026-11-23T20:50:44.237",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 181.1
+    },
+    {
+      "consulta": 28,
+      "fecha": "2026-11-23T20:50:44.923",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 226.8
+    },
+    {
+      "consulta": 29,
+      "fecha": "2026-11-23T20:50:45.653",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 215.8
+    },
+    {
+      "consulta": 30,
+      "fecha": "2026-11-23T20:50:46.374",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 222.0
+    },
+    {
+      "consulta": 31,
+      "fecha": "2026-11-23T20:50:47.101",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 211.8
+    },
+    {
+      "consulta": 32,
+      "fecha": "2026-11-23T20:50:47.817",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 200.1
+    },
+    {
+      "consulta": 33,
+      "fecha": "2026-11-23T20:50:48.522",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 184.2
+    },
+    {
+      "consulta": 34,
+      "fecha": "2026-11-23T20:50:49.206",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 194.9
+    },
+    {
+      "consulta": 35,
+      "fecha": "2026-11-23T20:50:49.906",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 206.0
+    },
+    {
+      "consulta": 36,
+      "fecha": "2026-11-23T20:50:50.612",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 204.2
+    },
+    {
+      "consulta": 37,
+      "fecha": "2026-11-23T20:50:51.321",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 179.9
+    },
+    {
+      "consulta": 38,
+      "fecha": "2026-11-23T20:50:52.006",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 209.9
+    },
+    {
+      "consulta": 39,
+      "fecha": "2026-11-23T20:50:52.721",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 213.7
+    },
+    {
+      "consulta": 40,
+      "fecha": "2026-11-23T20:50:53.437",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 186.1
+    },
+    {
+      "consulta": 41,
+      "fecha": "2026-11-23T20:50:54.127",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 198.4
+    },
+    {
+      "consulta": 42,
+      "fecha": "2026-11-23T20:50:54.831",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 250.0
+    },
+    {
+      "consulta": 43,
+      "fecha": "2026-11-23T20:50:55.584",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 229.6
+    },
+    {
+      "consulta": 44,
+      "fecha": "2026-11-23T20:50:56.319",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 475.0
+    },
+    {
+      "consulta": 45,
+      "fecha": "2026-11-23T20:50:57.298",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1229.2
+    },
+    {
+      "consulta": 46,
+      "fecha": "2026-11-23T20:50:59.033",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1213.8
+    },
+    {
+      "consulta": 47,
+      "fecha": "2026-11-23T20:51:00.747",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 257.8
+    },
+    {
+      "consulta": 48,
+      "fecha": "2026-11-23T20:51:01.509",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 214.8
+    },
+    {
+      "consulta": 49,
+      "fecha": "2026-11-23T20:51:02.227",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 214.9
+    },
+    {
+      "consulta": 50,
+      "fecha": "2026-11-23T20:51:02.947",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 173.7
+    },
+    {
+      "consulta": 51,
+      "fecha": "2026-11-23T20:51:03.625",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 205.3
+    },
+    {
+      "consulta": 52,
+      "fecha": "2026-11-23T20:51:04.336",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 229.0
+    },
+    {
+      "consulta": 53,
+      "fecha": "2026-11-23T20:51:05.068",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 220.3
+    },
+    {
+      "consulta": 54,
+      "fecha": "2026-11-23T20:51:05.789",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 190.0
+    },
+    {
+      "consulta": 55,
+      "fecha": "2026-11-23T20:51:06.484",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 225.9
+    },
+    {
+      "consulta": 56,
+      "fecha": "2026-11-23T20:51:07.215",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 234.3
+    },
+    {
+      "consulta": 57,
+      "fecha": "2026-11-23T20:51:07.951",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 458.9
+    },
+    {
+      "consulta": 58,
+      "fecha": "2026-11-23T20:51:08.914",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 227.5
+    },
+    {
+      "consulta": 59,
+      "fecha": "2026-11-23T20:51:09.643",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 199.5
+    },
+    {
+      "consulta": 60,
+      "fecha": "2026-11-23T20:51:10.348",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 440.4
+    },
+    {
+      "consulta": 61,
+      "fecha": "2026-11-23T20:51:11.292",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 177.6
+    },
+    {
+      "consulta": 62,
+      "fecha": "2026-11-23T20:51:11.974",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 203.0
+    },
+    {
+      "consulta": 63,
+      "fecha": "2026-11-23T20:51:12.680",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 216.5
+    },
+    {
+      "consulta": 64,
+      "fecha": "2026-11-23T20:51:13.401",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 196.0
+    },
+    {
+      "consulta": 65,
+      "fecha": "2026-11-23T20:51:14.102",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 504.6
+    },
+    {
+      "consulta": 66,
+      "fecha": "2026-11-23T20:51:15.111",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 226.3
+    },
+    {
+      "consulta": 67,
+      "fecha": "2026-11-23T20:51:15.840",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 210.0
+    },
+    {
+      "consulta": 68,
+      "fecha": "2026-11-23T20:51:16.555",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 201.4
+    },
+    {
+      "consulta": 69,
+      "fecha": "2026-11-23T20:51:17.258",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 604.6
+    },
+    {
+      "consulta": 70,
+      "fecha": "2026-11-23T20:51:18.363",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 220.9
+    },
+    {
+      "consulta": 71,
+      "fecha": "2026-11-23T20:51:19.089",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1239.5
+    },
+    {
+      "consulta": 72,
+      "fecha": "2026-11-23T20:51:20.829",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 198.7
+    },
+    {
+      "consulta": 73,
+      "fecha": "2026-11-23T20:51:21.529",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1201.0
+    },
+    {
+      "consulta": 74,
+      "fecha": "2026-11-23T20:51:23.235",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 234.2
+    },
+    {
+      "consulta": 75,
+      "fecha": "2026-11-23T20:51:23.974",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 215.2
+    },
+    {
+      "consulta": 76,
+      "fecha": "2026-11-23T20:51:24.692",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1195.9
+    },
+    {
+      "consulta": 77,
+      "fecha": "2026-11-23T20:51:26.390",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1812.1
+    },
+    {
+      "consulta": 78,
+      "fecha": "2026-11-23T20:51:28.707",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 191.5
+    },
+    {
+      "consulta": 79,
+      "fecha": "2026-11-23T20:51:29.404",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 559.1
+    }
+  ]
+}

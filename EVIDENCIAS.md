@@ -271,6 +271,17 @@ Qué queremos comprobar: que `despliegue/aws/respaldar.sh` saca un `pg_dump` de 
 Pasos (`infra/aws/PRUEBAS.md`): `respaldar.sh` en la EC2 A con `aws ssm send-command`; listar `respaldos/` en el bucket; `datos.sh comprobar` (vuelve a bajar el objeto, compara el SHA-256 y lee el índice con `pg_restore --list`).
 Resultado observado: `estado: Success` en las dos órdenes. En S3 quedaron `respaldos/20261124_013921_manual.dump` (2915 bytes) y su `.sha256`. `COMPROBADO`: mismo sha256 `ee626042…564e` y 6 objetos en el índice, con los datos de `pedidos`. Tiempo total: ~13 s, de las 20:39:20 a las 20:39:33. **CUMPLE**. Evidencia: `evidencias/AWS05_respaldo_s3.txt`
 
+## AWS06 — Alteración simulada y restauración desde S3 (primer intento, FALLÓ)
+Qué queremos comprobar: que un daño en los datos se detecta y que se restaura desde S3, midiendo el tiempo de recuperación.
+Pasos: monitor sobre `/health` del ALB 200 s; `datos.sh verificar` → `alterar` (DROP TABLE pedidos, con el respaldo de AWS05 comprobado antes) → `/health` → `restaurar`.
+Resultado observado: `verificar` antes: `datos-v1 pedidos=6`. Tras alterar, `/health` del ALB → **503** (el daño se detecta y no se tapa). **`restaurar` falló** (`estado: Failed`): antes de restaurar guarda una copia `prerestauracion` del estado actual, y `respaldar.sh` se negó a subirla porque exige la tabla `pedidos`, que es justo lo que faltaba. No se tocó la base. El servicio quedó en 503: **180 errores de 197** entre 20:42:00 y el final del monitor. **NO CUMPLE**.
+Corrección: commit `166ca8a`. La copia `prerestauracion` ya no exige `pedidos`, aunque sí que `pg_restore` pueda leerla. Evidencia: `evidencias/AWS06_restauracion_s3*`
+
+## AWS06b — Restauración desde S3 con la corrección
+Pasos: actualizar el repo de la EC2 A a `166ca8a` por SSM; monitor sobre `/health` 75 s; `datos.sh restaurar respaldos/20261124_013921_manual.dump`; `verificar`; listar el bucket.
+Resultado observado: `/health` antes: **503**. `RESTAURAR` a las **20:50:20**: respaldo comprobado (mismo sha256), copia `20261124_015025_prerestauracion.dump` subida a S3, `Restaurado desde ...`, `datos-v1 pedidos=6` (iguales que antes del daño). **Primer 200 a las 20:50:28,6 → recuperación en 8,6 s** medida desde la orden, incluida la latencia de SSM. Los 11 errores son todos anteriores (último a las 20:50:27,9) y **después hay 0 errores**, con 34 respuestas de cada zona. SSM informó el fin a las 20:50:33. **CUMPLE**.
+Lectura honesta: la recuperación con el procedimiento correcto tarda segundos, pero el incidente completo duró **~8,5 min** (20:42:00 → 20:50:28) por el defecto del script. Ensayar la restauración antes de necesitarla es lo que lo descubrió. Evidencia: `evidencias/AWS06b_restauracion_s3*`
+
 # Cierre
 
 Qué funciona realmente (probado en local):
