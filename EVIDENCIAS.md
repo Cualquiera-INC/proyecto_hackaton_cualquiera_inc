@@ -314,6 +314,27 @@ Diseñado, no probado (no se puede simular desde la IP permitida): el rechazo de
 Hallazgo: `app.py` responde **501 a HEAD** (también directo al ALB; es comportamiento previo de la app), por eso `curl -I` por CloudFront muestra `Error from cloudfront`. Con GET todo responde 200.
 Evidencias: `evidencias/AWS08_front_creacion.txt`, `evidencias/AWS08_publicacion.txt` y `evidencias/AWS08_front_cloudfront.txt`.
 
+## AWS09 — Despliegue completo y prueba desde GitHub Actions (primera ejecución real)
+Qué queremos comprobar: que el workflow `aws.yml` despliega las 4 pilas desde cero, publica el front y prueba, solo con el rol OIDC y la política versionada.
+Pasos:
+1. Actions → "AWS Nodo Ruta" → `desplegar` (cidr = IP del integrante).
+2. Corrección de la política.
+3. `desplegar` otra vez con la misma IP y `version=0ed004b`.
+4. `probar`.
+Resultado observado:
+- **Ejecución 45424206191:** se lanzó sin `cidr`. La validación la frenó antes de entrar a AWS, que es lo esperado.
+- **Ejecución 45425480991: FALLÓ.** Creó red (56 s), datos (7 min 53 s) y cómputo (3 min 15 s), pero `nodo-ruta-front` revirtió. `FuncionSoloIp` necesitaba `cloudfront:TagResource` y la política no lo tenía. Corrección en el PR #21: `TagResource`, `UntagResource` y `ListTagsForResource` de CloudFront.
+- **Ejecución 45430073463: ÉXITO en 4 min 29 s.**
+  - Red, datos y cómputo: sin cambios (idempotente).
+  - Pila `nodo-ruta-front`: se borró la que había revertido y se recreó en 3 min 52 s.
+  - Destinos `healthy`, front publicado.
+  - Humo por SSM en las 2 EC2: `estado ok`, `origen_datos base`.
+- **Desde la IP permitida:** `/` → 200 `text/html`; `/pedidos` → 6 pedidos; `/health` alterna entre 2a y 2b.
+- **Ejecución 45431041067 (`probar`): ÉXITO en 25 s.** Humo en las 2 EC2 y respaldo `respaldos/20261124_155538_manual.dump` comprobado en S3.
+- **Tiempo desde cero sin fallos (suma de pasos):** ~16 min. Red ~1 min, datos ~8 min, cómputo ~3 min y front ~4 min.
+
+**CUMPLE** tras corregir el permiso que faltaba. Desde GitHub, la prueba de humo no puede pasar por CloudFront (el runner no está en `CidrAcceso` → 403, esperado), así que comprueba las EC2 por SSM.
+
 # Cierre
 
 Qué funciona realmente (probado en local):

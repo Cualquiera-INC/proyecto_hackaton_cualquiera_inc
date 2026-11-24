@@ -164,6 +164,7 @@ Debe decir 0 recursos del proyecto.
 | La página o `curl` dan **403** | Cambió tu IP | Repetir el paso 1 con la IP nueva |
 | `EC2_B` sale vacío | La terminal 2 no tiene las variables | Pegar otra vez el bloque del paso 2 |
 | El monitor solo muestra `2a` después de prender B | B sigue arrancando | Esperar hasta 1 min |
+| Actions falla a mitad del despliegue | Un paso falló (se ve en "Ejecutar aws_nodo.py") | Corregir y lanzar `desplegar` otra vez con la misma IP: lo que ya existe no se toca |
 | Actions falla con `AccessDenied` | Falta un permiso en la política del rol | Pasar el error; se agrega en `infra/aws/iam/politica-github-actions.json` |
 
 **Costo:** mientras está arriba consume cerca de **USD 2 al día** de créditos. Destruir el mismo día.
