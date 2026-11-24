@@ -282,6 +282,26 @@ Pasos: actualizar el repo de la EC2 A a `166ca8a` por SSM; monitor sobre `/healt
 Resultado observado: `/health` antes: **503**. `RESTAURAR` a las **20:50:20**: respaldo comprobado (mismo sha256), copia `20261124_015025_prerestauracion.dump` subida a S3, `Restaurado desde ...`, `datos-v1 pedidos=6` (iguales que antes del daño). **Primer 200 a las 20:50:28,6 → recuperación en 8,6 s** medida desde la orden, incluida la latencia de SSM. Los 11 errores son todos anteriores (último a las 20:50:27,9) y **después hay 0 errores**, con 34 respuestas de cada zona. SSM informó el fin a las 20:50:33. **CUMPLE**.
 Lectura honesta: la recuperación con el procedimiento correcto tarda segundos, pero el incidente completo duró **~8,5 min** (20:42:00 → 20:50:28) por el defecto del script. Ensayar la restauración antes de necesitarla es lo que lo descubrió. Evidencia: `evidencias/AWS06b_restauracion_s3*`
 
+## AWS08 — Interfaz y API por CloudFront (D16)
+Qué queremos comprobar: que la interfaz se sirve por HTTPS desde S3 a través de CloudFront, que `/pedidos` y `/health` llegan al ALB sin caché y repartidas entre las dos zonas, y que los cambios de red y cómputo no reemplazaron recursos.
+Pasos (`infra/aws/README.md`, "Pila del front"):
+1. `update-stack` de `nodo-ruta-red`: `SgAlb` acepta la prefix list de CloudFront.
+2. Revisión con change set y `update-stack` de `nodo-ruta-computo`: listener con 403 por defecto, regla `X-Origin-Verify` y regla de IP.
+3. `create-stack` de `nodo-ruta-front`.
+4. `scripts/publicar_front.py`.
+5. Comprobaciones con `curl`.
+Resultado observado:
+- Change set del cómputo: `Listener Modify False` y 2 reglas `Add`. Las EC2 conservan sus ids (`i-0595…` e `i-0923…`) y el ALB directo sigue dando 200 desde la IP permitida.
+- La SCP **sí permite crear CloudFront**. La distribución tardó **6 min 54 s** (21:36:49 → 21:43:43).
+- `/` → 200 `text/html` (la interfaz). `http://` → **301** a `https://`. `/pedidos` → 200 JSON con 6 pedidos.
+- 6 consultas a `/health`: alternan entre 2a y 2b (3 y 3).
+- API con `x-cache: Miss from cloudfront` (sin caché). El `.js` de `assets/` sale con `cache-control: public,max-age=31536000,immutable`: `Miss` la primera vez y `Hit` la segunda.
+- Listener: `fixed-response 403` por defecto, regla 1 `http-header` y regla 2 `source-ip`.
+**CUMPLE**.
+Diseñado, no probado (no se puede simular desde la IP permitida): el rechazo de otras IP en la CloudFront Function y en el grupo de seguridad, y el 403 del ALB ante un encabezado falso o ausente.
+Hallazgo: `app.py` responde **501 a HEAD** (también directo al ALB; es comportamiento previo de la app), por eso `curl -I` por CloudFront muestra `Error from cloudfront`. Con GET todo responde 200.
+Evidencias: `evidencias/AWS08_front_creacion.txt`, `evidencias/AWS08_publicacion.txt` y `evidencias/AWS08_front_cloudfront.txt`.
+
 # Cierre
 
 Qué funciona realmente (probado en local):

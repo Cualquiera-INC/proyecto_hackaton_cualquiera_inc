@@ -49,7 +49,7 @@ flowchart LR
 | **Dónde vive PostgreSQL en AWS** | ✅ Decidido (D13): 2 EC2 + RDS PostgreSQL Single-AZ (`t3.micro` o `t4g.micro`). Sin Multi-AZ en el plan gratuito |
 | Usuarios IAM para el equipo | Nadie trabaja con el usuario raíz; permisos mínimos |
 | Región | ✅ **us-east-2 (Ohio)**: es la única donde la política de la organización permite EC2, CloudFormation y RDS. Todo comando y plantilla usa `--region us-east-2` |
-| **Decidir cómo se sirve la interfaz** | (a) CloudFront + S3, que da HTTPS gratis pero suma dos servicios; o (b) la misma imagen `nodo-ruta-proxy` en cada EC2 detrás del ALB, que reutiliza lo ya probado pero no tiene HTTPS. Ver `docs/02` |
+| **Decidir cómo se sirve la interfaz** | ✅ Decidido (D16, 23-11): CloudFront + S3 (la otra opción era la imagen `nodo-ruta-proxy` en cada EC2). Plantilla `infra/aws/04-front.yaml` **desplegada y probada** (AWS08) |
 | Registro de imágenes | Propuesta: GHCR público, publicado desde GitHub Actions (sin costo y sin secretos) |
 | Etiqueta común | `proyecto=nodo-ruta` en todo, para encontrarlo y borrarlo |
 | Rama `staging` | Su contenido (PostgreSQL + microservicio) se integra a `main`; después se puede borrar la rama |
@@ -64,9 +64,9 @@ Plantillas de **CloudFormation** en `infra/aws/` para crear y destruir con una p
 4. **2 EC2** en dos zonas, con Docker, la app montando `/data` y una tarea que sincroniza desde S3 cada 10 s con reemplazo atómico.
 5. **ALB** + target group con health check a `/health`. Security groups: las EC2 solo aceptan tráfico del ALB y no tienen SSH (se usa Session Manager).
 6. **CloudWatch Logs** con retención corta.
-7. (Según la decisión de la fase 3) CloudFront + S3 para la interfaz.
+7. CloudFront + S3 para la interfaz (D16, `04-front.yaml`; pruebas en AWS08).
 
-**Avance (23-11):** plantilla de red `infra/aws/01-red.yaml` escrita, validada y **desplegada** en us-east-2 como pila `nodo-ruta-red` (CREATE_COMPLETE, evidencia AWS01). Instrucciones en `infra/aws/README.md`. **Avance (23-11, rama `feat/infra-datos`):** `infra/aws/02-datos.yaml` (RDS PostgreSQL 17 Single-AZ, bucket S3 de respaldos, contrasena en SSM SecureString) escrita, validada y **desplegada** como pila `nodo-ruta-datos` (CREATE_COMPLETE, evidencia AWS02; RDS consume creditos mientras exista). **Avance (23-11, rama `feat/infra-computo`):** `infra/aws/03-computo.yaml` (2 EC2 por zona, ALB HTTP con health check a `/health` cada 5 s, rol de mínimo privilegio, sin SSH) escrita y **validada** con ValidateTemplate; **sin desplegar**. Carga inicial de la base y respaldo manual a S3 en `despliegue/aws/` y `basedatos/aws/` (D15).
+**Avance (23-11):** plantilla de red `infra/aws/01-red.yaml` escrita, validada y **desplegada** en us-east-2 como pila `nodo-ruta-red` (CREATE_COMPLETE, evidencia AWS01). Instrucciones en `infra/aws/README.md`. **Avance (23-11, rama `feat/infra-datos`):** `infra/aws/02-datos.yaml` (RDS PostgreSQL 17 Single-AZ, bucket S3 de respaldos, contrasena en SSM SecureString) escrita, validada y **desplegada** como pila `nodo-ruta-datos` (CREATE_COMPLETE, evidencia AWS02; RDS consume creditos mientras exista). **Avance (23-11, rama `feat/infra-computo`):** `infra/aws/03-computo.yaml` (2 EC2 por zona, ALB HTTP con health check a `/health` cada 5 s, rol de mínimo privilegio, sin SSH) escrita y **validada** con ValidateTemplate (después desplegada y probada). **Avance (23-11, rama `feat/infra-front`):** D16, `infra/aws/04-front.yaml` (S3 privado + CloudFront), regla de la prefix list en `01-red.yaml`, listener con 403 y reglas en `03-computo.yaml` y `scripts/publicar_front.py`; **desplegadas y probadas** (red y cómputo actualizados sin reemplazar recursos; front en `https://<id>.cloudfront.net`, evidencia AWS08). Carga inicial de la base y respaldo manual a S3 en `despliegue/aws/` y `basedatos/aws/` (D15).
 
 > Los puntos 1, 3 y 4 asumían los datos como JSON en S3. Con D13 cambian: S3 solo guarda respaldos, las EC2 corren `app` + `pedidos` sin sincronizar nada y se suma una instancia RDS en subred privada (con su grupo de seguridad). Esta lista se reescribe al empezar las plantillas de CloudFormation.
 

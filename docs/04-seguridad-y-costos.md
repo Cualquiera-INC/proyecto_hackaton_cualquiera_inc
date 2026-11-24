@@ -24,6 +24,7 @@
 | **AWS:** GitHub Actions sin claves | OIDC + rol `github-actions-nodo-ruta` que solo acepta este repo en `main` (identidad inmutable por ID) | ✅ conexión probada; permisos por definir según cada plantilla |
 | **AWS:** contraseña de la base | SSM Parameter Store SecureString (gratis) creado a mano y leído con `{{resolve:ssm-secure:...}}`; nunca en la plantilla ni en el repo. Se evita Secrets Manager (cobra) | 🟡 plantilla escrita y validada (`02-datos.yaml`), sin desplegar |
 | **AWS:** RDS y respaldos | RDS cifrada, sin acceso público, solo desde el SG de las EC2; bucket S3 con bloqueo público, SSE-S3, versiones, solo HTTPS y expiración corta | 🟡 plantilla escrita y validada, sin desplegar |
+| **AWS:** interfaz por CloudFront (D16) | Bucket privado con OAC; ALB abierto solo a la prefix list de CloudFront en el puerto 80, 403 por defecto salvo `X-Origin-Verify` o `CidrAcceso`; CloudFront Function que solo deja pasar a `CidrAcceso`. **Límite:** CloudFront→ALB va en HTTP y la clave es visible en las reglas del ALB | 🟡 plantilla `04-front.yaml` escrita y validada, sin desplegar |
 
 ## Factores de costo en AWS (sin cifras)
 
@@ -40,7 +41,7 @@ Los precios cambian y la guía pide no inventarlos. En el plan gratuito para cue
 | Transferencia de salida | GB hacia internet | Insignificante en la demo |
 | Registro de imágenes | GB guardados (ECR) | GHCR público: sin costo |
 | Base de datos (D13) | Si es RDS: horas de instancia y GB; si es EC2: disco EBS y memoria extra | `db.t3.micro` o `db.t4g.micro` Single-AZ (lo único que permite el plan gratuito); borrar al terminar |
-| CloudFront + S3 de la interfaz (opcional) | Solicitudes HTTPS, transferencia y GB del sitio estático | Solo si se despliega la interfaz; build de pocos KB |
+| CloudFront + S3 de la interfaz (D16) | Solicitudes HTTPS, transferencia y GB del sitio estático | El nivel gratuito de CloudFront incluye 1 TB de transferencia, 10 millones de solicitudes HTTP/HTTPS y 2 millones de invocaciones de CloudFront Functions al mes ([preguntas frecuentes de CloudFront](https://aws.amazon.com/cloudfront/faqs/) y [precios](https://aws.amazon.com/cloudfront/pricing/pay-as-you-go/)); otros usos, como las invalidaciones, quedan fuera de ese nivel; el uso de la demo es de unas decenas de solicitudes. **Supuesto:** no verificamos si en cuentas con créditos se factura distinto; el build pesa unos 230 KB. Se destruye con el resto |
 
 ## Antes de crear cualquier recurso
 
@@ -51,7 +52,7 @@ Los precios cambian y la guía pide no inventarlos. En el plan gratuito para cue
 ## Destrucción al terminar (obligatoria)
 
 0. **Si se creó con CloudFormation:** eliminar la pila borra casi todo. Después revisar lo que una pila no borra: buckets con objetos o versiones, snapshots manuales y log groups creados fuera de la plantilla.
-1. Distribución de CloudFront, si se creó: deshabilitar y eliminar.
+1. Distribución de CloudFront, si se creó: vaciar su bucket y borrar la pila `nodo-ruta-front` **antes** que la de cómputo (se deshabilita y elimina sola; tarda varios minutos).
 2. ALB y target group.
 3. Las 2 EC2 (terminar, no solo detener; así se liberan el disco y la IP).
 4. Buckets S3 (datos y, si existe, el de la interfaz) vaciados, **incluidas las versiones antiguas**, y luego eliminados.

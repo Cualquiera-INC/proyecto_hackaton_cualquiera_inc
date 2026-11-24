@@ -1,0 +1,215 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  Nodo Ruta - front: interfaz web en un bucket S3 privado servido por CloudFront (HTTPS al visitante), con la API
+  (/pedidos y /health) enviada al ALB de la pila de computo. Solo responde a CidrAcceso. Requiere la pila de computo.
+
+Metadata:
+  AWSToolsMetrics:
+    AWSAgentToolkit: aws-cloudformation@3
+  com.aws.cloudformation.Context:
+    purpose: Interfaz web en AWS con S3 + CloudFront (D16 en docs/03-decisiones.md).
+    must:
+      - El bucket es privado; solo CloudFront (OAC, con AWS:SourceArn de esta distribucion) puede leerlo.
+      - CloudFront habla con el ALB en HTTP (no hay dominio ni certificado en el ALB) y le manda X-Origin-Verify = ClaveOrigen; sin esa clave el ALB responde 403.
+      - ClaveOrigen (NoEcho) nunca se escribe en el repo ni en archivos; es la misma que se paso a nodo-ruta-computo.
+      - Una CloudFront Function devuelve 403 a quien no venga de CidrAcceso, en los 3 comportamientos.
+      - No hay pagina de error personalizada global: los errores de la API no se enmascaran.
+      - Todo lleva la etiqueta proyecto=nodo-ruta. Para borrar la pila hay que vaciar antes el bucket.
+
+Parameters:
+  PilaComputo:
+    Type: String
+    Default: nodo-ruta-computo
+    Description: Nombre de la pila de computo (03-computo.yaml); de ahi se importa el DNS del ALB.
+  ClaveOrigen:
+    Type: String
+    NoEcho: true
+    AllowedPattern: '^[A-Za-z0-9]{32,128}$'
+    ConstraintDescription: Debe ser alfanumerica, de 32 a 128 caracteres (openssl rand -hex 24).
+    Description: >-
+      Clave compartida con el ALB (encabezado X-Origin-Verify). Sin valor por defecto; debe ser la misma
+      que se paso a nodo-ruta-computo. Nunca se escribe en el repo.
+  CidrAcceso:
+    Type: String
+    AllowedPattern: '^(\d{1,3}\.){3}\d{1,3}/\d{1,2}$'
+    ConstraintDescription: Debe ser un CIDR IPv4, por ejemplo 203.0.113.7/32.
+    Description: >-
+      IP o rango IPv4 que puede usar la distribucion (mismo valor que en las otras pilas).
+      0.0.0.0/0 no esta permitido.
+
+Rules:
+  AccesoNoAbierto:
+    Assertions:
+      - Assert: !Not [!Equals [!Ref CidrAcceso, 0.0.0.0/0]]
+        AssertDescription: CidrAcceso no puede ser 0.0.0.0/0; usa tu IP o la del equipo.
+
+Resources:
+  BucketFront:
+    Type: AWS::S3::Bucket
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Guarda solo el build de la interfaz (KB). Sin versionado para poder vaciarlo y borrarlo facil; el codigo vive en git.
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault: { SSEAlgorithm: AES256 }
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-front" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+  AccesoOrigenS3:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${AWS::StackName}-oac"
+        Description: Firma las lecturas de CloudFront al bucket del front
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  PoliticaBucketFront:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref BucketFront
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: SoloCloudFrontLee
+            Effect: Allow
+            Principal: { Service: cloudfront.amazonaws.com }
+            Action: s3:GetObject
+            Resource: !Sub "${BucketFront.Arn}/*"
+            Condition:
+              StringEquals:
+                "AWS:SourceArn": !Sub "arn:${AWS::Partition}:cloudfront::${AWS::AccountId}:distribution/${Distribucion}"
+          - Sid: SoloHttps
+            Effect: Deny
+            Principal: "*"
+            Action: s3:*
+            Resource: [!GetAtt BucketFront.Arn, !Sub "${BucketFront.Arn}/*"]
+            Condition:
+              Bool: { "aws:SecureTransport": "false" }
+
+  FuncionSoloIp:
+    Type: AWS::CloudFront::Function
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Corta en el borde a quien no venga de CidrAcceso (la distribucion es publica por naturaleza). Compara IPv4 con mascara; IPv6 se rechaza.
+    Properties:
+      Name: !Sub "${AWS::StackName}-solo-ip"
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Devuelve 403 si la IP del visitante no esta en CidrAcceso
+        Runtime: cloudfront-js-2.0
+      FunctionCode: !Sub |
+        var CIDR = '${CidrAcceso}';
+        function aNumero(ip) {
+          var p = ip.split('.');
+          if (p.length !== 4) { return null; }
+          var n = 0;
+          for (var i = 0; i < 4; i++) {
+            var o = parseInt(p[i], 10);
+            if (isNaN(o) || o < 0 || o > 255) { return null; }
+            n = n * 256 + o;
+          }
+          return n;
+        }
+        function dentro(ip) {
+          var partes = CIDR.split('/');
+          var base = aNumero(partes[0]);
+          var bits = parseInt(partes[1], 10);
+          var x = aNumero(ip);
+          if (base === null || x === null || isNaN(bits) || bits < 0 || bits > 32) { return false; }
+          var tam = Math.pow(2, 32 - bits);
+          return Math.floor(base / tam) === Math.floor(x / tam);
+        }
+        function handler(event) {
+          if (dentro(event.viewer.ip)) { return event.request; }
+          return {
+            statusCode: 403,
+            statusDescription: 'Forbidden',
+            headers: { 'content-type': { value: 'text/plain' } },
+            body: 'Acceso denegado'
+          };
+        }
+
+  Distribucion:
+    Type: AWS::CloudFront::Distribution
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Un solo dominio https para la interfaz (S3) y la API (ALB), sin comprar dominio. La API no se cachea.
+        must:
+          - Comportamientos exactos /pedidos y /health (la API no tiene mas rutas); todo lo demas es la interfaz.
+          - Origen ALB en http-only: el ALB no tiene certificado. Esa parte del trayecto va sin cifrar (D16).
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub "${AWS::StackName} interfaz y API de Nodo Ruta"
+        DefaultRootObject: index.html
+        HttpVersion: http2
+        IPV6Enabled: false
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: s3-front
+            DomainName: !GetAtt BucketFront.RegionalDomainName
+            OriginAccessControlId: !GetAtt AccesoOrigenS3.Id
+            S3OriginConfig: { OriginAccessIdentity: "" }
+          - Id: alb
+            DomainName: !ImportValue { "Fn::Sub": "${PilaComputo}-DnsAlb" }
+            CustomOriginConfig:
+              HTTPPort: 80
+              OriginProtocolPolicy: http-only
+              OriginReadTimeout: 30
+            OriginCustomHeaders:
+              - { HeaderName: X-Origin-Verify, HeaderValue: !Ref ClaveOrigen }
+        DefaultCacheBehavior:
+          TargetOriginId: s3-front
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6   # Managed-CachingOptimized
+          FunctionAssociations:
+            - { EventType: viewer-request, FunctionARN: !GetAtt FuncionSoloIp.FunctionARN }
+        CacheBehaviors:
+          - PathPattern: /pedidos
+            TargetOriginId: alb
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD]
+            CachedMethods: [GET, HEAD]
+            Compress: true
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad            # Managed-CachingDisabled
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac    # Managed-AllViewerExceptHostHeader
+            FunctionAssociations:
+              - { EventType: viewer-request, FunctionARN: !GetAtt FuncionSoloIp.FunctionARN }
+          - PathPattern: /health
+            TargetOriginId: alb
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD]
+            CachedMethods: [GET, HEAD]
+            Compress: true
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
+            FunctionAssociations:
+              - { EventType: viewer-request, FunctionARN: !GetAtt FuncionSoloIp.FunctionARN }
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+      Tags:
+        - { Key: Name, Value: !Sub "${AWS::StackName}-cdn" }
+        - { Key: proyecto, Value: nodo-ruta }
+
+Outputs:
+  UrlFront:
+    Description: URL https de la interfaz y la API (solo desde CidrAcceso).
+    Value: !Sub "https://${Distribucion.DomainName}"
+  IdDistribucion:
+    Description: Id de la distribucion (para create-invalidation).
+    Value: !Ref Distribucion
+  NombreBucket:
+    Description: Bucket donde se sube el build de la interfaz.
+    Value: !Ref BucketFront

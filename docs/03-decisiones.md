@@ -85,6 +85,20 @@ Sin ECR ni GHCR por ahora (la política de la organización solo menciona EC2, C
 - **Se fijó** `python:3.12-slim` en el `Dockerfile` raíz (antes `python:3-slim`), pendiente ya listado abajo.
 - **Respaldo:** `despliegue/aws/respaldar.sh` (manual por SSM) hace `pg_dump` y lo sube a `s3://<bucket>/respaldos/`. Restaurar queda pendiente.
 
+## D16 · La interfaz en AWS: S3 + CloudFront 🟡 (23-11, elegida por el usuario; plantilla escrita y validada, sin desplegar)
+Hay que decidir cómo se sirve `frontend-nodo/` en AWS (D11). La interfaz es de una sola vista, usa rutas relativas (`/pedidos`, `/health`) y se construye con `npm ci && npm run build`. Opciones:
+
+| Opción | Cómo queda | A favor | En contra |
+|---|---|---|---|
+| A. NGINX en las EC2 | La imagen `nodo-ruta-proxy` en cada EC2 detrás del ALB | Reutiliza lo ya probado en local | Sin HTTPS (no hay dominio); sube el tiempo de arranque y mezcla interfaz y API en las EC2 |
+| **B. S3 + CloudFront** 🟢 | Bucket privado con la interfaz; CloudFront envía `/pedidos` y `/health` al ALB | HTTPS en `*.cloudfront.net` sin comprar dominio; las EC2 no cambian; dentro del plan gratuito de CloudFront | Suma dos servicios; la SCP de la organización no se pudo probar contra la creación de CloudFront (solo se sabe que deja leer) |
+
+**Elegida: B** (decisión del usuario). Implementación: `infra/aws/04-front.yaml` (pila `nodo-ruta-front`), más cambios en `01-red.yaml` y `03-computo.yaml`.
+- **Bucket privado** (bloqueo público, SSE-S3, solo HTTPS) que solo lee CloudFront por OAC con `AWS:SourceArn` de la distribución. Comportamientos exactos `/pedidos` y `/health` al ALB, sin caché y solo GET/HEAD; sin página de error global (no se enmascaran errores de la API).
+- **Consecuencias que se reconocen:** HTTPS **solo hasta CloudFront**; de CloudFront al ALB el tráfico va en **HTTP** (el ALB no tiene certificado). El ALB queda abierto a la prefix list de CloudFront (el grupo de seguridad no distingue a cuál distribución); se mitiga con **dos capas**: el listener responde 403 salvo que llegue el encabezado secreto `X-Origin-Verify` (o la IP sea `CidrAcceso`), y una **CloudFront Function** devuelve 403 a IP fuera de `CidrAcceso`. La clave es visible para quien pueda leer las reglas del ALB y viaja en HTTP entre CloudFront y el ALB: es una mitigación, no un control fuerte.
+- **Límites:** la prefix list pesa 55 de las 60 reglas del grupo del ALB; solo IPv4 y puerto 80. Las actualizaciones de red y cómputo son in situ (sin reemplazar ALB, target group ni EC2); el riesgo de reemplazo está en las AMI de SSM, por eso se usa `UsePreviousValue`.
+- **Probado vs. diseñado:** ver AWS08 en `infra/aws/PRUEBAS.md`. Hasta ejecutarla todo esto es solo diseño validado con `ValidateTemplate`.
+
 ## Pendientes medidos (mejoras para el siguiente PR)
 
 | Mejora | Por qué | Estado |

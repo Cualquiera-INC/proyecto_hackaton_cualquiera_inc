@@ -1,0 +1,5 @@
+2026-11-23T21:36:49 crear nodo-ruta-front
+2026-11-23T21:43:43 front lista (CREATE_COMPLETE)
+IdDistribucion	E3QG58RBF10KDL
+UrlFront	https://d13o4owza45505.cloudfront.net
+NombreBucket	nodo-ruta-front-bucketfront-i7k9whjcor9j

@@ -1,0 +1,52 @@
+
+added 162 packages, and audited 163 packages in 3s
+
+42 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+> frontend-nodo@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.8 building client environment for production...
+transforming...
+✓ 19 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.53 kB │ gzip:  0.33 kB
+dist/assets/index-kxAAxbK5.css    5.92 kB │ gzip:  2.04 kB
+dist/assets/index-9x6Lyod9.js   225.34 kB │ gzip: 70.32 kB
+
+✓ built in 418ms
+Completed 5.8 KiB/225.8 KiB (11.5 KiB/s) with 2 file(s) remainingupload: frontend-nodo/dist/assets/index-kxAAxbK5.css to s3://nodo-ruta-front-bucketfront-i7k9whjcor9j/assets/index-kxAAxbK5.css
+Completed 5.8 KiB/225.8 KiB (11.5 KiB/s) with 1 file(s) remainingCompleted 225.8 KiB/225.8 KiB (13.8 KiB/s) with 1 file(s) remainingupload: frontend-nodo/dist/assets/index-9x6Lyod9.js to s3://nodo-ruta-front-bucketfront-i7k9whjcor9j/assets/index-9x6Lyod9.js
+Completed 539 Bytes/24.0 KiB (501 Bytes/s) with 2 file(s) remainingupload: frontend-nodo/dist/index.html to s3://nodo-ruta-front-bucketfront-i7k9whjcor9j/index.html
+Completed 539 Bytes/24.0 KiB (501 Bytes/s) with 1 file(s) remainingCompleted 24.0 KiB/24.0 KiB (7.4 KiB/s) with 1 file(s) remaining   upload: frontend-nodo/dist/logo.png to s3://nodo-ruta-front-bucketfront-i7k9whjcor9j/logo.png
+{
+    "Location": "https://cloudfront.amazonaws.com/2020-05-31/distribution/E3QG58RBF10KDL/invalidation/I7S16AK656ARXC1NS16EU6DQMU",
+    "Invalidation": {
+        "Id": "I7S16AK656ARXC1NS16EU6DQMU",
+        "Status": "InProgress",
+        "CreateTime": "2026-11-24T02:47:11.529000+00:00",
+        "InvalidationBatch": {
+            "Paths": {
+                "Quantity": 2,
+                "Items": [
+                    "/index.html",
+                    "/"
+                ]
+            },
+            "CallerReference": "cli-1795488429-417640"
+        }
+    }
+}
+$ /opt/homebrew/bin/aws cloudformation describe-stacks --region us-east-2 --stack-name nodo-ruta-front --query Stacks[0].Outputs[?OutputKey=='NombreBucket'].OutputValue --output text
+$ /opt/homebrew/bin/aws cloudformation describe-stacks --region us-east-2 --stack-name nodo-ruta-front --query Stacks[0].Outputs[?OutputKey=='IdDistribucion'].OutputValue --output text
+Bucket: nodo-ruta-front-bucketfront-i7k9whjcor9j  Distribucion: E3QG58RBF10KDL
+$ /Users/juanpa/.local/state/fnm_multishells/6704_1795468325768/bin/npm ci
+$ /Users/juanpa/.local/state/fnm_multishells/6704_1795468325768/bin/npm run build
+$ /opt/homebrew/bin/aws s3 sync /Users/juanpa/Develop/proyecto_hackaton_cualquiera_inc/frontend-nodo/dist/assets s3://nodo-ruta-front-bucketfront-i7k9whjcor9j/assets --region us-east-2 --delete --cache-control public,max-age=31536000,immutable
+$ /opt/homebrew/bin/aws s3 sync /Users/juanpa/Develop/proyecto_hackaton_cualquiera_inc/frontend-nodo/dist s3://nodo-ruta-front-bucketfront-i7k9whjcor9j --region us-east-2 --delete --exclude assets/* --cache-control no-cache
+$ /opt/homebrew/bin/aws cloudfront create-invalidation --distribution-id E3QG58RBF10KDL --paths /index.html /
+Listo.

@@ -12,6 +12,7 @@ Metadata:
       - Las EC2 solo aceptan trafico del ALB y RDS solo de las EC2 (referencias entre grupos, nunca CIDR abiertos).
       - Sin NAT Gateway ni recursos de pago adicionales.
       - Todo lleva la etiqueta proyecto=nodo-ruta para encontrarlo y borrarlo.
+      - D16: el ALB acepta ademas la prefix list de CloudFront solo en el puerto 80 (pesa 55 reglas de las 60 del grupo; no agregar mas reglas a SgAlb).
 
 Parameters:
   CidrAcceso:
@@ -21,6 +22,16 @@ Parameters:
       No hay valor por defecto a proposito. 0.0.0.0/0 no esta permitido.
     AllowedPattern: '^(\d{1,3}\.){3}\d{1,3}/\d{1,2}$'
     ConstraintDescription: Debe ser un CIDR IPv4, por ejemplo 203.0.113.7/32.
+  PrefixListCloudFront:
+    Type: String
+    Default: pl-b6a144df
+    AllowedPattern: '^pl-[0-9a-f]{8,17}$'
+    Description: >-
+      Prefix list administrada de CloudFront (com.amazonaws.global.cloudfront.origin-facing) para que
+      CloudFront llegue al ALB (D16). El id es propio de cada region; el de us-east-2 es pl-b6a144df.
+      Para verificarlo: aws ec2 describe-managed-prefix-lists --region us-east-2
+      --filters Name=prefix-list-name,Values=com.amazonaws.global.cloudfront.origin-facing
+      --query "PrefixLists[0].PrefixListId" --output text
   CidrVpc:
     Type: String
     Default: 10.20.0.0/16
@@ -158,8 +169,11 @@ Resources:
     Properties:
       GroupDescription: ALB de Nodo Ruta; solo entra la IP indicada en CidrAcceso
       VpcId: !Ref Vpc
+      # Cambiar SecurityGroupIngress es una actualizacion sin interrupcion; GroupDescription y VpcId
+      # NO se tocan (cambiarlos si reemplazaria el grupo). Por eso la descripcion queda igual.
       SecurityGroupIngress:
         - { IpProtocol: tcp, FromPort: 80, ToPort: 80, CidrIp: !Ref CidrAcceso, Description: HTTP desde el equipo }
+        - { IpProtocol: tcp, FromPort: 80, ToPort: 80, SourcePrefixListId: !Ref PrefixListCloudFront, Description: HTTP desde CloudFront (D16) }
       Tags:
         - { Key: Name, Value: !Sub "${AWS::StackName}-sg-alb" }
         - { Key: proyecto, Value: nodo-ruta }

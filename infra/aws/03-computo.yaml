@@ -11,7 +11,9 @@ Metadata:
     must:
       - Importa red y datos; las EC2 usan SgEc2 (8080 solo desde el ALB) y el ALB usa SgAlb (80 solo desde CidrAcceso).
       - Sin secretos en la plantilla ni en el user data; la clave se lee de SSM en la EC2 (ssm:GetParameter solo sobre su ruta).
-      - Sin IP elastica, NAT ni HTTPS (no hay dominio: pendiente documentado).
+      - Sin IP elastica ni NAT. El ALB sigue en HTTP (CloudFront->ALB sin cifrar, D16); el listener responde 403 salvo con X-Origin-Verify correcto o desde CidrAcceso.
+      - ClaveOrigen (NoEcho) nunca se escribe en el repo. Ojo: queda visible en la regla del listener para quien pueda leer el ALB (elbv2:DescribeRules).
+      - Cambios en el listener y sus reglas no reemplazan ALB, target group ni EC2; no tocar las EC2 en esta actualizacion.
       - Todo lleva la etiqueta proyecto=nodo-ruta.
 
 Parameters:
@@ -29,6 +31,21 @@ Parameters:
     Description: >-
       Etiqueta o hash de commit del repo que ejecutan las EC2 (sin valor por defecto, para que sea reproducible).
       Debe estar publicado en GitHub. Tambien es la etiqueta de las imagenes Docker (nunca latest).
+  ClaveOrigen:
+    Type: String
+    NoEcho: true
+    AllowedPattern: '^[A-Za-z0-9]{32,128}$'
+    ConstraintDescription: Debe ser alfanumerica, de 32 a 128 caracteres (openssl rand -hex 24).
+    Description: >-
+      Clave compartida entre CloudFront y el ALB (encabezado X-Origin-Verify, D16). Sin valor por defecto
+      y nunca se escribe en el repo; se pasa al desplegar. Debe ser la misma en la pila nodo-ruta-front.
+  CidrAcceso:
+    Type: String
+    AllowedPattern: '^(\d{1,3}\.){3}\d{1,3}/\d{1,2}$'
+    ConstraintDescription: Debe ser un CIDR IPv4, por ejemplo 203.0.113.7/32.
+    Description: >-
+      IP o rango que puede llamar al ALB directamente (pruebas de PRUEBAS.md). Mismo valor que en la pila de red.
+      0.0.0.0/0 no esta permitido.
   UrlRepo:
     Type: String
     Default: https://github.com/Cualquiera-INC/proyecto_hackaton_cualquiera_inc.git
@@ -47,6 +64,12 @@ Parameters:
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-arm64
     Description: Amazon Linux 2023 Arm mas reciente (solo se usa con t4g.micro).
+
+Rules:
+  AccesoNoAbierto:
+    Assertions:
+      - Assert: !Not [!Equals [!Ref CidrAcceso, 0.0.0.0/0]]
+        AssertDescription: CidrAcceso no puede ser 0.0.0.0/0; usa tu IP o la del equipo.
 
 Conditions:
   EsArm: !Equals [!Ref TipoInstancia, t4g.micro]
@@ -274,11 +297,44 @@ Resources:
 
   Listener:
     Type: AWS::ElasticLoadBalancingV2::Listener
+    Metadata:
+      com.aws.cloudformation.Context:
+        why: Accion por defecto 403; solo pasa quien trae la clave de origen (CloudFront) o viene de CidrAcceso (D16).
     Properties:
       LoadBalancerArn: !Ref Alb
       Port: 80
       Protocol: HTTP   # Sin HTTPS: no hay dominio ni certificado (pendiente, docs/04)
       DefaultActions:
+        - Type: fixed-response
+          FixedResponseConfig:
+            StatusCode: "403"
+            ContentType: text/plain
+            MessageBody: Acceso denegado
+
+  ReglaOrigenCloudFront:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref Listener
+      Priority: 1
+      Conditions:
+        - Field: http-header
+          HttpHeaderConfig:
+            HttpHeaderName: X-Origin-Verify
+            Values: [!Ref ClaveOrigen]
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref GrupoDestino
+
+  ReglaIpPermitida:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      ListenerArn: !Ref Listener
+      Priority: 2
+      Conditions:
+        - Field: source-ip
+          SourceIpConfig:
+            Values: [!Ref CidrAcceso]
+      Actions:
         - Type: forward
           TargetGroupArn: !Ref GrupoDestino
 
@@ -286,6 +342,10 @@ Outputs:
   UrlAlb:
     Description: URL publica (solo accesible desde CidrAcceso).
     Value: !Sub "http://${Alb.DNSName}"
+  DnsAlb:
+    Description: Nombre DNS del ALB (lo importa la pila nodo-ruta-front como origen de CloudFront).
+    Value: !GetAtt Alb.DNSName
+    Export: { Name: !Sub "${AWS::StackName}-DnsAlb" }
   IdInstanciaA:
     Description: Id de la EC2 A.
     Value: !Ref Ec2A

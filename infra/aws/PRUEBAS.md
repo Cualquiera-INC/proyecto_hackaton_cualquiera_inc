@@ -1,6 +1,6 @@
 # Pruebas medidas en AWS (us-east-2)
 
-Guía para ejecutar AWS04 a AWS07 sobre las pilas `nodo-ruta-red`, `nodo-ruta-datos` y `nodo-ruta-computo` ya creadas (AWS01 a AWS03 están en `EVIDENCIAS.md`). Todo es **solo datos sintéticos** y se hace desde la raíz del repo, en **zsh de macOS**: los bloques se pegan completos, no tienen líneas de comentario y no usan `read -p`. Las explicaciones están fuera de los bloques.
+Guía para ejecutar AWS04 a AWS08 sobre las pilas `nodo-ruta-red`, `nodo-ruta-datos` y `nodo-ruta-computo` ya creadas (AWS01 a AWS03 están en `EVIDENCIAS.md`). Todo es **solo datos sintéticos** y se hace desde la raíz del repo, en **zsh de macOS**: los bloques se pegan completos, no tienen líneas de comentario y no usan `read -p`. Las explicaciones están fuera de los bloques.
 
 Reglas que se mantienen: región solo `us-east-2`, nada de pruebas destructivas sin respaldo previo en S3 (regla 5), los tiempos salen de marcas de tiempo (regla 7) y si una prueba falla se reporta tal cual (con la salida real) en `EVIDENCIAS.md`. Cada bloque guarda su salida en `evidencias/AWS0x_...` (las marcas llevan la **hora local del Mac**, la misma que escribe `scripts/monitorear.py`). Los scripts se niegan a sobrescribir un archivo existente: si repites una prueba, cambia el prefijo (por ejemplo `AWS04b_`).
 
@@ -159,11 +159,37 @@ El monitor dura 200 s; el bloque termina cuando acaba. Para el tiempo de recuper
 
 ## AWS07 - Destrucción y verificación de que no queda nada
 
-**Objetivo.** Dejar la cuenta sin costo. **Orden estricto: 03, luego 02 (vaciando antes el bucket con todas sus versiones), luego 01**, porque una pila no se borra mientras otra importa sus exports. El parámetro de SSM no pertenece a ninguna pila y se borra aparte. Esta prueba **es destructiva**: hazla solo cuando AWS04 a AWS06 estén registradas (los respaldos de S3 se pierden). Requiere el bloque 0 (variables, `BUCKET`).
+**Objetivo.** Dejar la cuenta sin costo. **Orden estricto: 04 (front, si existe), 03, luego 02 (vaciando antes el bucket con todas sus versiones), luego 01**, porque una pila no se borra mientras otra importa sus exports. El parámetro de SSM no pertenece a ninguna pila y se borra aparte. Esta prueba **es destructiva**: hazla solo cuando AWS04 a AWS06 estén registradas (los respaldos de S3 se pierden). Requiere el bloque 0 (variables, `BUCKET`); la parte del front usa también `salida`.
+
+**Primero el front (si se desplegó la pila `nodo-ruta-front`, D16).** El bucket del front debe vaciarse antes (una pila no borra un bucket con objetos) y la pila del front debe borrarse **antes** que la de cómputo, porque importa su salida `DnsAlb`. Borrar la distribución tarda varios minutos (CloudFormation la deshabilita y luego la elimina).
 
 ```bash
 P=evidencias/AWS07_destruccion
-echo "$(marca) borrar nodo-ruta-computo" | tee "$P".txt
+BF=$(salida nodo-ruta-front NombreBucket)
+echo "$(marca) vaciar bucket del front $BF" | tee "$P".txt
+aws s3 rm "s3://$BF" --recursive | tee -a "$P".txt
+echo "$(marca) borrar nodo-ruta-front" | tee -a "$P".txt
+aws cloudformation delete-stack --stack-name nodo-ruta-front
+aws cloudformation wait stack-delete-complete --stack-name nodo-ruta-front
+echo "$(marca) front borrada" | tee -a "$P".txt
+```
+
+Si solo quieres **revertir las reglas de D16 sin destruir el cómputo** (con `nodo-ruta-front` ya borrada, porque importa `DnsAlb`): actualiza `nodo-ruta-computo` con la plantilla anterior (sin `ClaveOrigen` ni `CidrAcceso`) y luego `nodo-ruta-red` con la anterior (sin la prefix list). Los parámetros que ya no existen no se pasan:
+
+```bash
+git show feat/infra-computo:infra/aws/03-computo.yaml > "$TMPDIR/03-computo-anterior.yaml"
+git show feat/infra-computo:infra/aws/01-red.yaml > "$TMPDIR/01-red-anterior.yaml"
+aws cloudformation update-stack --stack-name nodo-ruta-computo --template-body "file://$TMPDIR/03-computo-anterior.yaml" --capabilities CAPABILITY_IAM --parameters ParameterKey=PilaRed,UsePreviousValue=true ParameterKey=PilaDatos,UsePreviousValue=true ParameterKey=VersionGit,UsePreviousValue=true ParameterKey=UrlRepo,UsePreviousValue=true ParameterKey=TipoInstancia,UsePreviousValue=true ParameterKey=AmiX86,UsePreviousValue=true ParameterKey=AmiArm,UsePreviousValue=true
+aws cloudformation wait stack-update-complete --stack-name nodo-ruta-computo
+aws cloudformation update-stack --stack-name nodo-ruta-red --template-body "file://$TMPDIR/01-red-anterior.yaml" --parameters ParameterKey=CidrAcceso,UsePreviousValue=true ParameterKey=CidrVpc,UsePreviousValue=true
+aws cloudformation wait stack-update-complete --stack-name nodo-ruta-red
+```
+
+Luego, en la destrucción total:
+
+```bash
+P=evidencias/AWS07_destruccion
+echo "$(marca) borrar nodo-ruta-computo" | tee -a "$P".txt
 aws cloudformation delete-stack --stack-name nodo-ruta-computo
 aws cloudformation wait stack-delete-complete --stack-name nodo-ruta-computo
 echo "$(marca) computo borrada" | tee -a "$P".txt
@@ -212,6 +238,35 @@ aws ssm get-parameter --name /nodo-ruta/db/password 2>&1 | tee -a "$P".txt
 
 **CUMPLE si:** las pilas desaparecen sin `DELETE_FAILED`, las consultas por servicio salen vacías, `head-bucket` y `get-parameter` responden `404` / `ParameterNotFound`, y la consulta por etiqueta no devuelve nada. Quedan **a propósito** (no son de las pilas y no cuestan): la alerta de presupuesto, el proveedor OIDC de GitHub y el rol `github-actions-nodo-ruta`; si este rol lleva la etiqueta `proyecto=nodo-ruta` aparecerá en la consulta por etiqueta y no es un fallo.
 
+## AWS08 - Interfaz y API por CloudFront (D16)
+
+**Objetivo.** Comprobar que la interfaz se sirve por HTTPS desde S3 a través de CloudFront, que `/pedidos` y `/health` llegan al ALB por CloudFront (sin caché, alternando entre las dos instancias), y que el acceso directo al ALB desde la IP permitida sigue funcionando. Hazla **antes** de AWS07 (que destruye todo). Requiere haber hecho los pasos (a) a (e) de la sección "Pila del front" de [README.md](README.md) (red y cómputo actualizados, front creada y publicada).
+
+**Qué se puede probar y qué no.** Una solicitud al ALB con un encabezado falso o desde otra IP **no se puede simular** desde tu equipo: el grupo de seguridad solo deja entrar a tu IP y a CloudFront, y tu IP entra siempre por la regla de IP del listener. Eso queda como **diseñado** (se verifica leyendo la configuración, abajo), igual que el rechazo de otras IP en la CloudFront Function (solo se puede ver el caso permitido). Lo probado será: 200 por CloudFront, redirección a HTTPS, sin caché en la API, y el ALB directo sin encabezado desde la IP permitida.
+
+```bash
+CF=$(salida nodo-ruta-front UrlFront)
+ALB=$(salida nodo-ruta-computo UrlAlb)
+LISTENER=$(aws elbv2 describe-listeners --load-balancer-arn $(salida nodo-ruta-computo ArnAlb) --query "Listeners[0].ListenerArn" --output text)
+P=evidencias/AWS08_front_cloudfront
+echo "$(marca) $CF" | tee "$P".txt
+curl -s -o /dev/null -w "interfaz /: %{http_code} %{content_type}\n" "$CF/" | tee -a "$P".txt
+curl -s "$CF/" | head -c 300 | tee -a "$P".txt
+echo | tee -a "$P".txt
+curl -s -o /dev/null -w "http -> https en /health: %{http_code} %{redirect_url}\n" "http://${CF#https://}/health" | tee -a "$P".txt
+curl -s -o /dev/null -w "/pedidos por CloudFront: %{http_code} %{content_type}\n" "$CF/pedidos" | tee -a "$P".txt
+for i in 1 2 3 4 5 6; do curl -s "$CF/health" | head -c 200 | tee -a "$P".txt; echo | tee -a "$P".txt; done
+curl -sI "$CF/pedidos" | grep -i "^x-cache" | tee -a "$P".txt
+curl -sI "$CF/assets/$(curl -s "$CF/" | grep -o 'index-[A-Za-z0-9_-]*\.js' | head -1)" | grep -i "^x-cache\|^cache-control" | tee -a "$P".txt
+curl -s -o /dev/null -w "ALB directo /pedidos sin encabezado (IP permitida): %{http_code}\n" "$ALB/pedidos" | tee -a "$P".txt
+aws elbv2 describe-listeners --listener-arns "$LISTENER" --query "Listeners[0].DefaultActions[0].[Type,FixedResponseConfig.StatusCode]" --output text | tee -a "$P".txt
+aws elbv2 describe-rules --listener-arn "$LISTENER" --query "Rules[].[Priority,Conditions[0].Field]" --output text | tee -a "$P".txt
+```
+
+(El resumen de reglas no imprime el valor del encabezado: así la clave no queda en la evidencia.) Abre también `$CF` en el navegador, desde tu IP: debe cargar la interfaz con los 6 pedidos y el estado.
+
+**CUMPLE (criterio nuestro [S]) si:** (1) `/` da 200 con `text/html` y el cuerpo empieza con el HTML de la interfaz; (2) `http://` redirige (301) a `https://`; (3) `/pedidos` y `/health` dan 200 por CloudFront, con `instancia` alternando entre las dos zonas en las 6 consultas; (4) la API sale con `Miss from cloudfront` (sin caché) y el `.js` de `assets/` con `cache-control: public,max-age=31536000,immutable` (y `Hit` en una segunda consulta); (5) el ALB directo desde tu IP da 200 sin encabezado; (6) el listener tiene acción por defecto `fixed-response 403` y las reglas de prioridad 1 (`http-header`) y 2 (`source-ip`). **Diseñado, no probado:** rechazo de otras IP en el ALB (grupo de seguridad), 403 por encabezado falso o ausente desde una IP de CloudFront, y 403 de la CloudFront Function para IP ajenas. Anótalo así en `EVIDENCIAS.md`. Si la creación de la distribución falló por la política de la organización, ese es el resultado (AWS08 = NO CUMPLE) y se reporta con el error real.
+
 ## Qué falta registrar
 
-Tras cada prueba, añade su ficha (AWS04 a AWS07) a `EVIDENCIAS.md` con el formato de AWS01 a AWS03 (qué queremos comprobar, pasos, resultado observado con los números medidos, CUMPLE o no, ruta de la evidencia) y confirma en `docs/` qué es **probado** y qué sigue **solo diseñado**.
+Tras cada prueba, añade su ficha (AWS04 a AWS08) a `EVIDENCIAS.md` con el formato de AWS01 a AWS03 (qué queremos comprobar, pasos, resultado observado con los números medidos, CUMPLE o no, ruta de la evidencia) y confirma en `docs/` qué es **probado** y qué sigue **solo diseñado**.

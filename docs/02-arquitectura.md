@@ -80,6 +80,17 @@ flowchart LR
     E2 --> CW
 ```
 
+Con la interfaz (D16, plantilla `04-front.yaml`, **desplegada y probada**, AWS08) el punto de entrada pasa a ser CloudFront:
+
+```mermaid
+flowchart LR
+    V[Operaciones] -->|HTTPS| CF["CloudFront<br/>Function: solo CidrAcceso"]
+    CF -->|"/ y /assets/* (OAC)"| S3F[("S3 privado<br/>interfaz")]
+    CF -->|"/pedidos y /health<br/>HTTP + X-Origin-Verify, sin caché"| ALB["ALB<br/>403 por defecto"]
+    ALB --> E1["EC2 #1"] & E2["EC2 #2"]
+    E1 & E2 --> RDS[("RDS")]
+```
+
 > **Límite:** con el plan gratuito, RDS es de una sola zona (D13). La caída de una EC2 se tolera; la de la base no. La copia en memoria del microservicio cubre solo caídas cortas.
 
 | Rol | Local | AWS | Qué mejora |
@@ -92,13 +103,13 @@ flowchart LR
 | Exposición | Solo `127.0.0.1:8080` | Security groups: EC2 solo acepta tráfico del ALB | Misma idea |
 | Acceso de administración | — | **Session Manager** (sin SSH abierto) | Sin puerto 22 |
 
-### Interfaz web en AWS (propuesta de Silvia)
+### Interfaz web en AWS (propuesta de Silvia; elegida como D16)
 
 **CloudFront** delante de todo, con dos comportamientos:
 - la interfaz (`/`, `/assets/*`) se sirve desde un **bucket S3 de sitio estático**, con el build del workflow `frontend.yml`;
 - la API (`/pedidos`, `/health`) se envía al **ALB**.
 
-Así la interfaz y la API comparten origen (`VITE_API_URL` vacío) y se obtiene HTTPS en `*.cloudfront.net` sin comprar dominio. Con el caché desactivado para la API, las consultas siempre son en vivo. Es opcional: el MVP funciona sin la interfaz.
+Así la interfaz y la API comparten origen (`VITE_API_URL` vacío) y se obtiene HTTPS en `*.cloudfront.net` sin comprar dominio. Con el caché desactivado para la API, las consultas siempre son en vivo. Es opcional: el MVP funciona sin la interfaz. Implementación y límites (HTTPS solo hasta CloudFront, ALB en HTTP con clave de origen) en D16 y en `infra/aws/04-front.yaml`.
 
 ### PostgreSQL en AWS (D13: 2 EC2 + RDS)
 
@@ -136,7 +147,7 @@ El ALB **no reintenta** en otra instancia cuando una conexión falla, como sí h
 | Registro de imagen | GHCR público / ECR | GHCR público: sin costo y sin secretos en la imagen |
 | Cómo se crea la infraestructura | Consola / scripts / CloudFormation | 🟢 **CloudFormation** en `infra/aws/` (D14): crear y **destruir** con una pila |
 | Intervalo de sincronización con S3 | 5–30 s | 10 s; cada revisión es una solicitud a S3, así que también cuenta como costo |
-| HTTPS e interfaz | Sin dominio / CloudFront delante del ALB y del S3 de la interfaz | CloudFront: da `https://*.cloudfront.net` y sirve el frontend |
+| HTTPS e interfaz | Sin dominio / CloudFront delante del ALB y del S3 de la interfaz | 🟢 **CloudFront + S3** (D16): `https://*.cloudfront.net`; desplegado y probado (AWS08) |
 
 ## 3. Probado vs. diseñado
 
@@ -156,5 +167,5 @@ El ALB **no reintenta** en otra instancia cuando una conexión falla, como sí h
 | Tolerancia a la caída de una **máquina** | ⏳ Diseño AWS, por probar |
 | Health check activo | ⏳ Diseño AWS (ALB) |
 | Respaldos fuera del computador | ⏳ Diseño AWS (S3) |
-| HTTPS | ⏳ Opcional (CloudFront) |
+| HTTPS al visitante (CloudFront) | 🟢 Probado (AWS08: 301 http→https, 200 por CloudFront); CloudFront→ALB va en HTTP |
 | Tolerancia a la caída de una región | ❌ Fuera de alcance (el reto no lo exige) |
