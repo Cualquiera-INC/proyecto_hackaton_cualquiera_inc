@@ -70,6 +70,8 @@ Plantillas de **CloudFormation** en `infra/aws/` para crear y destruir con una p
 
 **Avance (24-11, rama `feat/despliegue-automatico`):** D17, `scripts/aws_nodo.py` (`desplegar`, `estado`, `probar`, `destruir`, `--simular`) reemplaza los bloques manuales de `infra/aws/README.md` y `PRUEBAS.md`. **Probado solo con lecturas y respuestas simuladas; falta la primera ejecución real** (crear, probar y destruir en una misma sesión, con `--evidencia`). **GitHub Actions aceptado (D17):** `.github/workflows/aws.yml` ejecuta el script con OIDC y la política del rol está versionada en `infra/aws/iam/`, **pero aún no está aplicada** (hay que correr `aws iam put-role-policy`, ver su README) **ni el workflow se ha ejecutado**, y solo correrá desde `main`.
 
+**Diagrama (24-11):** `docs/arquitectura/aws-final.png` (editable en `aws-final.drawio`) muestra la arquitectura AWS final con íconos oficiales.
+
 > Los puntos 1, 3 y 4 asumían los datos como JSON en S3. Con D13 cambian: S3 solo guarda respaldos, las EC2 corren `app` + `pedidos` sin sincronizar nada y se suma una instancia RDS en subred privada (con su grupo de seguridad). Esta lista se reescribe al empezar las plantillas de CloudFormation.
 
 ### Fase 5 · Probar en AWS y destruir
