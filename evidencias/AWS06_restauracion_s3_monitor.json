@@ -1,0 +1,1458 @@
+{
+  "url": "http://nodo-rut-Alb-kgaVDc2qaYOi-180377821.us-east-2.elb.amazonaws.com/health",
+  "resultado": "CON_ERRORES",
+  "consultas": 197,
+  "errores": 180,
+  "duracion_s": 203.7,
+  "respuestas_por_version": {
+    "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 17
+  },
+  "respuestas_por_instancia": {
+    "us-east-2a-i-0595561ca670bc592@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 9,
+    "us-east-2b-i-09231cd2d9334ea7d@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 8
+  },
+  "latencia_ms": {
+    "max": 4362.3,
+    "p95": 4261.6,
+    "mediana": 223.8
+  },
+  "instancias": {
+    "us-east-2a-i-0595561ca670bc592": {
+      "respuestas": 9,
+      "primera": "2026-11-23T20:41:35.491",
+      "ultima": "2026-11-23T20:41:59.717",
+      "mayor_silencio": {
+        "segundos": 6.5,
+        "desde": "2026-11-23T20:41:51.508",
+        "hasta": "2026-11-23T20:41:58.036"
+      }
+    },
+    "us-east-2b-i-09231cd2d9334ea7d": {
+      "respuestas": 8,
+      "primera": "2026-11-23T20:41:40.357",
+      "ultima": "2026-11-23T20:41:57.289",
+      "mayor_silencio": {
+        "segundos": 4.8,
+        "desde": "2026-11-23T20:41:52.522",
+        "hasta": "2026-11-23T20:41:57.289"
+      }
+    }
+  },
+  "primer_error": "2026-11-23T20:42:00.416",
+  "ultimo_error": "2026-11-23T20:44:54.199",
+  "detalle": [
+    {
+      "consulta": 1,
+      "fecha": "2026-11-23T20:41:35.491",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 4362.3
+    },
+    {
+      "consulta": 2,
+      "fecha": "2026-11-23T20:41:40.357",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 223.8
+    },
+    {
+      "consulta": 3,
+      "fecha": "2026-11-23T20:41:41.086",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 187.5
+    },
+    {
+      "consulta": 4,
+      "fecha": "2026-11-23T20:41:41.779",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 206.2
+    },
+    {
+      "consulta": 5,
+      "fecha": "2026-11-23T20:41:42.488",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 184.6
+    },
+    {
+      "consulta": 6,
+      "fecha": "2026-11-23T20:41:43.177",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 198.6
+    },
+    {
+      "consulta": 7,
+      "fecha": "2026-11-23T20:41:43.880",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 212.6
+    },
+    {
+      "consulta": 8,
+      "fecha": "2026-11-23T20:41:44.598",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 209.2
+    },
+    {
+      "consulta": 9,
+      "fecha": "2026-11-23T20:41:45.310",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 187.2
+    },
+    {
+      "consulta": 10,
+      "fecha": "2026-11-23T20:41:46.002",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 543.4
+    },
+    {
+      "consulta": 11,
+      "fecha": "2026-11-23T20:41:47.050",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 2208.7
+    },
+    {
+      "consulta": 12,
+      "fecha": "2026-11-23T20:41:49.764",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1238.9
+    },
+    {
+      "consulta": 13,
+      "fecha": "2026-11-23T20:41:51.508",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 513.8
+    },
+    {
+      "consulta": 14,
+      "fecha": "2026-11-23T20:41:52.522",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 4261.6
+    },
+    {
+      "consulta": 15,
+      "fecha": "2026-11-23T20:41:57.289",
+      "http": 200,
+      "instancia": "us-east-2b-i-09231cd2d9334ea7d",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 243.4
+    },
+    {
+      "consulta": 16,
+      "fecha": "2026-11-23T20:41:58.036",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 1179.1
+    },
+    {
+      "consulta": 17,
+      "fecha": "2026-11-23T20:41:59.717",
+      "http": 200,
+      "instancia": "us-east-2a-i-0595561ca670bc592",
+      "version_app": "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901",
+      "version_datos": "datos-v1",
+      "milisegundos": 197.8
+    },
+    {
+      "consulta": 18,
+      "fecha": "2026-11-23T20:42:00.416",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 211.7
+    },
+    {
+      "consulta": 19,
+      "fecha": "2026-11-23T20:42:01.130",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 457.8
+    },
+    {
+      "consulta": 20,
+      "fecha": "2026-11-23T20:42:02.093",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 512.9
+    },
+    {
+      "consulta": 21,
+      "fecha": "2026-11-23T20:42:03.107",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 234.7
+    },
+    {
+      "consulta": 22,
+      "fecha": "2026-11-23T20:42:03.846",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 231.6
+    },
+    {
+      "consulta": 23,
+      "fecha": "2026-11-23T20:42:04.583",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 176.5
+    },
+    {
+      "consulta": 24,
+      "fecha": "2026-11-23T20:42:05.263",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 200.7
+    },
+    {
+      "consulta": 25,
+      "fecha": "2026-11-23T20:42:05.966",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 217.5
+    },
+    {
+      "consulta": 26,
+      "fecha": "2026-11-23T20:42:06.686",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 187.8
+    },
+    {
+      "consulta": 27,
+      "fecha": "2026-11-23T20:42:07.376",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 200.7
+    },
+    {
+      "consulta": 28,
+      "fecha": "2026-11-23T20:42:08.079",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 216.2
+    },
+    {
+      "consulta": 29,
+      "fecha": "2026-11-23T20:42:08.799",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 236.1
+    },
+    {
+      "consulta": 30,
+      "fecha": "2026-11-23T20:42:09.540",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 180.9
+    },
+    {
+      "consulta": 31,
+      "fecha": "2026-11-23T20:42:10.221",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 200.8
+    },
+    {
+      "consulta": 32,
+      "fecha": "2026-11-23T20:42:10.927",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 174.5
+    },
+    {
+      "consulta": 33,
+      "fecha": "2026-11-23T20:42:11.606",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 212.4
+    },
+    {
+      "consulta": 34,
+      "fecha": "2026-11-23T20:42:12.322",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 219.0
+    },
+    {
+      "consulta": 35,
+      "fecha": "2026-11-23T20:42:13.047",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1207.7
+    },
+    {
+      "consulta": 36,
+      "fecha": "2026-11-23T20:42:14.760",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 234.4
+    },
+    {
+      "consulta": 37,
+      "fecha": "2026-11-23T20:42:15.499",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 221.9
+    },
+    {
+      "consulta": 38,
+      "fecha": "2026-11-23T20:42:16.226",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 480.0
+    },
+    {
+      "consulta": 39,
+      "fecha": "2026-11-23T20:42:17.211",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 199.8
+    },
+    {
+      "consulta": 40,
+      "fecha": "2026-11-23T20:42:17.911",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 215.0
+    },
+    {
+      "consulta": 41,
+      "fecha": "2026-11-23T20:42:18.631",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 537.0
+    },
+    {
+      "consulta": 42,
+      "fecha": "2026-11-23T20:42:19.672",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 184.3
+    },
+    {
+      "consulta": 43,
+      "fecha": "2026-11-23T20:42:20.362",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 515.4
+    },
+    {
+      "consulta": 44,
+      "fecha": "2026-11-23T20:42:21.381",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 245.1
+    },
+    {
+      "consulta": 45,
+      "fecha": "2026-11-23T20:42:22.128",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1524.1
+    },
+    {
+      "consulta": 46,
+      "fecha": "2026-11-23T20:42:24.156",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 919.7
+    },
+    {
+      "consulta": 47,
+      "fecha": "2026-11-23T20:42:25.581",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 201.1
+    },
+    {
+      "consulta": 48,
+      "fecha": "2026-11-23T20:42:26.287",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 229.9
+    },
+    {
+      "consulta": 49,
+      "fecha": "2026-11-23T20:42:27.020",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 241.4
+    },
+    {
+      "consulta": 50,
+      "fecha": "2026-11-23T20:42:27.764",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 193.3
+    },
+    {
+      "consulta": 51,
+      "fecha": "2026-11-23T20:42:28.460",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 529.8
+    },
+    {
+      "consulta": 52,
+      "fecha": "2026-11-23T20:42:29.491",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 507.8
+    },
+    {
+      "consulta": 53,
+      "fecha": "2026-11-23T20:42:30.500",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 198.1
+    },
+    {
+      "consulta": 54,
+      "fecha": "2026-11-23T20:42:31.201",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 265.7
+    },
+    {
+      "consulta": 55,
+      "fecha": "2026-11-23T20:42:31.972",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 227.0
+    },
+    {
+      "consulta": 56,
+      "fecha": "2026-11-23T20:42:32.706",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1264.5
+    },
+    {
+      "consulta": 57,
+      "fecha": "2026-11-23T20:42:34.475",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 243.7
+    },
+    {
+      "consulta": 58,
+      "fecha": "2026-11-23T20:42:35.223",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 209.3
+    },
+    {
+      "consulta": 59,
+      "fecha": "2026-11-23T20:42:35.933",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 253.1
+    },
+    {
+      "consulta": 60,
+      "fecha": "2026-11-23T20:42:36.689",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1271.8
+    },
+    {
+      "consulta": 61,
+      "fecha": "2026-11-23T20:42:38.465",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 244.9
+    },
+    {
+      "consulta": 62,
+      "fecha": "2026-11-23T20:42:39.214",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 212.3
+    },
+    {
+      "consulta": 63,
+      "fecha": "2026-11-23T20:42:39.931",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 2225.3
+    },
+    {
+      "consulta": 64,
+      "fecha": "2026-11-23T20:42:42.659",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 253.4
+    },
+    {
+      "consulta": 65,
+      "fecha": "2026-11-23T20:42:43.418",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 214.9
+    },
+    {
+      "consulta": 66,
+      "fecha": "2026-11-23T20:42:44.136",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 531.9
+    },
+    {
+      "consulta": 67,
+      "fecha": "2026-11-23T20:42:45.172",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1207.6
+    },
+    {
+      "consulta": 68,
+      "fecha": "2026-11-23T20:42:46.885",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1532.0
+    },
+    {
+      "consulta": 69,
+      "fecha": "2026-11-23T20:42:48.921",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 505.9
+    },
+    {
+      "consulta": 70,
+      "fecha": "2026-11-23T20:42:49.931",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1201.3
+    },
+    {
+      "consulta": 71,
+      "fecha": "2026-11-23T20:42:51.634",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 487.7
+    },
+    {
+      "consulta": 72,
+      "fecha": "2026-11-23T20:42:52.623",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1230.0
+    },
+    {
+      "consulta": 73,
+      "fecha": "2026-11-23T20:42:54.359",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 195.1
+    },
+    {
+      "consulta": 74,
+      "fecha": "2026-11-23T20:42:55.059",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 195.1
+    },
+    {
+      "consulta": 75,
+      "fecha": "2026-11-23T20:42:55.758",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 190.7
+    },
+    {
+      "consulta": 76,
+      "fecha": "2026-11-23T20:42:56.450",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 201.3
+    },
+    {
+      "consulta": 77,
+      "fecha": "2026-11-23T20:42:57.156",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 211.2
+    },
+    {
+      "consulta": 78,
+      "fecha": "2026-11-23T20:42:57.872",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 181.9
+    },
+    {
+      "consulta": 79,
+      "fecha": "2026-11-23T20:42:58.554",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 287.8
+    },
+    {
+      "consulta": 80,
+      "fecha": "2026-11-23T20:42:59.344",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 197.7
+    },
+    {
+      "consulta": 81,
+      "fecha": "2026-11-23T20:43:00.047",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 256.5
+    },
+    {
+      "consulta": 82,
+      "fecha": "2026-11-23T20:43:00.808",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 201.0
+    },
+    {
+      "consulta": 83,
+      "fecha": "2026-11-23T20:43:01.515",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 214.0
+    },
+    {
+      "consulta": 84,
+      "fecha": "2026-11-23T20:43:02.235",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1388.6
+    },
+    {
+      "consulta": 85,
+      "fecha": "2026-11-23T20:43:04.127",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 193.4
+    },
+    {
+      "consulta": 86,
+      "fecha": "2026-11-23T20:43:04.820",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 203.4
+    },
+    {
+      "consulta": 87,
+      "fecha": "2026-11-23T20:43:05.525",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 198.9
+    },
+    {
+      "consulta": 88,
+      "fecha": "2026-11-23T20:43:06.229",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 198.2
+    },
+    {
+      "consulta": 89,
+      "fecha": "2026-11-23T20:43:06.928",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 203.2
+    },
+    {
+      "consulta": 90,
+      "fecha": "2026-11-23T20:43:07.636",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 216.1
+    },
+    {
+      "consulta": 91,
+      "fecha": "2026-11-23T20:43:08.355",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1190.8
+    },
+    {
+      "consulta": 92,
+      "fecha": "2026-11-23T20:43:10.048",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1265.6
+    },
+    {
+      "consulta": 93,
+      "fecha": "2026-11-23T20:43:11.814",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 210.7
+    },
+    {
+      "consulta": 94,
+      "fecha": "2026-11-23T20:43:12.528",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1183.7
+    },
+    {
+      "consulta": 95,
+      "fecha": "2026-11-23T20:43:14.213",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 229.6
+    },
+    {
+      "consulta": 96,
+      "fecha": "2026-11-23T20:43:14.946",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1067.3
+    },
+    {
+      "consulta": 97,
+      "fecha": "2026-11-23T20:43:16.515",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 209.7
+    },
+    {
+      "consulta": 98,
+      "fecha": "2026-11-23T20:43:17.230",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 195.0
+    },
+    {
+      "consulta": 99,
+      "fecha": "2026-11-23T20:43:17.932",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 205.8
+    },
+    {
+      "consulta": 100,
+      "fecha": "2026-11-23T20:43:18.641",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1232.4
+    },
+    {
+      "consulta": 101,
+      "fecha": "2026-11-23T20:43:20.377",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 192.5
+    },
+    {
+      "consulta": 102,
+      "fecha": "2026-11-23T20:43:21.073",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 460.5
+    },
+    {
+      "consulta": 103,
+      "fecha": "2026-11-23T20:43:22.039",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 238.3
+    },
+    {
+      "consulta": 104,
+      "fecha": "2026-11-23T20:43:22.781",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 220.8
+    },
+    {
+      "consulta": 105,
+      "fecha": "2026-11-23T20:43:23.507",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 212.1
+    },
+    {
+      "consulta": 106,
+      "fecha": "2026-11-23T20:43:24.224",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 216.8
+    },
+    {
+      "consulta": 107,
+      "fecha": "2026-11-23T20:43:24.946",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 202.2
+    },
+    {
+      "consulta": 108,
+      "fecha": "2026-11-23T20:43:25.651",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 174.0
+    },
+    {
+      "consulta": 109,
+      "fecha": "2026-11-23T20:43:26.330",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 994.9
+    },
+    {
+      "consulta": 110,
+      "fecha": "2026-11-23T20:43:27.827",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 187.1
+    },
+    {
+      "consulta": 111,
+      "fecha": "2026-11-23T20:43:28.519",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 211.3
+    },
+    {
+      "consulta": 112,
+      "fecha": "2026-11-23T20:43:29.233",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 229.6
+    },
+    {
+      "consulta": 113,
+      "fecha": "2026-11-23T20:43:29.967",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 230.8
+    },
+    {
+      "consulta": 114,
+      "fecha": "2026-11-23T20:43:30.700",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 213.0
+    },
+    {
+      "consulta": 115,
+      "fecha": "2026-11-23T20:43:31.418",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 239.1
+    },
+    {
+      "consulta": 116,
+      "fecha": "2026-11-23T20:43:32.162",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 215.7
+    },
+    {
+      "consulta": 117,
+      "fecha": "2026-11-23T20:43:32.882",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 229.2
+    },
+    {
+      "consulta": 118,
+      "fecha": "2026-11-23T20:43:33.615",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 195.1
+    },
+    {
+      "consulta": 119,
+      "fecha": "2026-11-23T20:43:34.314",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 184.3
+    },
+    {
+      "consulta": 120,
+      "fecha": "2026-11-23T20:43:35.000",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 984.7
+    },
+    {
+      "consulta": 121,
+      "fecha": "2026-11-23T20:43:36.492",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1213.9
+    },
+    {
+      "consulta": 122,
+      "fecha": "2026-11-23T20:43:38.212",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 211.4
+    },
+    {
+      "consulta": 123,
+      "fecha": "2026-11-23T20:43:38.927",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 214.1
+    },
+    {
+      "consulta": 124,
+      "fecha": "2026-11-23T20:43:39.642",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 233.1
+    },
+    {
+      "consulta": 125,
+      "fecha": "2026-11-23T20:43:40.380",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 221.8
+    },
+    {
+      "consulta": 126,
+      "fecha": "2026-11-23T20:43:41.107",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 192.8
+    },
+    {
+      "consulta": 127,
+      "fecha": "2026-11-23T20:43:41.804",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1213.2
+    },
+    {
+      "consulta": 128,
+      "fecha": "2026-11-23T20:43:43.522",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1216.9
+    },
+    {
+      "consulta": 129,
+      "fecha": "2026-11-23T20:43:45.242",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 207.8
+    },
+    {
+      "consulta": 130,
+      "fecha": "2026-11-23T20:43:45.953",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 205.7
+    },
+    {
+      "consulta": 131,
+      "fecha": "2026-11-23T20:43:46.664",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1181.1
+    },
+    {
+      "consulta": 132,
+      "fecha": "2026-11-23T20:43:48.361",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 475.2
+    },
+    {
+      "consulta": 133,
+      "fecha": "2026-11-23T20:43:49.337",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 231.4
+    },
+    {
+      "consulta": 134,
+      "fecha": "2026-11-23T20:43:50.073",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 217.6
+    },
+    {
+      "consulta": 135,
+      "fecha": "2026-11-23T20:43:50.795",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 239.3
+    },
+    {
+      "consulta": 136,
+      "fecha": "2026-11-23T20:43:51.537",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 210.4
+    },
+    {
+      "consulta": 137,
+      "fecha": "2026-11-23T20:43:52.253",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 209.0
+    },
+    {
+      "consulta": 138,
+      "fecha": "2026-11-23T20:43:52.966",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 196.3
+    },
+    {
+      "consulta": 139,
+      "fecha": "2026-11-23T20:43:53.668",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 221.0
+    },
+    {
+      "consulta": 140,
+      "fecha": "2026-11-23T20:43:54.394",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 233.2
+    },
+    {
+      "consulta": 141,
+      "fecha": "2026-11-23T20:43:55.131",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 584.6
+    },
+    {
+      "consulta": 142,
+      "fecha": "2026-11-23T20:43:56.217",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 215.5
+    },
+    {
+      "consulta": 143,
+      "fecha": "2026-11-23T20:43:56.935",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 464.0
+    },
+    {
+      "consulta": 144,
+      "fecha": "2026-11-23T20:43:57.902",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 202.1
+    },
+    {
+      "consulta": 145,
+      "fecha": "2026-11-23T20:43:58.609",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 212.9
+    },
+    {
+      "consulta": 146,
+      "fecha": "2026-11-23T20:43:59.327",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1522.6
+    },
+    {
+      "consulta": 147,
+      "fecha": "2026-11-23T20:44:01.354",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 215.5
+    },
+    {
+      "consulta": 148,
+      "fecha": "2026-11-23T20:44:02.071",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 214.6
+    },
+    {
+      "consulta": 149,
+      "fecha": "2026-11-23T20:44:02.789",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 968.9
+    },
+    {
+      "consulta": 150,
+      "fecha": "2026-11-23T20:44:04.260",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 228.0
+    },
+    {
+      "consulta": 151,
+      "fecha": "2026-11-23T20:44:04.993",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1210.5
+    },
+    {
+      "consulta": 152,
+      "fecha": "2026-11-23T20:44:06.709",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1485.5
+    },
+    {
+      "consulta": 153,
+      "fecha": "2026-11-23T20:44:08.699",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 453.6
+    },
+    {
+      "consulta": 154,
+      "fecha": "2026-11-23T20:44:09.657",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1232.1
+    },
+    {
+      "consulta": 155,
+      "fecha": "2026-11-23T20:44:11.393",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 216.3
+    },
+    {
+      "consulta": 156,
+      "fecha": "2026-11-23T20:44:12.113",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1173.2
+    },
+    {
+      "consulta": 157,
+      "fecha": "2026-11-23T20:44:13.787",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1221.8
+    },
+    {
+      "consulta": 158,
+      "fecha": "2026-11-23T20:44:15.514",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 221.4
+    },
+    {
+      "consulta": 159,
+      "fecha": "2026-11-23T20:44:16.240",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 499.6
+    },
+    {
+      "consulta": 160,
+      "fecha": "2026-11-23T20:44:17.245",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 627.5
+    },
+    {
+      "consulta": 161,
+      "fecha": "2026-11-23T20:44:18.376",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 229.9
+    },
+    {
+      "consulta": 162,
+      "fecha": "2026-11-23T20:44:19.109",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 199.7
+    },
+    {
+      "consulta": 163,
+      "fecha": "2026-11-23T20:44:19.813",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1214.0
+    },
+    {
+      "consulta": 164,
+      "fecha": "2026-11-23T20:44:21.532",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1191.3
+    },
+    {
+      "consulta": 165,
+      "fecha": "2026-11-23T20:44:23.223",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 196.0
+    },
+    {
+      "consulta": 166,
+      "fecha": "2026-11-23T20:44:23.925",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 200.7
+    },
+    {
+      "consulta": 167,
+      "fecha": "2026-11-23T20:44:24.627",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 255.3
+    },
+    {
+      "consulta": 168,
+      "fecha": "2026-11-23T20:44:25.387",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 216.3
+    },
+    {
+      "consulta": 169,
+      "fecha": "2026-11-23T20:44:26.108",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 197.1
+    },
+    {
+      "consulta": 170,
+      "fecha": "2026-11-23T20:44:26.810",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1515.1
+    },
+    {
+      "consulta": 171,
+      "fecha": "2026-11-23T20:44:28.827",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 199.0
+    },
+    {
+      "consulta": 172,
+      "fecha": "2026-11-23T20:44:29.527",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 202.1
+    },
+    {
+      "consulta": 173,
+      "fecha": "2026-11-23T20:44:30.232",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 207.6
+    },
+    {
+      "consulta": 174,
+      "fecha": "2026-11-23T20:44:30.944",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 196.5
+    },
+    {
+      "consulta": 175,
+      "fecha": "2026-11-23T20:44:31.644",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 225.9
+    },
+    {
+      "consulta": 176,
+      "fecha": "2026-11-23T20:44:32.375",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 500.1
+    },
+    {
+      "consulta": 177,
+      "fecha": "2026-11-23T20:44:33.381",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 216.5
+    },
+    {
+      "consulta": 178,
+      "fecha": "2026-11-23T20:44:34.102",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1213.0
+    },
+    {
+      "consulta": 179,
+      "fecha": "2026-11-23T20:44:35.819",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 214.7
+    },
+    {
+      "consulta": 180,
+      "fecha": "2026-11-23T20:44:36.539",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 197.1
+    },
+    {
+      "consulta": 181,
+      "fecha": "2026-11-23T20:44:37.236",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 215.7
+    },
+    {
+      "consulta": 182,
+      "fecha": "2026-11-23T20:44:37.957",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1507.4
+    },
+    {
+      "consulta": 183,
+      "fecha": "2026-11-23T20:44:39.969",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 192.3
+    },
+    {
+      "consulta": 184,
+      "fecha": "2026-11-23T20:44:40.666",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 518.2
+    },
+    {
+      "consulta": 185,
+      "fecha": "2026-11-23T20:44:41.689",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 2211.2
+    },
+    {
+      "consulta": 186,
+      "fecha": "2026-11-23T20:44:44.405",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 211.4
+    },
+    {
+      "consulta": 187,
+      "fecha": "2026-11-23T20:44:45.121",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 1223.1
+    },
+    {
+      "consulta": 188,
+      "fecha": "2026-11-23T20:44:46.848",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 239.9
+    },
+    {
+      "consulta": 189,
+      "fecha": "2026-11-23T20:44:47.593",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 488.0
+    },
+    {
+      "consulta": 190,
+      "fecha": "2026-11-23T20:44:48.582",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 225.2
+    },
+    {
+      "consulta": 191,
+      "fecha": "2026-11-23T20:44:49.308",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 234.0
+    },
+    {
+      "consulta": 192,
+      "fecha": "2026-11-23T20:44:50.047",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 511.0
+    },
+    {
+      "consulta": 193,
+      "fecha": "2026-11-23T20:44:51.059",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 206.2
+    },
+    {
+      "consulta": 194,
+      "fecha": "2026-11-23T20:44:51.771",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 481.8
+    },
+    {
+      "consulta": 195,
+      "fecha": "2026-11-23T20:44:52.757",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 246.2
+    },
+    {
+      "consulta": 196,
+      "fecha": "2026-11-23T20:44:53.503",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 191.4
+    },
+    {
+      "consulta": 197,
+      "fecha": "2026-11-23T20:44:54.199",
+      "http": 503,
+      "error": "HTTP Error 503: Service Unavailable",
+      "milisegundos": 4477.8
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "url": "http://nodo-rut-Alb-kgaVDc2qaYOi-180377821.us-east-2.elb.amazonaws.com/health",
+  "resultado": "CON_ERRORES",
+  "consultas": 197,
+  "errores": 180,
+  "duracion_s": 203.7,
+  "respuestas_por_version": {
+    "d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 17
+  },
+  "respuestas_por_instancia": {
+    "us-east-2a-i-0595561ca670bc592@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 9,
+    "us-east-2b-i-09231cd2d9334ea7d@d7b0acd55cce3434eb0b03bb20bb576d6bb3d901": 8
+  },
+  "latencia_ms": {
+    "max": 4362.3,
+    "p95": 4261.6,
+    "mediana": 223.8
+  },
+  "instancias": {
+    "us-east-2a-i-0595561ca670bc592": {
+      "respuestas": 9,
+      "primera": "2026-11-23T20:41:35.491",
+      "ultima": "2026-11-23T20:41:59.717",
+      "mayor_silencio": {
+        "segundos": 6.5,
+        "desde": "2026-11-23T20:41:51.508",
+        "hasta": "2026-11-23T20:41:58.036"
+      }
+    },
+    "us-east-2b-i-09231cd2d9334ea7d": {
+      "respuestas": 8,
+      "primera": "2026-11-23T20:41:40.357",
+      "ultima": "2026-11-23T20:41:57.289",
+      "mayor_silencio": {
+        "segundos": 4.8,
+        "desde": "2026-11-23T20:41:52.522",
+        "hasta": "2026-11-23T20:41:57.289"
+      }
+    }
+  },
+  "primer_error": "2026-11-23T20:42:00.416",
+  "ultimo_error": "2026-11-23T20:44:54.199"
+}
