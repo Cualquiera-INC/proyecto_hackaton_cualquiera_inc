@@ -255,6 +255,7 @@ svg [data-f]{transform:none;filter:none}
 .qrcard{position:absolute;right:140px;top:100px;width:620px;z-index:5}
 .qrbox{background:#fff;border-radius:30px;padding:30px;box-shadow:0 30px 90px rgba(0,0,0,.55),0 0 0 3px rgba(26,168,240,.5)}
 .qrbox svg{display:block;width:560px;height:560px}
+.qrmini{left:auto;right:140px;top:560px;width:300px}.qrmini .qrbox{padding:18px;border-radius:22px}.qrmini .qrbox svg{width:264px;height:264px}.qrmini .qrurl{font-size:13px;margin-top:8px}.qrlbl{text-shadow:0 2px 12px rgba(0,0,0,.9);margin-top:14px;text-align:center;font-weight:700;font-size:22px;color:#fff;letter-spacing:.01em}
 .qrurl{margin-top:14px;text-align:center;font-family:var(--m);font-size:25px;font-weight:700;color:#0a1a33;word-break:break-all}
 .phr{font-size:62px;line-height:1.12;font-weight:800;letter-spacing:-1.5px;margin-top:30px}
 .phr div{margin-top:6px}
@@ -277,7 +278,8 @@ svg [data-f]{transform:none;filter:none}
 <div class="toprow a" style="--i:0"><img src="assets/logo-estudia.png" width="330" alt="Estud-IA"><img class="nr" src="assets/logo-nodo-ruta.png" alt="Nodo Ruta"></div>
 <div class="kick a" style="--i:1">Nodo Ruta · Reto 16</div>
 <h1 class="hook a" style="--i:2">¿Qué pasa si el único servidor <span class="dead">se apaga</span> a mitad del día?</h1>
-<div class="hsub a" style="--i:4"><b>Nodo Ruta</b> (empresa ficticia) consulta sus entregas en <b>una sola instancia</b>, con los datos adentro y cambios a mano. Si cae, operaciones queda a ciegas y <b>nadie sabe cuánto tarda en volver</b>.</div>
+<div class="hsub a" style="--i:4;max-width:1180px"><b>Nodo Ruta</b> (empresa ficticia) consulta sus entregas en <b>una sola instancia</b>, con los datos adentro y cambios a mano. Si cae, operaciones queda a ciegas y <b>nadie sabe cuánto tarda en volver</b>.</div>
+<div class="qrcard qrmini a" style="--i:5"><div class="qrbox"><div id="qr1"></div><div class="qrurl" id="qrurl1"></div></div><div class="qrlbl">Escanéenlo: está en vivo</div></div>
 <div class="actors a" style="--i:6"><span class="chip o">Operaciones</span><span class="chip">Responsable técnico</span><span class="chip m">Coordinación logística</span></div>
 </section>
 <section class="slide" data-steps="2200" data-titulo="La solución" data-tiempo="0:45" data-notas="(0:30-1:15) Esta es la solución, en AWS región us-east-2. El usuario entra por CloudFront con HTTPS; la interfaz sale de S3 y las consultas pasan por el balanceador (ALB) a DOS servidores EC2, uno en cada zona (us-east-2a y us-east-2b). Los datos viven en PostgreSQL (RDS) en subred privada, fuera de los servidores. Los respaldos van a S3 con pg_dump y suma SHA-256, para poder verificarlos. Y todo es código: GitHub Actions entra con OIDC, sin claves guardadas, y CloudFormation crea 4 pilas. Un botón crea (unos 16 minutos desde cero, suma de pasos, AWS09) y otro destruye (8 min 28 s, AWS10). Decir claro: la base es una sola (RDS Single-AZ, D13).">
@@ -413,7 +415,7 @@ var stage=document.getElementById('stage'),slides=[].slice.call(document.querySe
 function fit(){var s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';stage.style.left=((innerWidth-1920*s)/2)+'px';stage.style.top=((innerHeight-1080*s)/2)+'px';}
 addEventListener('resize',fit);fit();
 /* QR */
-(function(){var h=document.getElementById('qr');if(h)h.innerHTML=qrSvg(QR_URL,560);var u=document.getElementById('qrurl');if(u)u.textContent=QR_URL.replace(/^https?:\/\//,'')})();
+(function(){[['qr','qrurl',560],['qr1','qrurl1',264]].forEach(function(p){var h=document.getElementById(p[0]);if(h)h.innerHTML=qrSvg(QR_URL,p[2]);var u=document.getElementById(p[1]);if(u)u.textContent=QR_URL.replace(/^https?:\/\//,'')})})();
 /* pueblo */
 (function(){var seed=11;function r(){seed=(seed*16807)%2147483647;return seed/2147483647}
 var W=1920,H=330,o='<svg viewBox="0 0 1920 330" width="1920" height="330" preserveAspectRatio="none">';
