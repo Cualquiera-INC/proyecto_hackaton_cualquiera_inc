@@ -19,5 +19,8 @@ Ojo: cambia en cada despliegue nuevo desde cero. El HTML debe tener la URL en UN
 | 4 | Pruébenlo + cierre | QR grande a la URL en vivo, con la URL escrita debajo; "Escaneen: está en vivo ahora, en dos zonas de AWS". Frase de cierre: "Tolera la caída de un servidor. Datos que se verifican. Tiempos medidos." "Gracias · Preguntas". Logos Estud-IA, Nodo Ruta, Alcaldía. | 0:40 |
 Total: 3:00. Quién habla: [asignar].
 
-## Archivo único para enviar
-`python scripts/empaquetar_pitch.py` genera `presentacion/index.html`: la presentación con todas las imágenes incrustadas (~330 KB), que se abre sola, sin la carpeta `assets/` y sin internet. Regenerarlo después de cada cambio en `pitch.html`.
+## Archivos únicos para enviar
+`python scripts/empaquetar_pitch.py` genera, con todas las imágenes incrustadas (sin la carpeta `assets/` ni internet):
+- `presentacion/index.html`: la presentación (~330 KB).
+- `presentacion/guion-unico.html`: el guion (~250 KB); sus enlaces abren `index.html`, así que se envían los dos juntos.
+Regenerarlos después de cada cambio en `pitch.html` o `guion.html`.
