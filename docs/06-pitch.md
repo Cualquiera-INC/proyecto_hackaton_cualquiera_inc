@@ -2,6 +2,8 @@
 
 > Versión del 27-11-2026. Cada número sale de [EVIDENCIAS.md](../EVIDENCIAS.md) y lleva su ID. Lo que no está medido se dice como tal. Quién habla en cada parte queda como [asignar] hasta que el equipo lo defina.
 
+**Presentación y guion:** las slides están en [`presentacion/pitch.html`](../presentacion/pitch.html) y el guion para ensayar en [`presentacion/guion.html`](../presentacion/guion.html); se abren con doble clic y funcionan sin internet. El esquema común está en [`presentacion/ESQUEMA.md`](../presentacion/ESQUEMA.md).
+
 ## Duración
 
 La guía del reto (`recursos-reto/GUIA_ESTUDIANTE.md`) no fija la duración del pitch ni da criterios de evaluación. Usamos **5 minutos** (objetivo), con la demo en un video aparte que se enlaza (`docs/09-guion-video-aws.md`, aún por grabar). Si la organización confirma otro tiempo, se ajusta la columna de minutos.

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nodo Ruta · Pitch · Estud-IA Reto 16</title>
+<style>
+:root{--bg:#070B14;--bg2:#0B1220;--or:#F07A22;--mg:#C83CC8;--li:#8CC63F;--cy:#1AA8F0;--vi:#6A3DF0;--tx:#EEF3FB;--mu:#A9B6CC;--ok:#8CC63F;--am:#FFB020;--rd:#FF6B6B;
+--f:"SF Pro Display","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;--m:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--e:cubic-bezier(.2,.8,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#03050a;overflow:hidden;font-family:var(--f);color:var(--tx)}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden;
+ background:radial-gradient(1300px 800px at 72% 8%,#12204a 0,transparent 62%),radial-gradient(900px 700px at 0% 100%,#1a1030 0,transparent 60%),linear-gradient(180deg,#070B14,#0B1220)}
+.bk{position:absolute;border-radius:50%;filter:blur(70px);opacity:.28;transition:transform 1.6s var(--e)}
+.cl{position:absolute;left:0;width:4800px;transition:transform 1.8s var(--e);will-change:transform}
+.cl svg{display:block;width:4800px;height:100%;animation:drift 90s linear infinite alternate}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-420px)}}
+#cl1{top:40px;height:520px;color:#7f9bff;opacity:.10;filter:blur(9px)}
+#cl2{top:360px;height:560px;color:#9db4ff;opacity:.11;filter:blur(5px)}
+#cl3{bottom:-120px;height:420px;color:#b9c8ff;opacity:.13;filter:blur(2px);z-index:3}
+#cl2 svg{animation-duration:60s}#cl3 svg{animation-duration:45s}
+#wave{position:absolute;left:0;top:0;width:1920px;height:1080px;opacity:.55}
+#village{position:absolute;left:0;bottom:0;width:1920px;height:330px;opacity:0;transform:translateY(80px);transition:opacity 1.2s ease,transform 1.4s var(--e)}
+#stage.hero #village{opacity:1;transform:none}
+#fog{position:absolute;left:0;bottom:0;width:1920px;height:260px;background:linear-gradient(0deg,#0B1220 0,rgba(11,18,32,.75) 25%,transparent);z-index:3;opacity:0;transition:opacity 1.2s}
+#stage.hero #fog{opacity:.9}
+.tw{animation:tw 5s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:1}}
+.slide{position:absolute;inset:0;padding:112px 140px 120px;opacity:0;visibility:hidden;pointer-events:none;z-index:4;
+ transition:opacity .9s ease,transform 1s var(--e),filter .9s ease,visibility 0s .9s}
+.slide.future{transform:translateX(140px) scale(.97);filter:blur(18px)}
+.slide.past{transform:translateX(-140px) scale(1.03);filter:blur(18px)}
+.slide.leaving{visibility:visible}
+.slide.active{opacity:1;visibility:visible;transform:none;filter:none;pointer-events:auto;transition:opacity .9s ease .15s,transform 1s var(--e) .1s,filter .9s ease .1s,visibility 0s}
+.a{opacity:0}
+.active .a{animation:rise .9s var(--e) both;animation-delay:calc(.35s + var(--i,0)*.11s)}
+.leaving .a{opacity:1}
+@keyframes rise{from{opacity:0;transform:translateY(36px);filter:blur(9px)}to{opacity:1;transform:none;filter:blur(0)}}
+[data-f]{opacity:0;transform:translateY(26px);filter:blur(7px);transition:opacity .8s ease,transform .9s var(--e),filter .8s ease}
+[data-f].on{opacity:1;transform:none;filter:none}
+svg [data-f]{transform:none;filter:none}
+.kick{font-size:26px;letter-spacing:7px;text-transform:uppercase;font-weight:700;color:#62c6ff;display:flex;align-items:center;gap:20px;margin-bottom:26px}
+.kick:before{content:"";width:64px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--or),var(--mg))}
+.h1{font-size:88px;line-height:1.04;font-weight:800;letter-spacing:-2px}
+.h2{font-size:72px;line-height:1.06;font-weight:800;letter-spacing:-1.5px}
+.ac{background:linear-gradient(90deg,var(--or),#ff5fa8 55%,var(--mg));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ac2{background:linear-gradient(90deg,var(--cy),#8a6bff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-size:36px;line-height:1.35;color:var(--mu);font-weight:400}
+.card{background:linear-gradient(160deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid rgba(150,185,255,.2);border-radius:30px;box-shadow:0 30px 70px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08);backdrop-filter:blur(8px)}
+.chip{display:inline-flex;align-items:center;gap:10px;font-family:var(--m);font-size:24px;font-weight:700;padding:6px 16px;border-radius:999px;background:rgba(26,168,240,.16);color:#7fd2ff;border:1px solid rgba(26,168,240,.4)}
+.chip.l{background:rgba(140,198,63,.15);color:#b4e36f;border-color:rgba(140,198,63,.45)}
+.chip.o{background:rgba(240,122,34,.16);color:#ffa763;border-color:rgba(240,122,34,.5)}
+.chip.m{background:rgba(200,60,200,.16);color:#ee8cee;border-color:rgba(200,60,200,.5)}
+.mark{font-family:var(--m);color:#ffd27a;background:rgba(255,176,32,.14);border:1px dashed rgba(255,176,32,.6);border-radius:10px;padding:2px 12px}
+/* chrome */
+#logoS{position:absolute;top:34px;right:48px;width:176px;border-radius:12px;z-index:6;opacity:.92;transition:opacity .8s;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#stage.hero #logoS{opacity:0}
+#prog{position:absolute;left:0;bottom:0;height:8px;width:100%;z-index:7;background:rgba(255,255,255,.07)}
+#prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--or),var(--mg),var(--li),var(--cy),var(--vi));transition:width 1s var(--e);border-radius:0 6px 6px 0;box-shadow:0 0 18px rgba(240,122,34,.5)}
+#num{position:absolute;right:52px;bottom:30px;z-index:7;font-family:var(--m);font-size:24px;color:#8fa0bd;letter-spacing:2px}
+#num b{color:#fff}
+#hint{position:absolute;left:52px;bottom:28px;z-index:7;font-size:20px;color:#8fa0bd;transition:opacity 1.5s}
+/* cover */
+.cover{display:flex;flex-direction:column;padding-top:90px;padding-bottom:0}
+.glass{display:inline-block;position:relative}.glass img{display:block;filter:drop-shadow(0 6px 30px rgba(26,168,240,.25)) drop-shadow(0 0 60px rgba(106,61,240,.25))}
+.glass img{display:block}
+.title-xl{font-size:196px;line-height:.95;font-weight:900;letter-spacing:-6px}
+.tag{font-size:50px;font-weight:300;line-height:1.2;margin-top:24px;color:#dbe6fa}
+.meta{margin-top:34px;font-size:28px;color:var(--mu);letter-spacing:.5px}
+.meta b{color:#fff;font-weight:600}
+.row{display:flex}
+/* problema */
+.pw{position:absolute;left:140px;right:140px;top:420px;height:420px;display:flex;align-items:center;justify-content:space-between}
+.win{width:700px;height:370px;border-radius:24px;overflow:hidden;position:relative}
+.win .bar{height:54px;background:rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;padding:0 22px;font-size:20px;color:var(--mu);font-family:var(--m)}
+.win .bar i{width:14px;height:14px;border-radius:50%;background:#ff6b6b}.win .bar i:nth-child(2){background:#ffb020}.win .bar i:nth-child(3){background:#8cc63f}
+.win .rows{padding:24px 28px;display:grid;gap:14px;transition:opacity .6s}
+.win .rows s{display:block;height:34px;border-radius:10px;background:linear-gradient(90deg,rgba(26,168,240,.35),rgba(106,61,240,.25));text-decoration:none}
+.win .rows s:nth-child(odd){width:94%}.win .rows s:nth-child(even){width:80%}
+.blank{position:absolute;inset:54px 0 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:#0a0f1c;opacity:0;transition:opacity .5s;font-size:34px;font-weight:700;color:#cfd8ea}
+.blank small{font-size:24px;color:#8fa0bd;font-weight:400}
+.pw.off .blank{opacity:1}
+.pw.off .rows{opacity:0}
+.pw.off .win{box-shadow:0 0 60px rgba(255,107,107,.25)}
+.link{flex:1;height:6px;margin:0 30px;position:relative;background:repeating-linear-gradient(90deg,rgba(26,168,240,.6) 0 18px,transparent 18px 34px);border-radius:3px;transition:opacity .6s}
+.link:after{content:"";position:absolute;top:-7px;left:0;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 0 22px 6px var(--cy);animation:pk 1.8s linear infinite}
+@keyframes pk{from{left:0}to{left:calc(100% - 20px)}}
+.pw.off .link{opacity:.12}.pw.off .link:after{animation:none;display:none}
+.srv .led{fill:#8cc63f;animation:bl 1.2s infinite}
+@keyframes bl{50%{opacity:.35}}
+.pw.off .srv .led{fill:#ff6b6b;animation:none;opacity:.9;animation:die 1.2s forwards}
+@keyframes die{0%{opacity:1}30%{opacity:.2}50%{opacity:1}100%{opacity:0}}
+.srv .body{stroke:#1AA8F0;transition:stroke .8s,fill .8s}
+.pw.off .srv .body{stroke:#3a4560;fill:#0a0f1c}
+.srv .pw-ico{opacity:0;transition:opacity .8s .6s}.pw.off .srv .pw-ico{opacity:1}
+.srv{transition:filter .8s}.pw.off .srv{filter:grayscale(1) brightness(.7)}
+.cons{position:absolute;left:140px;right:140px;bottom:140px;display:flex;gap:28px}
+.cons .chip{font-family:var(--f);font-size:30px;padding:14px 28px;border-radius:18px}
+/* quien */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-top:56px}
+.who{padding:48px 44px;min-height:500px;position:relative;overflow:hidden}
+.who:before{content:"";position:absolute;inset:0 0 auto 0;height:6px;background:var(--c)}
+.who svg{width:104px;height:104px;margin-bottom:30px}
+.who h3{font-size:46px;line-height:1.1;font-weight:800;margin-bottom:14px}
+.who .r{font-size:28px;font-weight:700;color:var(--c);margin-bottom:22px;line-height:1.25}
+.who p{font-size:30px;line-height:1.4;color:var(--mu)}
+/* necesidades */
+.need{padding:44px 44px 40px;display:flex;flex-direction:column;min-height:480px}
+.need .n{font-size:150px;font-weight:900;line-height:.9;margin-bottom:18px;background:linear-gradient(180deg,var(--c),transparent 130%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.need h3{font-size:44px;line-height:1.12;font-weight:800;margin-bottom:16px}
+.need p{font-size:29px;line-height:1.4;color:var(--mu)}
+/* diagramas */
+.dg{width:1640px;display:block}
+.dg text{font-family:var(--f);fill:#e6eefb;font-size:24px}
+.dg .tm{fill:#9fb0cc;font-size:20px}.dg .tb{font-weight:800;font-size:34px}.dg .tl{font-size:21px;fill:#b8c6e0}
+.dg .box{fill:#0f1a33;stroke:rgba(110,170,255,.55);stroke-width:2.5}
+.dg .ln{fill:none;stroke:#5b7fb8;stroke-width:3.5}
+.dg .dash{stroke-dasharray:10 9}
+.dg .pk{fill:#fff;filter:drop-shadow(0 0 7px #1AA8F0) drop-shadow(0 0 14px #1AA8F0)}
+.dg .pk2{fill:#ffd2a8;filter:drop-shadow(0 0 7px #F07A22) drop-shadow(0 0 14px #F07A22)}
+.dgtop{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
+/* AWS07 */
+.flow{display:flex;align-items:center;gap:26px;margin-top:40px}
+.flow .nd{display:flex;align-items:center;gap:22px;padding:20px 30px;font-size:30px;font-weight:700}
+.flow .nd img{width:80px;height:80px}
+.flow .nd small{display:block;font-size:22px;color:var(--mu);font-weight:400;margin-top:4px}
+.flow .ar{width:90px;height:8px;border-radius:4px;background:repeating-linear-gradient(90deg,var(--cy) 0 16px,transparent 16px 28px);position:relative;animation:mv 1s linear infinite;background-size:28px 8px}
+@keyframes mv{to{background-position:28px 0}}
+.stacks{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:40px}
+.stack{padding:30px 28px;text-align:center}
+.stack img{width:96px;height:96px;margin-bottom:14px}
+.stack b{display:block;font-size:36px;font-weight:800}
+.stack code{font-family:var(--m);font-size:22px;color:#7fd2ff}
+.bars{margin-top:42px;display:grid;gap:22px}
+.bar{display:grid;grid-template-columns:260px 1fr;align-items:center;gap:26px}
+.bar .bt{font-size:32px;font-weight:800}
+.bar .tr{height:64px;border-radius:16px;background:rgba(255,255,255,.06);overflow:hidden}
+.bar .fl{height:100%;width:0;border-radius:16px;display:flex;align-items:center;padding:0 24px;font-size:28px;font-weight:800;color:#0a0f1c;white-space:nowrap;transition:width 2.2s var(--e) .4s}
+.active .bar .fl{width:var(--w)}
+.note{font-size:24px;color:var(--mu);margin-top:16px}
+/* demo */
+.demo{display:grid;grid-template-columns:960px 1fr;gap:50px;margin-top:40px;align-items:start}
+.vid{width:960px;height:540px;border-radius:28px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;overflow:hidden;
+ background:radial-gradient(500px 300px at 30% 20%,rgba(106,61,240,.35),transparent),radial-gradient(500px 300px at 80% 90%,rgba(240,122,34,.28),transparent),#0a1020;border:2px dashed rgba(255,176,32,.55)}
+.play{width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--mg));display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 14px rgba(240,122,34,.15),0 0 70px rgba(240,122,34,.5);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.07)}}
+.play:after{content:"";margin-left:12px;border-left:50px solid #fff;border-top:30px solid transparent;border-bottom:30px solid transparent}
+.esc{list-style:none;display:grid;gap:14px;counter-reset:s}
+.esc li{counter-increment:s;display:flex;gap:20px;align-items:center;padding:16px 24px;font-size:29px;line-height:1.2;border-radius:20px;font-weight:600}
+.esc li:before{content:counter(s);flex:none;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--vi));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px}
+.esc li.hot{border-color:rgba(255,107,107,.7);box-shadow:0 0 40px rgba(255,107,107,.2)}
+.esc li.hot:before{background:linear-gradient(135deg,var(--or),#ff4d4d)}
+/* aws04 */
+.tl{display:block;width:1640px;margin-top:6px}
+.tl text{font-family:var(--f);fill:#e6eefb;font-size:24px}
+.tl .draw{stroke-dasharray:1100;stroke-dashoffset:1100;transition:stroke-dashoffset 2s var(--e)}
+.st-3 .tl .g1{stroke-dashoffset:0}
+.tl .band{transform-origin:0 50%;transform:scaleX(0);transform-box:fill-box;transition:transform 1.2s var(--e)}
+.st-2 .tl .band{transform:scaleX(1)}
+.ec2s{transition:filter .8s,opacity .8s}
+.st-1 .ec2s{filter:grayscale(1) brightness(.6)}.st-4 .ec2s{filter:none}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:6px}
+.stat{padding:26px 32px;display:flex;align-items:baseline;gap:20px}
+.stat b{font-size:84px;font-weight:900;line-height:1;letter-spacing:-2px}
+.stat span{font-size:27px;color:var(--mu);line-height:1.25}
+/* numeros */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-top:40px}
+.num{padding:30px 32px 28px;min-height:300px;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.num:before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--c)}
+.num .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.num .top .chip{font-size:22px}
+.num .top em{font-style:normal;font-size:20px;letter-spacing:3px;text-transform:uppercase;color:var(--c);font-weight:800}
+.num .v{font-size:92px;font-weight:900;line-height:1.02;letter-spacing:-2px;color:#fff;white-space:nowrap}
+.num .v small{font-size:38px;font-weight:700;color:var(--c);letter-spacing:0;margin:0 6px 0 4px}
+.num p{font-size:24px;line-height:1.3;color:var(--mu);margin-top:auto;padding-top:10px}
+/* seguridad */
+.g4b{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:44px}
+.sec{padding:36px 30px;min-height:430px}
+.sec img{width:104px;height:104px;margin-bottom:22px}
+.sec h3{font-size:38px;font-weight:800;margin-bottom:16px;line-height:1.1}
+.sec ul{list-style:none;display:grid;gap:12px}
+.sec li{font-size:27px;line-height:1.28;color:#cfd9ec;padding-left:30px;position:relative}
+.sec li:before{content:"";position:absolute;left:0;top:12px;width:14px;height:14px;border-radius:50%;background:var(--li)}
+.costb{margin-top:30px;padding:24px 34px;font-size:29px;line-height:1.35;display:flex;gap:22px;align-items:center;border-color:rgba(255,176,32,.5)}
+.costb b{color:#ffcf6b}
+/* limites */
+.lim{display:grid;grid-template-columns:1.25fr 1fr;gap:40px;margin-top:40px}
+.lc{display:grid;gap:20px}
+.li{padding:26px 32px;display:flex;gap:26px;align-items:center;border-left:8px solid var(--c)}
+.li .ic{flex:none;width:74px;height:74px;border-radius:20px;background:var(--c);color:#0a0f1c;font-size:46px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.li h4{font-size:34px;font-weight:800;line-height:1.15}
+.li p{font-size:25px;line-height:1.3;color:var(--mu);margin-top:6px}
+.dis{padding:36px 38px}
+.dis h3{font-size:36px;font-weight:800;margin-bottom:8px}
+.dis p.s{font-size:24px;color:var(--mu);margin-bottom:24px}
+.dis .chips{display:grid;gap:16px}
+.dis .chips span{font-size:30px;font-weight:700;padding:18px 24px;border-radius:18px;background:rgba(255,176,32,.1);border:1px dashed rgba(255,176,32,.6);color:#ffe0a0}
+/* probado */
+.pv{display:grid;grid-template-columns:1.9fr 1fr 1fr;gap:22px;margin-top:34px}
+.pc{padding:28px 30px;border-top:8px solid var(--c);min-height:640px}
+.pc h3{font-size:42px;font-weight:800;color:var(--c);margin-bottom:6px}
+.pc .s{font-size:24px;color:var(--mu);margin-bottom:22px}
+.pc ul{list-style:none;display:grid;gap:18px}
+.pc li{font-size:30px;line-height:1.2;display:flex;justify-content:space-between;gap:14px;align-items:baseline}
+.pc li i{font-style:normal;font-family:var(--m);font-size:22px;color:var(--c);white-space:nowrap}
+.pc .two{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.pc .two h4{font-size:22px;letter-spacing:4px;text-transform:uppercase;color:#8fa0bd;margin-bottom:12px}
+.pc .two li{flex-direction:column;gap:2px}
+/* cierre */
+.phrase{font-size:84px;line-height:1.08;font-weight:800;letter-spacing:-2px;margin-top:6px}
+.next{display:flex;flex-wrap:wrap;gap:16px;margin-top:34px}
+.next .chip{font-family:var(--f);font-size:28px;padding:12px 26px}
+.thanks{font-size:64px;font-weight:300;margin-top:36px}
+.thanks b{font-weight:800}
+.logos{position:absolute;left:140px;right:140px;bottom:90px;display:flex;align-items:flex-end;justify-content:space-between;z-index:5}
+.logos .l1{display:flex;gap:30px;align-items:center}
+.logos .nr{width:110px;height:110px;border-radius:24px;box-shadow:0 0 0 1px rgba(255,255,255,.14)}
+.alc{width:118px;border-radius:14px;opacity:.88;margin-bottom:46px}
+/* respaldo */
+.qa{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;margin-top:6px}
+.q{padding:12px 26px 12px;display:grid;gap:4px;border-radius:22px;position:relative}
+.q h4{font-size:26px;font-weight:800;line-height:1.15;display:flex;gap:14px;align-items:baseline}
+.q h4 b{color:var(--cy);font-family:var(--m);font-size:22px}
+.q p{font-size:21px;line-height:1.25;color:#c3cee3}
+.q .chip{font-size:18px;padding:2px 12px;justify-self:start;margin-top:2px}
+.zoomw{position:absolute;left:140px;right:140px;top:200px;bottom:110px;border-radius:26px;overflow:hidden;background:#fff;box-shadow:0 30px 90px rgba(0,0,0,.5),0 0 0 2px rgba(26,168,240,.5);cursor:zoom-in}
+.zoomw img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .7s var(--e)}
+.zoomw.z{cursor:zoom-out}.zoomw.z img{transform:scale(2.3)}
+/* panel */
+#notes{position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(30px);width:min(1100px,92vw);padding:18px 26px;border-radius:18px;background:rgba(8,12,22,.94);border:1px solid rgba(26,168,240,.5);color:#eaf0fb;font-size:19px;line-height:1.45;z-index:50;opacity:0;pointer-events:none;transition:.4s var(--e);box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#notes.on{opacity:1;transform:translateX(-50%)}
+#notes h5{font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#62c6ff;margin-bottom:6px}
+#ov{position:fixed;inset:0;z-index:60;background:rgba(3,5,10,.93);backdrop-filter:blur(14px);display:none;overflow:auto;padding:4vh 4vw}
+#ov.on{display:block;animation:fi .35s}
+@keyframes fi{from{opacity:0}}
+#ov .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:1700px;margin:0 auto}
+#ov .it{cursor:pointer;aspect-ratio:16/9;border-radius:14px;padding:16px 18px;background:linear-gradient(150deg,#12203d,#0a1020);border:1px solid rgba(150,185,255,.22);display:flex;flex-direction:column;justify-content:space-between;transition:transform .25s,border-color .25s}
+#ov .it:hover{transform:translateY(-4px) scale(1.02);border-color:var(--or)}
+#ov .it.cur{border-color:var(--or);box-shadow:0 0 0 2px var(--or)}
+#ov .it b{font-family:var(--m);color:var(--or);font-size:15px}
+#ov .it span{font-size:20px;font-weight:700;line-height:1.2}
+#ov .it small{font-size:13px;color:#8fa0bd}
+#blk{position:fixed;inset:0;background:#000;z-index:80;display:none}#blk.on{display:block}
+@media (prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important;transition-delay:0s!important}
+ .cl svg{animation:none!important}.play{animation:none!important}.dg .pk,.dg .pk2{display:none}.link:after{display:none}
+ .slide.future,.slide.past{transform:none;filter:none}
+}
+</style></head><body>
+<div id="stage"><svg width="0" height="0" style="position:absolute"><defs><symbol id="cd" viewBox="0 0 400 160"><g fill="currentColor"><ellipse cx="200" cy="122" rx="196" ry="34"/><circle cx="118" cy="92" r="52"/><circle cx="208" cy="64" r="68"/><circle cx="292" cy="94" r="48"/></g></symbol></defs></svg>
+<div class="bk" style="left:-260px;top:-200px;width:700px;height:700px;background:#F07A22"></div>
+<div class="bk" style="left:-200px;bottom:-300px;width:700px;height:600px;background:#d12a2a;opacity:.22"></div>
+<div class="bk" style="right:-240px;top:120px;width:640px;height:640px;background:#C83CC8;opacity:.2"></div>
+<div class="bk" style="right:-200px;bottom:-260px;width:620px;height:560px;background:#ffb020;opacity:.18"></div>
+<div class="cl" id="cl1"><svg viewBox="0 0 4800 520" preserveAspectRatio="none"><use href="#cd" x="100" y="60" width="720" height="288"/><use href="#cd" x="900" y="200" width="960" height="384"/><use href="#cd" x="1700" y="40" width="800" height="320"/><use href="#cd" x="2500" y="230" width="1040" height="416"/><use href="#cd" x="3300" y="80" width="840" height="336"/><use href="#cd" x="4000" y="200" width="880.0000000000001" height="352"/></svg></div>
+<div class="cl" id="cl2"><svg viewBox="0 0 4800 560" preserveAspectRatio="none"><use href="#cd" x="-100" y="200" width="880.0000000000001" height="352"/><use href="#cd" x="700" y="40" width="640" height="256"/><use href="#cd" x="1400" y="260" width="1120" height="448"/><use href="#cd" x="2300" y="60" width="800" height="320"/><use href="#cd" x="3000" y="240" width="1000" height="400"/><use href="#cd" x="3800" y="100" width="800" height="320"/></svg></div>
+<canvas id="wave" width="1920" height="1080"></canvas>
+<div id="village"></div><div id="fog"></div>
+<div class="cl" id="cl3"><svg viewBox="0 0 4800 420" preserveAspectRatio="none"><use href="#cd" x="-200" y="160" width="1200" height="480"/><use href="#cd" x="600" y="220" width="1360" height="544"/><use href="#cd" x="1500" y="140" width="1200" height="480"/><use href="#cd" x="2400" y="210" width="1400" height="560"/><use href="#cd" x="3300" y="150" width="1200" height="480"/><use href="#cd" x="4100" y="220" width="1320" height="528"/></svg></div>
+<img id="logoS" src="assets/logo-estudia-transparente.png" alt="Estud-IA">
+<section class="slide cover" data-hero="1" data-titulo="Portada: Nodo Ruta" data-tiempo="0:10" data-notas="Saludo y contexto: reto 16 de Estud-IA, Nube e infraestructura, Capa 2. Presentar al equipo Cualquiera INC. Quién habla: [asignar].">
+<div class="a" style="--i:0"><div class="glass"><img src="assets/logo-estudia-transparente.png" width="820" alt="Estud-IA"></div></div>
+<div style="margin-top:56px"><div class="title-xl a" style="--i:2"><span class="ac">Nodo Ruta</span></div>
+<div class="tag a" style="--i:4">Que la consulta de entregas <b style="font-weight:800;color:#fff">no se caiga</b></div>
+<div class="meta a" style="--i:6"><b>Equipo Cualquiera INC</b> &nbsp;·&nbsp; Reto 16 &nbsp;·&nbsp; Estud-IA Nube e infraestructura, Capa 2</div></div>
+<img class="a" style="--i:5;position:absolute;right:140px;top:90px;width:120px;height:120px;border-radius:26px;box-shadow:0 0 0 1px rgba(255,255,255,.15),0 20px 60px rgba(0,0,0,.5)" src="assets/logo-nodo-ruta.png" alt="Nodo Ruta">
+<img class="a alc" style="--i:7;position:absolute;right:140px;bottom:104px;z-index:6" src="assets/logo-alcaldia.png" alt="Alcaldía de Medellín, Distrito de Ciencia, Tecnología e Innovación">
+</section>
+<section class="slide" data-auto="2600" data-titulo="El problema" data-tiempo="0:15" data-notas="Una sola instancia, datos dentro de la app, cambios a mano. Si la única instancia cae, operaciones se queda sin consultar entregas y nadie sabe cuánto tarda en volver ni si los datos que vuelven son los correctos. El servidor se apaga solo a los pocos segundos.">
+<div class="kick a" style="--i:0">El problema</div><h1 class="h1 a" style="--i:1">Si cae la única instancia,<br>la consulta se queda <span class="ac">en blanco</span></h1>
+<div class="pw a" id="pw" style="--i:3"><div class="win card"><div class="bar"><i></i><i></i><i></i>&nbsp; consulta de entregas</div><div class="rows"><s></s><s></s><s></s><s></s><s></s><s></s></div><div class="blank">Sin respuesta<small>nadie sabe cuánto tarda en volver</small></div></div>
+<div class="link"></div><svg class="srv" width="320" height="400" viewBox="0 0 320 400"><rect class="body" x="30" y="20" width="260" height="360" rx="26" fill="#0f1a33" stroke-width="4"/>
+<rect x="58" y="52" width="204" height="78" rx="14" fill="#16244a" stroke="rgba(150,185,255,.25)"/><circle class="led" cx="90" cy="91" r="10" style="animation-delay:0s"/><rect x="118" y="84" width="110" height="14" rx="7" fill="rgba(150,185,255,.25)"/><rect x="58" y="152" width="204" height="78" rx="14" fill="#16244a" stroke="rgba(150,185,255,.25)"/><circle class="led" cx="90" cy="191" r="10" style="animation-delay:0.3s"/><rect x="118" y="184" width="110" height="14" rx="7" fill="rgba(150,185,255,.25)"/><rect x="58" y="252" width="204" height="78" rx="14" fill="#16244a" stroke="rgba(150,185,255,.25)"/><circle class="led" cx="90" cy="291" r="10" style="animation-delay:0.6s"/><rect x="118" y="284" width="110" height="14" rx="7" fill="rgba(150,185,255,.25)"/>
+<g class="pw-ico" stroke="#ff6b6b" stroke-width="10" stroke-linecap="round" fill="none"><path d="M187 168A42 42 0 1 1 133 168"/><path d="M160 150V198"/></g></svg></div>
+<div class="cons a" style="--i:5"><span class="chip o">1 sola instancia</span><span class="chip m">Datos dentro de la app</span><span class="chip">Cambios a mano</span></div>
+</section>
+<section class="slide" data-titulo="Quién lo vive" data-tiempo="0:20" data-notas="Tres actores: Operaciones sufre la caída; el responsable técnico opera la solución y es quien más cambia; coordinación logística necesita saber el estado y los límites.">
+<div class="kick a" style="--i:0">Quién lo vive</div><h2 class="h2 a" style="--i:1">Tres personas, <span class="ac2">una misma consulta</span></h2>
+<div class="g3">
+<div class="who card a" style="--c:#F07A22;--i:3"><svg viewBox="0 0 104 104" fill="none" stroke="#F07A22" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="18" width="80" height="52" rx="8"/><path d="M36 88h32M52 70v18"/><path d="M30 44l14 10 14-18 16 14"/></svg><h3>Operaciones</h3><div class="r">Sufre la caída</div><p>Consulta entregas; si el servicio cae, busca información por otros medios.</p></div>
+<div class="who card a" style="--c:#8CC63F;--i:4"><svg viewBox="0 0 104 104" fill="none" stroke="#8CC63F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 30l24 22-24 22"/><path d="M56 78h28"/><rect x="8" y="12" width="88" height="80" rx="12"/></svg><h3>Responsable técnico</h3><div class="r">Opera la solución · quien más cambia</div><p>Publica versiones y atiende incidentes; hoy reinicia y busca una copia.</p></div>
+<div class="who card a" style="--c:#C83CC8;--i:5"><svg viewBox="0 0 104 104" fill="none" stroke="#C83CC8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="22" y="14" width="60" height="78" rx="10"/><path d="M38 10h28v14H38z"/><path d="M36 48h32M36 62h32M36 76h18"/></svg><h3>Coordinación logística</h3><div class="r">Necesita estado y límites</div><p>Quiere saber si el servicio funciona y qué límites tiene.</p></div>
+</div></section>
+<section class="slide" data-titulo="Qué necesitaba el negocio" data-tiempo="0:25" data-notas="No pidió cinco nueves. Pidió tres cosas que se pueden medir: que la caída de un servidor no se note, datos correctos y recuperación en un tiempo conocido, medido con scripts y no estimado.">
+<div class="kick a" style="--i:0">Qué necesitaba el negocio</div><h2 class="h2 a" style="--i:1">No pidió “cinco nueves”.<br><span class="ac">Pidió tres cosas medibles.</span></h2>
+<div class="g3" style="margin-top:50px">
+<div class="need card a" style="--c:#1AA8F0;--i:3"><div class="n">1</div><h3>La caída de un servidor no se nota</h3><p>Las consultas siguen funcionando, o se nota muy poco.</p></div>
+<div class="need card a" style="--c:#8CC63F;--i:4"><div class="n">2</div><h3>Datos correctos</h3><p>Detectar un dato dañado y recuperarlo desde una copia verificada.</p></div>
+<div class="need card a" style="--c:#F07A22;--i:5"><div class="n">3</div><h3>Recuperación en un tiempo conocido</h3><p>Medido con scripts, no estimado.</p></div>
+</div></section>
+<section class="slide" data-titulo="La solución local" data-tiempo="0:20" data-notas="En local: dos instancias detrás de NGINX, el microservicio de pedidos, PostgreSQL con réplica en caliente y respaldo con pg_dump verificado con SHA-256. Aclarar: dos contenedores en un mismo computador dan tolerancia a la caída de una instancia, nada más.">
+<div class="kick a" style="--i:0">La solución local</div><div class="dgtop"><h2 class="h2 a" style="--i:1">Dos instancias detrás de <span class="ac2">NGINX</span></h2><span class="chip a" style="--i:2">Docker Compose · 127.0.0.1:8080</span></div>
+<svg class="dg a" style="--i:3" viewBox="0 0 1640 640" height="640"><defs><marker id="ma" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7fa6e6"/></marker></defs>
+<path class="ln" marker-end="url(#ma)" d="M125,280 H228"/>
+<g data-f="1"><path class="ln" marker-end="url(#ma)" d="M440,280 H500 V145 H558"/><path class="ln" marker-end="url(#ma)" d="M440,280 H500 V415 H558"/></g>
+<g data-f="2"><path class="ln" marker-end="url(#ma)" d="M770,145 H878"/><path class="ln" marker-end="url(#ma)" d="M770,415 H878"/><path class="ln" marker-end="url(#ma)" d="M1090,145 H1238"/><path class="ln" marker-end="url(#ma)" d="M1090,415 H1150 V365 H1238"/></g>
+<g data-f="2"><circle class="pk" r="9"><animateMotion dur="5s" begin="0s" repeatCount="indefinite" path="M70,280 H500 V145 H880 H1240"/></circle><circle class="pk2" r="9"><animateMotion dur="5s" begin="2.5s" repeatCount="indefinite" path="M70,280 H500 V415 H1150 V365 H1240"/></circle></g>
+<g><circle cx="70" cy="248" r="22" fill="none" stroke="#9fb0cc" stroke-width="5"/><path d="M26 318c0-34 20-46 44-46s44 12 44 46" fill="none" stroke="#9fb0cc" stroke-width="5"/><text x="70" y="362" text-anchor="middle" class="tm" style="font-size:24px">Operaciones</text></g>
+<g><rect class="box" x="230" y="215" width="210" height="130" rx="20"/><text class="tb" x="335" y="278" text-anchor="middle" style="font-size:32px">NGINX</text><text class="tm" x="335" y="310" text-anchor="middle">punto de acceso</text></g>
+<g data-f="1"><rect class="box" x="560" y="90" width="210" height="110" rx="20"/><text class="tb" x="665" y="143" text-anchor="middle" style="font-size:32px">app1</text><text class="tm" x="665" y="175" text-anchor="middle">X-Instance-Id</text><rect class="box" x="560" y="360" width="210" height="110" rx="20"/><text class="tb" x="665" y="413" text-anchor="middle" style="font-size:32px">app2</text><text class="tm" x="665" y="445" text-anchor="middle">X-Instance-Id</text></g>
+<g data-f="2"><rect class="box" x="880" y="90" width="210" height="110" rx="20"/><text class="tb" x="985" y="143" text-anchor="middle" style="font-size:32px">pedidos1</text><text class="tm" x="985" y="175" text-anchor="middle">microservicio</text><rect class="box" x="880" y="360" width="210" height="110" rx="20"/><text class="tb" x="985" y="413" text-anchor="middle" style="font-size:32px">pedidos2</text><text class="tm" x="985" y="445" text-anchor="middle">microservicio</text>
+<rect x="1210" y="30" width="400" height="450" rx="26" fill="rgba(106,61,240,.08)" stroke="#8a6bff" stroke-width="3" stroke-dasharray="12 9"/><text x="1232" y="68" class="tb" style="font-size:26px;fill:#b7a5ff">PostgreSQL</text>
+<rect class="box" x="1240" y="100" width="340" height="110" rx="20"/><text class="tb" x="1410" y="153" text-anchor="middle" style="font-size:32px">Primario</text><text class="tm" x="1410" y="185" text-anchor="middle">escritura</text><rect class="box" x="1240" y="310" width="340" height="110" rx="20"/><text class="tb" x="1410" y="363" text-anchor="middle" style="font-size:32px">Réplica</text><text class="tm" x="1410" y="395" text-anchor="middle">lectura en vivo</text>
+<path class="ln" marker-end="url(#ma)" d="M1410,212 V308"/><text class="tl" x="1428" y="268">réplica en caliente</text></g>
+<g data-f="3"><path class="ln dash" marker-end="url(#ma)" d="M1410,482 V548" style="stroke:#F07A22"/><rect x="1210" y="552" width="400" height="84" rx="20" fill="#2a1a0c" stroke="#F07A22" stroke-width="2.5"/><text x="1410" y="587" text-anchor="middle" class="tb" style="font-size:28px">Respaldo</text><text x="1410" y="618" text-anchor="middle" class="tm">pg_dump + SHA-256</text></g>
+</svg></section>
+<section class="slide" data-titulo="La solución en AWS" data-tiempo="0:30" data-notas="En AWS: CloudFront con HTTPS, ALB, dos EC2 en us-east-2a y us-east-2b, RDS PostgreSQL Single-AZ, respaldos en S3 y Systems Manager sin SSH. Lo desplegamos con CloudFormation. Decir claro que la base es Single-AZ: punto único de falla.">
+<div class="kick a" style="--i:0">La solución en AWS</div><div class="dgtop"><h2 class="h2 a" style="--i:1">La misma idea, con piezas de <span class="ac">nube</span></h2><span class="chip o a" style="--i:2">us-east-2 · Ohio</span></div>
+<svg class="dg a" style="--i:3" viewBox="0 0 1640 660" height="660"><defs><marker id="mb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7fa6e6"/></marker></defs>
+<path class="ln" marker-end="url(#mb)" d="M104,327 H228"/>
+<g data-f="1"><path class="ln" marker-end="url(#mb)" d="M272,283 V152"/><path class="ln" marker-end="url(#mb)" d="M316,327 H536"/><text class="tl" x="326" y="312" style="font-size:.85em">/pedidos · /health</text><text class="tl" x="290" y="228">“/” interfaz</text></g>
+<g data-f="2"><rect x="480" y="108" width="770" height="494" rx="22" fill="rgba(140,90,255,.07)" stroke="#8c5aff" stroke-width="3"/>
+<rect x="770" y="150" width="230" height="190" rx="14" fill="rgba(26,168,240,.07)" stroke="#1AA8F0" stroke-dasharray="9 7" stroke-width="2.5"/><rect x="770" y="380" width="230" height="190" rx="14" fill="rgba(26,168,240,.07)" stroke="#1AA8F0" stroke-dasharray="9 7" stroke-width="2.5"/>
+<text x="988" y="180" text-anchor="end" class="tl" style="fill:#7fd2ff;font-weight:700">us-east-2a</text><text x="988" y="410" text-anchor="end" class="tl" style="fill:#7fd2ff;font-weight:700">us-east-2b</text>
+<path class="ln" marker-end="url(#mb)" d="M626,327 H700 V242 H826"/><path class="ln" marker-end="url(#mb)" d="M626,327 H700 V462 H826"/>
+<path class="ln" d="M872,286 V327 H1050"/><path class="ln" marker-end="url(#mb)" d="M872,418 V327 H1076"/></g>
+<g data-f="3"><path class="ln dash" style="stroke:#F07A22" marker-end="url(#mb)" d="M916,242 H1434"/><path class="ln dash" style="stroke:#E7157B" marker-end="url(#mb)" d="M916,462 H1434"/><text class="tl" x="1270" y="228">pg_dump</text><text class="tl" x="1262" y="488">sesión · sin SSH</text></g>
+<g data-f="2"><circle class="pk" r="9"><animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M60,327 H700 V242 H872 V327 H1122"/></circle><circle class="pk2" r="9"><animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M60,327 H700 V462 H872 V327 H1122"/></circle></g>
+<g data-f="1"><circle class="pk" r="9"><animateMotion dur="3s" begin="0s" repeatCount="indefinite" path="M272,327 V102"/></circle></g>
+<g><circle cx="60" cy="296" r="22" fill="none" stroke="#9fb0cc" stroke-width="5"/><path d="M18,364c0-34 18-46 42-46s42 12 42 46" fill="none" stroke="#9fb0cc" stroke-width="5"/><text x="60" y="404" text-anchor="middle" class="tm" style="font-size:22px">Operaciones</text></g>
+<g data-f="1"><image href="assets/aws-icons/cloudfront.svg" x="230" y="285" width="84" height="84"/><text x="272" y="410" text-anchor="middle">CloudFront</text><text x="272" y="438" text-anchor="middle" class="tm">HTTPS</text>
+<image href="assets/aws-icons/s3.svg" x="230" y="60" width="84" height="84"/><text x="334" y="96" class="tl" style="font-size:24px">S3 front</text>
+<image href="assets/aws-icons/elastic_load_balancing.svg" x="540" y="285" width="84" height="84"/><text x="582" y="410" text-anchor="middle">ALB</text></g>
+<g data-f="2"><image href="assets/aws-icons/vpc.svg" x="494" y="120" width="44" height="44"/><text x="548" y="152" class="tl" style="font-weight:700;fill:#c7b3ff">VPC</text>
+<image href="assets/aws-icons/ec2.svg" x="830" y="200" width="84" height="84"/><text x="786" y="318" style="font-size:22px">EC2 A</text><image href="assets/aws-icons/ec2.svg" x="830" y="420" width="84" height="84"/><text x="786" y="548" style="font-size:22px">EC2 B</text>
+<image href="assets/aws-icons/rds.svg" x="1080" y="285" width="84" height="84"/><text x="1122" y="410" text-anchor="middle">RDS PostgreSQL</text><text x="1122" y="438" text-anchor="middle" style="fill:#ffb020;font-weight:700;font-size:22px">Single-AZ</text></g>
+<g data-f="3"><image href="assets/aws-icons/s3.svg" x="1440" y="200" width="84" height="84"/><text x="1482" y="308" text-anchor="middle">S3 respaldos</text><text x="1482" y="336" text-anchor="middle" class="tm">versiones</text>
+<image href="assets/aws-icons/systems_manager.svg" x="1440" y="420" width="84" height="84"/><text x="1482" y="528" text-anchor="middle">Systems Manager</text></g>
+<g data-f="4"><rect x="0" y="528" width="176" height="64" rx="14" fill="#161b2b" stroke="#6b7a99" stroke-width="2"/><text x="88" y="568" text-anchor="middle" style="font-size:22px;font-weight:700">GitHub Actions</text>
+<path class="ln" marker-end="url(#mb)" d="M178,560 H214"/><image href="assets/aws-icons/identity_and_access_management.svg" x="220" y="524" width="72" height="72"/><text x="256" y="632" text-anchor="middle" style="font-size:22px">IAM · OIDC</text>
+<path class="ln" marker-end="url(#mb)" d="M294,560 H374"/><image href="assets/aws-icons/cloudformation.svg" x="380" y="524" width="72" height="72"/><text x="416" y="632" text-anchor="middle" style="font-size:22px">CloudFormation</text>
+<path class="ln dash" marker-end="url(#mb)" d="M454,560 H476"/></g>
+</svg></section>
+<section class="slide" data-titulo="Todo es código" data-tiempo="0:20" data-notas="Cuatro pilas de CloudFormation: red, datos, cómputo y front. GitHub Actions entra a AWS con OIDC, sin claves guardadas. Un botón crea y otro destruye. Desde cero, unos 16 minutos (AWS09, suma de pasos); destruir toma 8 min 28 s (AWS10).">
+<div class="kick a" style="--i:0">Todo es código</div><h2 class="h2 a" style="--i:1">Un botón para <span class="ac">crear</span>, otro para <span class="ac2">destruir</span></h2>
+<div class="flow a" style="--i:3"><div class="nd card"><div>GitHub Actions<small>solo rama main</small></div></div><div class="ar"></div>
+<div class="nd card"><img src="assets/aws-icons/identity_and_access_management.svg" alt="">OIDC<small>sin claves</small></div><div class="ar"></div>
+<div class="nd card"><img src="assets/aws-icons/cloudformation.svg" alt="">CloudFormation<small>4 pilas</small></div></div>
+<div class="stacks a" style="--i:5">
+<div class="stack card"><img src="assets/aws-icons/vpc.svg" alt=""><b>Red</b><code>nodo-ruta-red</code></div>
+<div class="stack card"><img src="assets/aws-icons/rds.svg" alt=""><b>Datos</b><code>nodo-ruta-datos</code></div>
+<div class="stack card"><img src="assets/aws-icons/ec2.svg" alt=""><b>Cómputo</b><code>nodo-ruta-computo</code></div>
+<div class="stack card"><img src="assets/aws-icons/cloudfront.svg" alt=""><b>Front</b><code>nodo-ruta-front</code></div></div>
+<div class="bars a" style="--i:7">
+<div class="bar"><div class="bt" style="color:#ffa763">Crear</div><div class="tr"><div class="fl" style="--w:100%;background:linear-gradient(90deg,#F07A22,#ff5fa8)">~16 min desde cero · AWS09</div></div></div>
+<div class="bar"><div class="bt" style="color:#7fd2ff">Destruir</div><div class="tr"><div class="fl" style="--w:53%;background:linear-gradient(90deg,#1AA8F0,#8a6bff)">8 min 28 s · AWS10</div></div></div>
+<div class="note">AWS09: ~16 min es la suma de pasos; la ejecución con red, datos y cómputo ya creados tardó 4 min 29 s.</div></div>
+</section>
+<section class="slide" data-titulo="Demo" data-tiempo="0:40" data-notas="Video de la demo [pendiente de grabar; guion en docs/09-guion-video-aws.md]. Mostrar un resumen de unos 40 s: Actions en verde, la interfaz alternando entre us-east-2a y us-east-2b, la consola y la caída de un servidor en vivo.">
+<div class="kick a" style="--i:0">Demo</div><h2 class="h2 a" style="--i:1">Verlo funcionar, <span class="ac">en vivo</span></h2>
+<div class="demo"><div class="vid a" style="--i:3"><div class="play"></div><div style="font-size:30px;font-weight:700">Video de la demo</div><div class="mark" style="font-size:26px">[enlace del video]</div><div style="font-size:22px;color:#8fa0bd">Pendiente de grabar · guion en docs/09</div></div>
+<ol class="esc">
+<li class="card a" style="--i:4">Despliegue desde GitHub Actions en verde</li>
+<li class="card a" style="--i:5">Interfaz por HTTPS alternando us&#8209;east&#8209;2a y us&#8209;east&#8209;2b</li>
+<li class="card a" style="--i:6">Las 4 pilas, 2 destinos sanos, RDS y S3 en consola</li>
+<li class="card a" style="--i:7">Estado desde la terminal con aws_nodo.py</li>
+<li class="card hot a" style="--i:8">Caída de un servidor en vivo, con el monitor corriendo</li>
+<li class="card a" style="--i:9">Destrucción de todo</li></ol></div></section>
+<section class="slide" data-titulo="Caída de un servidor (AWS04)" data-tiempo="0:20" data-notas="AWS04: se detiene una EC2 con el monitor corriendo. 299 consultas, 5 errores (1,7 %), todos entre 2,1 y 9,8 s después de la parada; después, 0 errores. La EC2 volvió sola a los 40,6 s. Explicar: el ALB no reintenta en otra instancia hasta que su health check (2 por 5 s) saca la caída.">
+<div class="kick a" style="--i:0">Caída de un servidor · AWS04</div><h2 class="h2 a" style="--i:1">Se apaga una EC2. <span class="ac">¿Qué ve el usuario?</span></h2>
+<svg class="tl a" style="--i:3" viewBox="0 0 1640 470" height="470"><defs><marker id="mc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9fb0cc"/></marker></defs>
+<g class="ec2s"><image href="assets/aws-icons/ec2.svg" x="1380" y="20" width="84" height="84"/><text x="1422" y="130" text-anchor="middle" style="font-size:22px">EC2 B</text></g>
+<g><image href="assets/aws-icons/ec2.svg" x="1500" y="20" width="84" height="84"/><text x="1542" y="130" text-anchor="middle" style="font-size:22px">EC2 A</text></g>
+<g data-f="1"><text x="60" y="58" style="font-size:30px;font-weight:800;fill:#ff8a8a">t = 0 · se detiene EC2 B</text></g>
+<line x1="60" y1="300" x2="1580" y2="300" stroke="#5b7fb8" stroke-width="4" marker-end="url(#mc)"/>
+<line x1="60" y1="292" x2="60" y2="310" stroke="#9fb0cc" stroke-width="3"/><text x="60" y="344" text-anchor="middle" style="font-size:22px;fill:#9fb0cc">0 s</text><line x1="400" y1="292" x2="400" y2="310" stroke="#9fb0cc" stroke-width="3"/><text x="400" y="344" text-anchor="middle" style="font-size:22px;fill:#9fb0cc">10 s</text><line x1="740" y1="292" x2="740" y2="310" stroke="#9fb0cc" stroke-width="3"/><text x="740" y="344" text-anchor="middle" style="font-size:22px;fill:#9fb0cc">20 s</text><line x1="1080" y1="292" x2="1080" y2="310" stroke="#9fb0cc" stroke-width="3"/><text x="1080" y="344" text-anchor="middle" style="font-size:22px;fill:#9fb0cc">30 s</text><line x1="1420" y1="292" x2="1420" y2="310" stroke="#9fb0cc" stroke-width="3"/><text x="1420" y="344" text-anchor="middle" style="font-size:22px;fill:#9fb0cc">40 s</text>
+<g data-f="1"><circle cx="60" cy="300" r="14" fill="#ff6b6b"/><line x1="60" y1="70" x2="60" y2="286" stroke="#ff6b6b" stroke-width="3" stroke-dasharray="8 7"/></g>
+<rect class="band" x="131.4" y="276" width="261.80000000000007" height="48" rx="10" fill="#ff6b6b" opacity=".9"/>
+<g data-f="2"><text x="261.4" y="226" text-anchor="middle" style="font-size:34px;font-weight:800;fill:#ff8a8a">5 errores de 299</text><text x="261.4" y="258" text-anchor="middle" style="font-size:22px;fill:#ffb3b3">entre 2,1 y 9,8 s</text><path d="M261.4 268 V274" stroke="#ff6b6b" stroke-width="3"/></g>
+<path class="draw g1" d="M407.20000000000005 300 H1426.4" stroke="#8CC63F" stroke-width="10" stroke-linecap="round" fill="none" style="stroke-dasharray:1100;"/>
+<g data-f="3"><text x="910" y="256" text-anchor="middle" style="font-size:40px;font-weight:800;fill:#b4e36f">0 errores</text></g>
+<g data-f="4"><circle cx="1440.4" cy="300" r="16" fill="#8CC63F"/><text x="1440.4" y="388" text-anchor="middle" style="font-size:30px;font-weight:800;fill:#b4e36f">40,6 s · vuelve sola</text></g>
+</svg>
+<div class="stats">
+<div class="stat card" data-f="2"><b class="ac">1,7 %</b><span>de errores,<br>en ~8 s</span></div>
+<div class="stat card" data-f="3"><b style="color:#b4e36f">0</b><span>errores<br>después</span></div>
+<div class="stat card" data-f="4"><b class="ac2">40,6 s</b><span>la EC2 vuelve<br>sola</span></div></div>
+</section>
+<section class="slide" data-titulo="Los números" data-tiempo="0:20" data-notas="Cada cifra sale de un script con marcas de tiempo y lleva su ID en EVIDENCIAS.md. Local: 0 errores en caída de app1, 157 ms para recuperar datos, 708 consultas sin errores en un despliegue, rollback en 4,2 s. AWS: restaurar desde S3 en 8,6 s; crear ~16 min; destruir 8 min 28 s.">
+<div class="kick a" style="--i:0">Los números medidos</div><h2 class="h2 a" style="--i:1">Medido, <span class="ac">no estimado</span></h2>
+<div class="g4">
+<div class="num card a" style="--c:#1AA8F0;--i:2"><div class="top"><span class="chip ">I02</span><em>Local</em></div><div class="v"><b class="c" data-to="0" data-dec="0">0</b><small>errores</small></div><p>Cae app1: 10 de 10 consultas con 200</p></div>
+<div class="num card a" style="--c:#1AA8F0;--i:3"><div class="top"><span class="chip ">I05c</span><em>Local</em></div><div class="v"><b class="c" data-to="157" data-dec="0">157</b><small>ms</small></div><p>Primer 200 correcto tras restaurar datos alterados</p></div>
+<div class="num card a" style="--c:#1AA8F0;--i:4"><div class="top"><span class="chip ">I07</span><em>Local</em></div><div class="v"><b class="c" data-to="0" data-dec="0">0</b><small>errores</small></div><p>en <b class="c" data-to="708" data-dec="0">708</b> consultas · versión nueva sin caída</p></div>
+<div class="num card a" style="--c:#1AA8F0;--i:5"><div class="top"><span class="chip ">I08</span><em>Local</em></div><div class="v"><b class="c" data-to="4.2" data-dec="1">4,2</b><small>s</small></div><p>Rollback automático de versión rota</p></div>
+<div class="num card a" style="--c:#1AA8F0;--i:6"><div class="top"><span class="chip ">STG08</span><em>Local</em></div><div class="v"><b class="c" data-to="0" data-dec="0">0</b><small>errores</small></div><p>en <b class="c" data-to="418" data-dec="0">418</b> consultas · cae el primario de PostgreSQL</p></div>
+<div class="num card a" style="--c:#F07A22;--i:7"><div class="top"><span class="chip o">AWS06b</span><em>AWS</em></div><div class="v"><b class="c" data-to="8.6" data-dec="1">8,6</b><small>s</small></div><p>Primer 200 tras restaurar desde S3</p></div>
+<div class="num card a" style="--c:#F07A22;--i:8"><div class="top"><span class="chip o">AWS09</span><em>AWS</em></div><div class="v">~<b class="c" data-to="16" data-dec="0">16</b><small>min</small></div><p>Crear todo desde cero con Actions (suma de pasos)</p></div>
+<div class="num card a" style="--c:#F07A22;--i:9"><div class="top"><span class="chip o">AWS10</span><em>AWS</em></div><div class="v"><b class="c" data-to="8" data-dec="0">8</b><small>min</small><b class="c" data-to="28" data-dec="0">28</b><small>s</small></div><p>Destruir todo desde Actions</p></div>
+</div></section>
+<section class="slide" data-titulo="Seguridad y costos" data-tiempo="0:30" data-notas="Sin claves guardadas: GitHub entra con OIDC y el rol solo acepta este repositorio en main. Secretos en SSM, sin SSH. Filtro por IP. La política solo permite máquinas micro. Alerta de presupuesto de USD 5 al mes. El costo NO lo medimos: la referencia de unos USD 2 al día es de lista y sin verificar; por eso se destruye el mismo día.">
+<div class="kick a" style="--i:0">Seguridad y costos</div><h2 class="h2 a" style="--i:1">Sin claves, sin SSH, <span class="ac">sin sorpresas</span></h2>
+<div class="g4b">
+<div class="sec card a" style="--i:2"><img src="assets/aws-icons/identity_and_access_management.svg" alt=""><h3>IAM</h3><ul><li>OIDC, sin claves guardadas</li><li>Rol solo para este repo en main</li></ul></div>
+<div class="sec card a" style="--i:3"><img src="assets/aws-icons/systems_manager.svg" alt=""><h3>Systems Manager</h3><ul><li>Secretos en SSM</li><li>Sin SSH: Session Manager</li></ul></div>
+<div class="sec card a" style="--i:4"><img src="assets/aws-icons/vpc.svg" alt=""><h3>VPC</h3><ul><li>EC2 solo acepta tráfico del ALB</li><li>RDS sin acceso público</li><li>Filtro por IP</li></ul></div>
+<div class="sec card a" style="--i:5"><img src="assets/aws-icons/budgets.svg" alt=""><h3>Budgets</h3><ul><li>Solo máquinas micro</li><li>Alerta de USD 5 al mes</li><li>Destruir al terminar</li></ul></div>
+</div>
+<div class="costb card a" style="--i:7"><span class="chip o" style="font-size:22px">Costo</span><div><b>No medido.</b> Referencia de lista: ~USD 2 al día con todo encendido, sin verificar en la facturación (docs/09).</div></div>
+</section>
+<section class="slide" data-titulo="Límites honestos" data-tiempo="0:30" data-notas="La base en AWS es un punto único de falla: RDS Single-AZ, porque el plan gratuito no permite Multi-AZ (D13). Durante la caída de un servidor hay errores: 5, el 1,7 % (AWS04). Registramos los fallos tal cual: AWS06, el primer AWS09 y el falso positivo de AWS10. Solo diseño: Multi-AZ, dominio propio, alarmas y autoescalado.">
+<div class="kick a" style="--i:0">Límites honestos</div><h2 class="h2 a" style="--i:1">Lo que <span class="ac">no</span> cubrimos</h2>
+<div class="lim"><div class="lc">
+<div class="li card a" style="--c:#FF6B6B;--i:2"><div class="ic">!</div><div><h4>La base en AWS es un punto único de falla</h4><p>RDS Single-AZ: el plan gratuito no permite Multi-AZ (D13)</p></div></div>
+<div class="li card a" style="--c:#FFB020;--i:3"><div class="ic">5</div><div><h4>Hay errores durante la caída</h4><p>5 errores, 1,7 % (AWS04)</p></div></div>
+<div class="li card a" style="--c:#FFB020;--i:4"><div class="ic">×</div><div><h4>Registramos los fallos tal cual</h4><p>AWS06, el primer AWS09 y el falso positivo de AWS10</p></div></div>
+<div class="li card a" style="--c:#1AA8F0;--i:5"><div class="ic">2</div><div><h4>En local: tolerancia a la caída de una instancia</h4><p>Las dos copias corren en el mismo computador</p></div></div>
+</div><div class="dis card a" style="--i:6"><h3>Solo diseño o pendiente</h3><p class="s">No probado todavía</p><div class="chips"><span>RDS Multi-AZ</span><span>HTTPS con dominio propio</span><span>Alarmas de monitoreo</span><span>Autoescalado</span></div></div></div>
+</section>
+<section class="slide" data-titulo="Probado vs. diseñado" data-tiempo="Se muestra rápido o se salta" data-notas="Mostrar rápido o saltar. Verde: probado con evidencia. Ámbar: solo diseño o parcial. Rojo: no cubierto o fuera de alcance. Fuente: docs/07, sección Probado vs. diseñado.">
+<div class="kick a" style="--i:0">Probado vs. diseñado</div><h2 class="h2 a" style="--i:1">Cada cosa en su <span class="ac">color</span></h2>
+<div class="pv">
+<div class="pc card a" style="--c:#8CC63F;--i:2"><h3>Probado</h3><div class="s">con evidencia medida</div><div class="two"><div><h4>Local</h4><ul><li><span>2 instancias + proxy</span><i>I02</i></li><li><span>Datos que persisten</span><i>I04</i></li><li><span>Respaldo y restauración</span><i>I05c</i></li><li><span>Despliegue y rollback</span><i>I07 · I08</i></li><li><span>Réplica PostgreSQL</span><i>STG08</i></li></ul></div><div><h4>AWS</h4><ul><li><span>Reparto en 2 zonas</span><i>AWS03</i></li><li><span>Caída de una EC2</span><i>AWS04</i></li><li><span>Respaldo y restauración S3</span><i>AWS05 · AWS06b</i></li><li><span>HTTPS en CloudFront</span><i>AWS08</i></li><li><span>Actions con OIDC</span><i>AWS09 · AWS10</i></li></ul></div></div></div>
+<div class="pc card a" style="--c:#FFB020;--i:3"><h3>Solo diseño</h3><div class="s">o parcial</div><ul><li><span>Rechazo de otras IP</span><i>AWS08</i></li><li><span>RDS Multi-AZ</span><i></i></li><li><span>HTTPS propio con dominio</span><i></i></li><li><span>Repetición por otra persona</span><i>I06</i></li></ul></div>
+<div class="pc card a" style="--c:#FF6B6B;--i:4"><h3>No cubierto</h3><div class="s">o fuera de alcance</div><ul><li><span>Caída de la base en AWS</span><i>D13</i></li><li><span>Autoescalado</span><i></i></li><li><span>Alarmas CloudWatch</span><i></i></li><li><span>Promoción automática de réplica</span><i></i></li><li><span>Caída de una región</span><i></i></li></ul></div>
+</div></section>
+<section class="slide" data-hero="1" data-titulo="Cierre" data-tiempo="0:20" data-notas="Cierre: entregamos un servicio que tolera la caída de un servidor, datos que se pueden verificar y restaurar, y tiempos medidos. Próximos pasos: Multi-AZ para la base, HTTPS con dominio, alarmas y un health check más rápido. Gracias, preguntas.">
+<div class="kick a" style="--i:0">Cierre</div><div class="phrase a" style="--i:1">Tolera la caída de un servidor.<br><span class="ac">Datos que se verifican.</span><br><span class="ac2">Tiempos medidos.</span></div>
+<div class="next a" style="--i:3"><span class="chip">Multi-AZ para la base</span><span class="chip">HTTPS con dominio</span><span class="chip">Alarmas</span><span class="chip">Health check más rápido</span></div>
+<div class="thanks a" style="--i:4"><b>Gracias</b> · Preguntas</div>
+<div class="logos a" style="--i:5"><div class="l1"><div class="glass"><img src="assets/logo-estudia-transparente.png" width="640" alt="Estud-IA"></div><img class="nr" src="assets/logo-nodo-ruta.png" alt="Nodo Ruta"></div><img class="alc" src="assets/logo-alcaldia.png" alt="Alcaldía de Medellín"></div>
+</section>
+<section class="slide" data-titulo="Respaldo: preguntas del jurado" data-tiempo="" data-notas="Respaldo: las 10 preguntas probables con respuesta corta y su evidencia. Fuente: docs/06-pitch.md.">
+<div class="kick a" style="--i:0">Respaldo · preguntas del jurado</div><div class="qa"><div class="q card a" style="--i:0"><h4><b>01</b>¿Por qué no Multi-AZ?</h4><p>El plan gratuito de RDS solo permite Single-AZ y la regla es cero costos. La base es punto único de falla y lo decimos.</p><span class="chip">D13</span></div><div class="q card a" style="--i:1"><h4><b>02</b>¿Por qué no ECS ni Kubernetes?</h4><p>El reto premia un MVP medido; con 2 servicios bastan 2 EC2 detrás de un ALB.</p><span class="chip">D13 · D15</span></div><div class="q card a" style="--i:1"><h4><b>03</b>¿Qué pasa si cae la base?</h4><p>Local: se lee la réplica y hubo 0 errores. En AWS no hay réplica: solo la copia en memoria cubre caídas cortas.</p><span class="chip">STG08 · STG12 · D13</span></div><div class="q card a" style="--i:2"><h4><b>04</b>¿Cuánto cuesta?</h4><p>No lo medimos. Referencia de lista ~USD 2 al día, sin verificar; se destruye al terminar; alerta de USD 5 al mes.</p><span class="chip">docs/09 · AWS10</span></div><div class="q card a" style="--i:2"><h4><b>05</b>¿Por qué 5 errores en la caída?</h4><p>El ALB no reintenta en otra instancia hasta que su health check (2 × 5 s) saca la EC2 caída. Errores entre 2,1 y 9,8 s.</p><span class="chip">AWS04</span></div><div class="q card a" style="--i:3"><h4><b>06</b>¿Cómo evitan entrar directo al ALB?</h4><p>Solo acepta CloudFront y exige un encabezado secreto. Es mitigación; el rechazo de otras IP es diseño, no probado.</p><span class="chip">AWS08 · D16</span></div><div class="q card a" style="--i:3"><h4><b>07</b>¿Cómo saben que el respaldo sirve?</h4><p>Se verifica el SHA-256 y el índice con pg_restore --list; AWS06b restauró 6 pedidos.</p><span class="chip">AWS05 · AWS06b</span></div><div class="q card a" style="--i:4"><h4><b>08</b>¿Qué falló y qué aprendieron?</h4><p>AWS06 falló por un defecto del script de restauración; ensayar antes de necesitarla lo descubrió.</p><span class="chip">AWS06 · AWS06b</span></div><div class="q card a" style="--i:4"><h4><b>09</b>¿Se puede repetir?</h4><p>Sí: un comando o un botón en Actions, y destruir con otro.</p><span class="chip">AWS09 · AWS10</span></div><div class="q card a" style="--i:5"><h4><b>10</b>¿Ya no se cae nunca?</h4><p>No lo prometemos: tolera la caída de una instancia o servidor, con errores medidos y la base como punto único en AWS.</p><span class="chip">EVIDENCIAS.md</span></div></div></section>
+<section class="slide" data-titulo="Respaldo: diagrama oficial" data-tiempo="" data-notas="Respaldo: diagrama oficial de AWS. Clic sobre la imagen para acercar; mover el ratón para recorrerla; otro clic para volver.">
+<div class="kick a" style="--i:0">Respaldo · diagrama oficial</div><div class="zoomw a" id="zw" data-noclick="1" style="--i:2"><img src="assets/aws-final.png" alt="Arquitectura AWS final de Nodo Ruta"></div></section>
+<div id="hint">Flechas o espacio: avanzar &nbsp;·&nbsp; O: vista general &nbsp;·&nbsp; N: notas &nbsp;·&nbsp; F: pantalla completa</div>
+<div id="num"></div><div id="prog"><i></i></div></div>
+<div id="notes"></div><div id="ov"></div><div id="blk"></div>
+<script>
+(function(){
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var stage=document.getElementById('stage'),slides=[].slice.call(document.querySelectorAll('.slide')),N=slides.length,cur=-1,step=0,timers=[];
+function fit(){var s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';stage.style.left=((innerWidth-1920*s)/2)+'px';stage.style.top=((innerHeight-1080*s)/2)+'px';}
+addEventListener('resize',fit);fit();
+/* pueblo */
+(function(){var seed=11;function r(){seed=(seed*16807)%2147483647;return seed/2147483647}
+var W=1920,H=330,o='<svg viewBox="0 0 1920 330" width="1920" height="330" preserveAspectRatio="none">';
+var L=[{c:'#18254a',b:H-70,mn:60,mx:150,w0:60,w1:120,win:0},{c:'#0e1733',b:H-30,mn:80,mx:190,w0:70,w1:130,win:1},{c:'#070b16',b:H+4,mn:50,mx:110,w0:90,w1:160,win:1}];
+L.forEach(function(l,li){var x=-30;while(x<W){var w=l.w0+r()*(l.w1-l.w0),h=l.mn+r()*(l.mx-l.mn);
+o+='<rect x="'+x+'" y="'+(l.b-h)+'" width="'+w+'" height="'+(h+10)+'" fill="'+l.c+'"/>';
+var t=r();if(t<.45)o+='<polygon points="'+(x-6)+','+(l.b-h)+' '+(x+w/2)+','+(l.b-h-26-r()*24)+' '+(x+w+6)+','+(l.b-h)+'" fill="'+l.c+'"/>';
+if(l.win){for(var wy=l.b-h+16;wy<l.b-14;wy+=26){for(var wx=x+12;wx<x+w-16;wx+=24){if(r()<.34)o+='<rect class="tw" style="animation-delay:'+(r()*5).toFixed(2)+'s" x="'+wx+'" y="'+wy+'" width="9" height="13" rx="1.5" fill="#F7A24A"/>';}}}
+x+=w+(r()<.3?8:0);}
+if(li==1){o+='<rect x="1380" y="'+(H-30-300)+'" width="64" height="300" fill="#0e1733"/><polygon points="1370,'+(H-330)+' 1412,'+(H-420)+' 1454,'+(H-330)+'" fill="#0e1733"/><circle cx="1412" cy="'+(H-290)+'" r="18" fill="#F7A24A" opacity=".85"/>';}
+});
+document.getElementById('village').innerHTML=o+'</svg>';})();
+/* onda de particulas */
+(function(){var cv=document.getElementById('wave'),g=cv.getContext('2d'),t0=0;
+function draw(t){g.clearRect(0,0,1920,1080);var C=118,R=15;for(var rr=0;rr<R;rr++){for(var i=0;i<C;i++){var x=i*16.6,p=i/C,y=640+rr*19+Math.sin(i*.07+t*.7+rr*.28)*(34+rr*4)+Math.sin(i*.021-t*.4)*50;
+var a=.1+.55*(rr/R)*(.5+.5*Math.sin(i*.05+t*.5));var cr=26+Math.round(80*p),cg=168-Math.round(107*p),cb=240-Math.round(0*p);
+g.fillStyle='rgba('+cr+','+cg+','+cb+','+a.toFixed(3)+')';g.beginPath();g.arc(x,y,1.1+rr*.12,0,6.283);g.fill();}}}
+if(reduce||/still/.test(location.search)){draw(1.5);return}
+function loop(ms){draw(ms/1000);requestAnimationFrame(loop)}requestAnimationFrame(loop);})();
+/* nube parallax */
+function parallax(i){stage.style.setProperty('--p',i);[['cl1',-26],['cl2',-60],['cl3',-110]].forEach(function(a){document.getElementById(a[0]).style.transform='translateX('+(i*a[1])+'px)'});
+var b=document.querySelectorAll('.bk');for(var k=0;k<b.length;k++)b[k].style.transform='translateX('+(i*(k%2?-12:12))+'px)';}
+function pad(n){return n<10?'0'+n:''+n}
+function fmt(v,d){return v.toFixed(d).replace('.',',')}
+function counters(s,run){var cs=s.querySelectorAll('.c');for(var k=0;k<cs.length;k++)(function(el,k){var to=+el.dataset.to,d=+el.dataset.dec||0;
+if(!run||reduce||/still/.test(location.search)){el.textContent=fmt(run?to:0,d);return}
+el.textContent=fmt(0,d);var st=null,del=600+k*130,dur=1700;
+function f(ms){if(st===null)st=ms;var e=ms-st-del;if(e<0){el._r=requestAnimationFrame(f);return}var q=Math.min(1,e/dur),v=to*(1-Math.pow(1-q,3));el.textContent=fmt(v,d);if(q<1)el._r=requestAnimationFrame(f);else el.textContent=fmt(to,d)}
+cancelAnimationFrame(el._r);el._r=requestAnimationFrame(f);})(cs[k],k);}
+function maxStep(s){var m=0;[].forEach.call(s.querySelectorAll('[data-f]'),function(e){m=Math.max(m,+e.dataset.f)});return m}
+function applyStep(){var s=slides[cur];for(var k=1;k<=8;k++)s.classList.toggle('st-'+k,k<=step);[].forEach.call(s.querySelectorAll('[data-f]'),function(e){e.classList.toggle('on',+e.dataset.f<=step)});}
+function go(i,st){i=Math.max(0,Math.min(N-1,i));if(i===cur&&st==null)return;var prev=cur;
+timers.forEach(clearTimeout);timers=[];
+slides.forEach(function(s,j){s.classList.remove('active');if(j===i){s.classList.remove('past','future','leaving');}else{
+if(j===prev){s.classList.add('leaving');(function(s){timers.push(setTimeout(function(){s.classList.remove('leaving')},1000))})(s);}
+s.classList.toggle('past',j<i);s.classList.toggle('future',j>i);}});
+var s=slides[i];cur=i;step=(st==null)?((prev>i)?maxStep(s):0):Math.min(st,maxStep(s));
+/* reinicia animaciones de entrada */ void s.offsetWidth;s.classList.add('active');applyStep();
+stage.classList.toggle('hero',!!s.dataset.hero);
+document.getElementById('prog').firstChild.style.width=((i+1)/N*100)+'%';
+document.getElementById('num').innerHTML='<b>'+(i<14?pad(i+1):'R'+(i-13))+'</b> / '+(i<14?'14':'R2');
+parallax(i);
+slides.forEach(function(x,j){if(j!==i)counters(x,false)});counters(s,true);
+var pw=document.getElementById('pw');if(pw){pw.classList.remove('off');if(s.dataset.auto&&!reduce&&!/still/.test(location.search))timers.push(setTimeout(function(){pw.classList.add('off')},+s.dataset.auto));else if(s.dataset.auto)pw.classList.add('off');}
+var z=document.getElementById('zw');if(z)z.classList.remove('z');
+notes();try{history.replaceState(null,'','#'+(i+1)+(step?'.'+step:''))}catch(e){}
+[].forEach.call(document.querySelectorAll('#ov .it'),function(e,j){e.classList.toggle('cur',j===i)});}
+function next(){var m=maxStep(slides[cur]);if(step<m){step++;applyStep();hashStep()}else if(cur<N-1)go(cur+1)}
+function prev(){if(step>0){step--;applyStep();hashStep()}else if(cur>0)go(cur-1)}
+function hashStep(){try{history.replaceState(null,'','#'+(cur+1)+(step?'.'+step:''))}catch(e){}}
+/* notas y vista general */
+var nt=document.getElementById('notes');function notes(){var s=slides[cur];nt.innerHTML='<h5>Notas del orador · '+(cur<14?'slide '+(cur+1):'respaldo R'+(cur-13))+(s.dataset.tiempo?' · '+s.dataset.tiempo:'')+'</h5>'+s.dataset.notas}
+var ov=document.getElementById('ov');
+ov.innerHTML='<div class="grid">'+slides.map(function(s,j){return '<div class="it" data-j="'+j+'"><b>'+(j<14?pad(j+1):'R'+(j-13))+(s.dataset.tiempo?' · '+s.dataset.tiempo:'')+'</b><span>'+s.dataset.titulo+'</span><small>Clic para ir</small></div>'}).join('')+'</div>';
+ov.addEventListener('click',function(e){var it=e.target.closest('.it');if(it){go(+it.dataset.j);ov.classList.remove('on')}else ov.classList.remove('on')});
+document.addEventListener('keydown',function(e){if(e.ctrlKey||e.metaKey||e.altKey)return;var k=e.key;
+if(k==='ArrowRight'||k==='PageDown'||k==='Enter'||(k===' '&&!e.shiftKey)||k==='ArrowDown'){e.preventDefault();ov.classList.contains('on')||next()}
+else if(k==='ArrowLeft'||k==='PageUp'||k==='Backspace'||(k===' '&&e.shiftKey)||k==='ArrowUp'){e.preventDefault();ov.classList.contains('on')||prev()}
+else if(k==='Home'){go(0)}else if(k==='End'){go(N-1)}
+else if(k==='f'||k==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+else if(k==='o'||k==='O'){ov.classList.toggle('on')}else if(k==='Escape'){ov.classList.remove('on');document.getElementById('blk').classList.remove('on')}
+else if(k==='n'||k==='N'){nt.classList.toggle('on')}
+else if(k==='b'||k==='B'||k==='.'){document.getElementById('blk').classList.toggle('on')}});
+document.addEventListener('click',function(e){if(!e.target.closest('#stage')||e.target.closest('[data-noclick],a,button'))return;if(ov.classList.contains('on'))return;(e.clientX<innerWidth*.2)?prev():next()});
+var tx=null,ty=0;document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+document.addEventListener('touchend',function(e){if(tx===null)return;var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev()}});
+var zw=document.getElementById('zw');zw.addEventListener('click',function(){zw.classList.toggle('z')});
+zw.addEventListener('mousemove',function(e){var b=zw.getBoundingClientRect();zw.firstElementChild.style.transformOrigin=((e.clientX-b.left)/b.width*100)+'% '+((e.clientY-b.top)/b.height*100)+'%'});
+function fromHash(){var m=/^#(\d+)(?:\.(\d+))?/.exec(location.hash);if(m){go(+m[1]-1,m[2]?+m[2]:0)}}
+addEventListener('hashchange',function(){var m=/^#(\d+)(?:\.(\d+))?/.exec(location.hash);if(m&&(+m[1]-1!==cur||(+(m[2]||0))!==step))go(+m[1]-1,+(m[2]||0))});
+if(/^#\d+/.test(location.hash))fromHash();else go(0);
+setTimeout(function(){var h=document.getElementById('hint');if(h)h.style.opacity=0},7000);
+})();
+</script></body></html>
