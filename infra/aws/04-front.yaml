@@ -1,7 +1,8 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >-
   Nodo Ruta - front: interfaz web en un bucket S3 privado servido por CloudFront (HTTPS al visitante), con la API
-  (/pedidos y /health) enviada al ALB de la pila de computo. Solo responde a CidrAcceso. Requiere la pila de computo.
+  (/pedidos y /health) enviada al ALB de la pila de computo. Por defecto solo responde a CidrAcceso; con
+  AccesoPublico=si responde a cualquier IP (solo CloudFront; el ALB sigue cerrado). Requiere la pila de computo.
 
 Metadata:
   AWSToolsMetrics:
@@ -12,7 +13,9 @@ Metadata:
       - El bucket es privado; solo CloudFront (OAC, con AWS:SourceArn de esta distribucion) puede leerlo.
       - CloudFront habla con el ALB en HTTP (no hay dominio ni certificado en el ALB) y le manda X-Origin-Verify = ClaveOrigen; sin esa clave el ALB responde 403.
       - ClaveOrigen (NoEcho) nunca se escribe en el repo ni en archivos; es la misma que se paso a nodo-ruta-computo.
-      - Una CloudFront Function devuelve 403 a quien no venga de CidrAcceso, en los 3 comportamientos.
+      - Con AccesoPublico=no (por defecto) una CloudFront Function devuelve 403 a quien no venga de CidrAcceso, en los 3 comportamientos.
+      - Con AccesoPublico=si (D18) la distribucion no filtra por IP: solo CloudFront queda abierto al mundo. El ALB sigue admitiendo solo la prefix list de CloudFront y CidrAcceso, y exige X-Origin-Verify.
+      - Cambiar AccesoPublico en una pila existente es una actualizacion sin interrupcion: no reemplaza la distribucion ni el bucket (ver el razonamiento en Distribucion).
       - No hay pagina de error personalizada global: los errores de la API no se enmascaran.
       - Todo lleva la etiqueta proyecto=nodo-ruta. Para borrar la pila hay que vaciar antes el bucket.
 
@@ -36,6 +39,16 @@ Parameters:
     Description: >-
       IP o rango IPv4 que puede usar la distribucion (mismo valor que en las otras pilas).
       0.0.0.0/0 no esta permitido.
+  AccesoPublico:
+    Type: String
+    Default: "no"
+    AllowedValues: ["si", "no"]
+    Description: >-
+      "no" (por defecto): CloudFront solo responde a CidrAcceso. "si": responde a cualquier IP (pitch o jurado);
+      el ALB no se abre. Ver D18. Destruir la pila el mismo dia.
+
+Conditions:
+  EsPublico: !Equals [!Ref AccesoPublico, "si"]
 
 Rules:
   AccesoNoAbierto:
@@ -99,7 +112,7 @@ Resources:
     Type: AWS::CloudFront::Function
     Metadata:
       com.aws.cloudformation.Context:
-        why: Corta en el borde a quien no venga de CidrAcceso (la distribucion es publica por naturaleza). Compara IPv4 con mascara; IPv6 se rechaza.
+        why: Corta en el borde a quien no venga de CidrAcceso (la distribucion es publica por naturaleza). Compara IPv4 con mascara; IPv6 se rechaza. Existe siempre, tambien con AccesoPublico=si (solo se deja de asociar): asi alternar el parametro no crea ni borra la funcion, y una funcion sin asociar no cuesta nada.
     Properties:
       Name: !Sub "${AWS::StackName}-solo-ip"
       AutoPublish: true
@@ -146,6 +159,7 @@ Resources:
         must:
           - Comportamientos exactos /pedidos y /health (la API no tiene mas rutas); todo lo demas es la interfaz.
           - Origen ALB en http-only: el ALB no tiene certificado. Esa parte del trayecto va sin cifrar (D16).
+          - AccesoPublico solo cambia FunctionAssociations (quita o pone la funcion de IP). Esa propiedad es "Update requires - No interruption"; Origins, DefaultRootObject, PriceClass y el resto no cambian. La distribucion y el bucket no se reemplazan y la politica del bucket sigue apuntando al mismo ARN. Tarda unos minutos en propagarse (InProgress).
     Properties:
       DistributionConfig:
         Enabled: true
@@ -174,8 +188,10 @@ Resources:
           CachedMethods: [GET, HEAD]
           Compress: true
           CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6   # Managed-CachingOptimized
-          FunctionAssociations:
-            - { EventType: viewer-request, FunctionARN: !GetAtt FuncionSoloIp.FunctionARN }
+          FunctionAssociations: !If
+            - EsPublico
+            - !Ref AWS::NoValue
+            - - { EventType: viewer-request, FunctionARN: !GetAtt FuncionSoloIp.FunctionARN }
         CacheBehaviors:
           - PathPattern: /pedidos
             TargetOriginId: alb
@@ -185,8 +201,10 @@ Resources:
             Compress: true
             CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad            # Managed-CachingDisabled
             OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac    # Managed-AllViewerExceptHostHeader
-            FunctionAssociations:
-              - { EventType: viewer-request, FunctionARN: !GetAtt FuncionSoloIp.FunctionARN }
+            FunctionAssociations: !If
+              - EsPublico
+              - !Ref AWS::NoValue
+              - - { EventType: viewer-request, FunctionARN: !GetAtt FuncionSoloIp.FunctionARN }
           - PathPattern: /health
             TargetOriginId: alb
             ViewerProtocolPolicy: redirect-to-https
@@ -195,8 +213,10 @@ Resources:
             Compress: true
             CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
             OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac
-            FunctionAssociations:
-              - { EventType: viewer-request, FunctionARN: !GetAtt FuncionSoloIp.FunctionARN }
+            FunctionAssociations: !If
+              - EsPublico
+              - !Ref AWS::NoValue
+              - - { EventType: viewer-request, FunctionARN: !GetAtt FuncionSoloIp.FunctionARN }
         ViewerCertificate:
           CloudFrontDefaultCertificate: true
       Tags:
@@ -205,7 +225,7 @@ Resources:
 
 Outputs:
   UrlFront:
-    Description: URL https de la interfaz y la API (solo desde CidrAcceso).
+    Description: URL https de la interfaz y la API (solo desde CidrAcceso, o desde cualquier IP si AccesoPublico=si).
     Value: !Sub "https://${Distribucion.DomainName}"
   IdDistribucion:
     Description: Id de la distribucion (para create-invalidation).

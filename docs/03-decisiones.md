@@ -117,6 +117,24 @@ Desplegar en AWS eran ~10 bloques de comandos pegados a mano (contraseña en SSM
 - **Política del rol, versionada y sin aplicar:** `infra/aws/iam/politica-github-actions.json` (bloques explicados en su README). Mínimo privilegio razonable: CloudFormation solo `nodo-ruta-*`, IAM solo roles y perfiles `nodo-ruta-computo-*` con `PassRole` solo a EC2, SSM `/nodo-ruta/*`, `SendCommand` solo a instancias con `proyecto=nodo-ruta`, región us-east-2; sin `*:*` ni `iam:*`. Pasó `ValidatePolicy` sin hallazgos, pero **no se ha ejecutado nunca**: pueden faltar permisos en la primera corrida.
 - **Riesgos que se reconocen:** quien lance el workflow puede crear recursos de pago (se mitiga con `main` solamente y la alerta de presupuesto); la sesión OIDC dura como máximo 1 h (`MaxSessionDuration`), justa para un despliegue de ~45 min; el repo es público, así que la IP de `cidr` queda visible en registros y artifact.
 
+## D18 · Acceso público solo por CloudFront para el pitch: `AccesoPublico` / `--publico` 🟡 (28-11; plantilla y script escritos, **sin desplegar ni probar en AWS**)
+El jurado y el público del pitch entran desde redes que no conocemos, y hasta ahora todo estaba cerrado a una sola IP (`CidrAcceso`). Opciones:
+
+| Opción | A favor | En contra |
+|---|---|---|
+| Seguir con una sola IP | Superficie mínima | La demo solo funciona desde el computador del equipo; el jurado no puede abrirla |
+| Abrir también el ALB a `0.0.0.0/0` | Sencillo | Expone el balanceador directo y quita el control de `X-Origin-Verify`; **descartada**: los candados de `01-red.yaml` y `03-computo.yaml` siguen prohibiendo `0.0.0.0/0` |
+| **Abrir solo CloudFront** (`AccesoPublico=si`) 🟡 | El ALB sigue admitiendo solo la prefix list de CloudFront y la IP del equipo, con 403 por defecto y regla por `X-Origin-Verify`; un solo cambio, reversible | Cualquiera puede ver la interfaz y la API |
+
+**Se eligió la tercera.** Diseño:
+- Parámetro `AccesoPublico` (`si`/`no`, por defecto `no`) en `04-front.yaml`. Con `si`, la distribución deja de asociar la CloudFront Function de IP (`!If` con `AWS::NoValue`); la función sigue existiendo sin asociar. `CidrAcceso` sigue siendo la IP /32 del equipo (entra directo al ALB). No cambia el ALB ni sus candados.
+- Cambiar el parámetro en una pila existente solo modifica `FunctionAssociations` (actualización sin interrupción): no reemplaza la distribución ni el bucket. El script lo comprueba con su change set (aborta si algo se reemplazaría).
+- `aws_nodo.py desplegar --publico` (o la entrada `publico=si` de Actions) abre; un despliegue sin el flag vuelve a cerrar. `estado` muestra si CloudFront es público o restringido. La prueba de humo en modo público espera 200 desde el propio runner.
+- **Riesgos:** cualquiera con la URL ve datos sintéticos de solo lectura; el tráfico y el costo de CloudFront quedan acotados por `PriceClass_100` y el nivel gratuito (1 TB y 10 millones de solicitudes al mes, ver `docs/04-seguridad-y-costos.md`), pero un abuso (miles de solicitudes) podría consumirlos; la URL `*.cloudfront.net` es difícil de adivinar, no secreta.
+- **Mitigaciones:** el ALB sigue cerrado; la API es de solo lectura; el bucket es privado; se destruye todo el mismo día (`destruir`) y la alerta de presupuesto sigue activa.
+- **Solo diseñado, no implementado:** AWS WAF con límite de tasa (es de pago, contra la regla de cero costos). Honestidad: esto es una apertura deliberada para la demo, no una configuración de producción.
+- **Estado:** nada de esto se ha desplegado todavía. La plantilla no pudo validarse con `cfn-lint` (no instalado) ni con `validate-template` (sesión de AWS vencida); falta validar y probar el cambio en AWS.
+
 ## Pendientes medidos (mejoras para el siguiente PR)
 
 | Mejora | Por qué | Estado |
