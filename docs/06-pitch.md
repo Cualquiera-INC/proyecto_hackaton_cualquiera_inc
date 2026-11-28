@@ -52,7 +52,7 @@ Diagrama de AWS: ![Arquitectura AWS final](arquitectura/aws-final.png)
 
 > "En local, dos instancias detrás de NGINX, con la base de datos aparte, respaldo verificado y despliegue sin caída. En AWS, lo mismo con piezas de nube: dos servidores en dos zonas detrás de un balanceador, base de datos administrada, respaldos en S3 y la interfaz por CloudFront con HTTPS. Todo es código: se levanta y se destruye con un comando."
 
-Importante: en local, dos contenedores en un computador son **tolerancia a la caída de una instancia**, no alta disponibilidad. La caída de una máquina solo se pudo probar en AWS.
+Importante: en local, dos contenedores en un mismo computador dan **tolerancia a la caída de una instancia**, nada más: si se apaga el computador, se cae todo. La caída de una máquina completa solo se pudo probar en AWS.
 
 ## 4. La demo (0:50)
 
@@ -108,7 +108,7 @@ Escenas del guion (≈ 5 min completos; en el pitch se muestra un resumen de ~50
 - **Hay errores durante la caída de un servidor.** AWS04: 5 errores (1,7 %) en una ventana de ~8 s, porque el ALB no reintenta en la otra instancia hasta que su health check saca a la caída.
 - **Registramos los fallos tal cual.** AWS06: la restauración falló y el servicio quedó en 503; el incidente completo duró ~8,5 min por un defecto del script, corregido y repetido en AWS06b. El primer intento de AWS09 también falló (faltaba un permiso de CloudFront). AWS10 terminó en fallo por un falso positivo de la verificación final, ya corregido.
 - **Solo diseño, no probado:** el rechazo de otras IP en CloudFront y el ALB, HTTPS propio con dominio (de CloudFront al ALB va en HTTP), autoescalado y alarmas de monitoreo.
-- **No es alta disponibilidad** en local: es tolerancia a la caída de una instancia.
+- **En local solo hay tolerancia a la caída de una instancia:** las dos copias corren en el mismo computador.
 - I06 sigue parcial: falta que alguien despliegue siguiendo solo el README.
 
 > "Lo que no cubrimos: si cae la base de datos en AWS, el servicio depende de ella. Y cuando cae un servidor, hay unos segundos con errores. Preferimos decirlo y mostrar el número."
@@ -132,7 +132,7 @@ Próximos pasos: Multi-AZ en RDS (con plan de pago), dominio y certificado, alar
 | ¿Cómo sabemos que el respaldo sirve? | Se verifica el SHA-256 y se lee el índice con `pg_restore --list`; AWS06b restauró y devolvió 6 pedidos | AWS05, AWS06b |
 | ¿Qué falló y qué aprendieron? | AWS06 falló por un defecto del script de restauración; ensayar la restauración antes de necesitarla lo descubrió | AWS06, AWS06b |
 | ¿Se puede repetir? | Sí: un comando o un botón en Actions, y destruir con otro | AWS09, AWS10 |
-| ¿Es alta disponibilidad? | No. Es tolerancia a la caída de una instancia o de un servidor, con límites | EVIDENCIAS.md, cierre |
+| ¿El servicio ya no se cae nunca? | No lo prometemos. Tolera la caída de una instancia (local) o de un servidor (AWS), con los errores medidos y con la base como punto único de falla en AWS | EVIDENCIAS.md, cierre |
 
 ## Frase para coordinación logística (público no técnico)
 

@@ -13,7 +13,7 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 - **Región: solo `us-east-2`.** Una política de la organización (SCP) bloquea EC2, CloudFormation, RDS, ELB y ECS en las demás regiones. Los servicios globales (IAM, Budgets, S3 al listar) funcionan desde cualquiera. Siempre `--region us-east-2` en `aws` y en CloudFormation.
 - **Plan por fases** (pulir local → preparar AWS → construir → probar y destruir → pitch): `docs/07-plan-y-fases.md`. Mantenerlo al día en cada PR.
 - **PostgreSQL y el microservicio de pedidos están aceptados (D12; D9 quedó superado).** Nunca usar nombres de contenedor individuales entre servicios: en la red `internal` resolver un nombre inexistente tarda ~8 s (STG02/STG09); se usan los alias `pedidos` y `pg-lectura`. Contraseña en `despliegue/secretos/db_password.txt` (Docker secret, ignorada por git).
-- **Mejoras pendientes medidas:** quitar `http_503` de `proxy_next_upstream`, fijar `python:3.12-slim`, `server_tokens off` y endurecer los contenedores (`docs/03-decisiones.md`).
+- **Mejoras pendientes medidas:** quitar `http_503` de `proxy_next_upstream`, `server_tokens off` y endurecer los contenedores (`docs/03-decisiones.md`).
 
 ## Mapa
 
