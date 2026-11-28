@@ -6,21 +6,21 @@
 
 ## Duración
 
-La guía del reto (`recursos-reto/GUIA_ESTUDIANTE.md`) no fija la duración del pitch ni da criterios de evaluación. Usamos **5 minutos** (objetivo), con la demo en un video aparte que se enlaza (`docs/09-guion-video-aws.md`, aún por grabar). Si la organización confirma otro tiempo, se ajusta la columna de minutos.
+La guía del reto (`recursos-reto/GUIA_ESTUDIANTE.md`) no fija la duración del pitch ni da criterios de evaluación. Usamos **5 minutos** (objetivo), sin video: en el pitch no se proyecta ningún video y la evidencia en vivo se cuenta con la slide de AWS04. El video de la demo (`docs/09-guion-video-aws.md`) queda como material opcional aparte. Si la organización confirma otro tiempo, se ajusta la columna de minutos.
 
 | # | Sección | Tiempo | Quién |
 |---|---|---|---|
-| 1 | El problema y quién lo vive | 0:40 | [asignar] |
-| 2 | Qué necesitaba el negocio | 0:30 | [asignar] |
-| 3 | La solución: local y AWS | 0:50 | [asignar] |
-| 4 | La demo | 0:50 | [asignar] |
-| 5 | Los números medidos | 0:50 | [asignar] |
-| 6 | Seguridad y costos | 0:40 | [asignar] |
+| 1 | El problema y quién lo vive | 0:45 | [asignar] |
+| 2 | Qué necesitaba el negocio | 0:25 | [asignar] |
+| 3 | La solución: local y AWS | 1:15 | [asignar] |
+| 4 | La demo (sin video: slide AWS04) | 0:35 | [asignar] |
+| 5 | Los números medidos | 0:30 | [asignar] |
+| 6 | Seguridad y costos | 0:30 | [asignar] |
 | 7 | Límites honestos | 0:40 | [asignar] |
 | 8 | Cierre y próximos pasos | 0:20 | [asignar] |
 | | **Total** | **5:00** | |
 
-## 1. El problema (0:40)
+## 1. El problema (0:45)
 
 Nodo Ruta es una empresa ficticia de distribución urbana con un servicio web de consulta de entregas que corre en **una sola instancia**, con los datos dentro de la app. Lo viven tres actores:
 
@@ -30,7 +30,7 @@ Nodo Ruta es una empresa ficticia de distribución urbana con un servicio web de
 
 > "Si la única instancia cae, operaciones se queda sin consultar entregas. Y nadie sabe cuánto tarda en volver ni si los datos que vuelven son los correctos."
 
-## 2. Qué necesitaba el negocio (0:30)
+## 2. Qué necesitaba el negocio (0:25)
 
 No pidió "cinco nueves". Pidió tres cosas que se pueden medir:
 
@@ -40,7 +40,7 @@ No pidió "cinco nueves". Pidió tres cosas que se pueden medir:
 
 > "Nos preguntamos: cuando algo falla, ¿operaciones sigue consultando, y el responsable técnico recupera la versión correcta en un tiempo que podemos decir en voz alta? Y lo medimos."
 
-## 3. La solución: local y AWS (0:50)
+## 3. La solución: local y AWS (1:15)
 
 Diagrama de AWS: ![Arquitectura AWS final](arquitectura/aws-final.png)
 
@@ -56,11 +56,11 @@ Diagrama de AWS: ![Arquitectura AWS final](arquitectura/aws-final.png)
 
 Importante: en local, dos contenedores en un mismo computador dan **tolerancia a la caída de una instancia**, nada más: si se apaga el computador, se cae todo. La caída de una máquina completa solo se pudo probar en AWS.
 
-## 4. La demo (0:50)
+## 4. La demo (0:35)
 
-Video: [pendiente de grabar; el guion está en `docs/09-guion-video-aws.md`]. Enlace del video: [agregar cuando exista].
+**En el pitch no se proyecta video.** La evidencia en vivo se cuenta con la slide de AWS04 (línea de tiempo animada, 0:35): se apagó la EC2 B con el monitor corriendo; 299 consultas, 5 errores (1,7 %) entre 2,1 y 9,8 s después de la parada, luego 0 errores; la EC2 volvió sola en 40,6 s. El ALB no reintenta en otra instancia hasta que su health check (2 x 5 s) la saca.
 
-Escenas del guion (≈ 5 min completos; en el pitch se muestra un resumen de ~50 s o se enlaza):
+El video de la demo (`docs/09-guion-video-aws.md`) queda como material opcional aparte, por si el jurado lo pide. Escenas de ese guion (≈ 5 min completos):
 
 1. Despliegue desde GitHub Actions (OIDC, sin claves).
 2. La interfaz por HTTPS, con el campo `instancia` alternando entre `us-east-2a` y `us-east-2b`.
@@ -71,7 +71,7 @@ Escenas del guion (≈ 5 min completos; en el pitch se muestra un resumen de ~50
 
 > "Aquí vemos la consulta repartiéndose entre dos zonas. Ahora detenemos un servidor y miramos qué ve un usuario: unos pocos errores en los primeros segundos y después nada, hasta que el servidor vuelve solo."
 
-## 5. Los números medidos (0:50)
+## 5. Los números medidos (0:30)
 
 | ID | Qué se probó | Resultado medido |
 |---|---|---|
@@ -87,7 +87,7 @@ Escenas del guion (≈ 5 min completos; en el pitch se muestra un resumen de ~50
 
 > "El servidor local recuperó los datos en menos de un segundo. En AWS, una caída de servidor costó cinco errores en unos diez segundos y volvió solo en 40 segundos. Restaurar desde S3 tardó 8,6 segundos. Levantar toda la infraestructura desde cero toma unos 16 minutos y destruirla, 8."
 
-## 6. Seguridad y costos (0:40)
+## 6. Seguridad y costos (0:30)
 
 | Control | Cómo |
 |---|---|
