@@ -1,91 +1,125 @@
 # 07 · Estado y próximas fases
 
-> Actualizado el 24-11-2026. Cuando se cierre una tarea, márquenla aquí en el mismo PR.
+> Actualizado el 27-11-2026. Cuando se cierre una tarea, márquenla aquí en el mismo PR.
 
-## Lo que tenemos (probado en local)
+## Dónde estamos
 
-| Pieza | Qué es | Evidencia |
-|---|---|---|
-| **2 instancias de la app** | `app1` y `app2`, la misma imagen `nodo-ruta:<versión>`; cada respuesta dice `instancia` y `version_app` | I01 |
-| **Proxy NGINX** | Único puerto (`127.0.0.1:8080`). Sirve la interfaz web en `/` y reparte `/pedidos` y `/health` entre las dos instancias, con reintento si una falla | I02, I07b |
-| **Interfaz web** | React + Vite de solo lectura (estado, pedidos, búsqueda por ID), construida dentro de la imagen del proxy | I07b |
-| **Datos fuera del contenedor** | `data/pedidos.json` montado en solo lectura; el original del reto queda intacto | I04 |
-| **Respaldo automático** | Contenedor `respaldo`: copia + SHA-256 cada 5 min; nunca respalda un archivo dañado | I05, respaldo automático |
-| **Restauración verificada** | `datos.py restaurar` comprueba la huella antes de escribir; el servicio vuelve en 157 ms | I05c, I05d |
-| **Despliegue sin caída + rollback** | `desplegar.py`: una instancia a la vez, rollback automático si la nueva falla | I07 (0 errores en 708 consultas), I08 |
-| **CI en GitHub Actions** | Build del frontend + prueba de punta a punta del despliegue en Linux en cada PR | checks de los PR #7 y #8 |
-| **PostgreSQL + microservicio de pedidos** | `pedidos1`/`pedidos2` (solo lectura, copia en memoria), primario + réplica en caliente, respaldo con `pg_dump`. Tolera la caída de una base | STG01–STG14 |
-| **Documentación** | `docs/01` a `docs/08`, `EVIDENCIAS.md`, README | — |
+El servicio está **implementado y probado en local** (Docker Compose con PostgreSQL) y **implementado, probado y destruido en AWS** (4 pilas de CloudFormation, evidencias AWS01 a AWS10). Hoy no hay nada encendido en AWS. Lo que falta es pulir algunos detalles locales y entregar: grabar el video y presentar el pitch.
 
-**Lo que todavía no está demostrado:** que el servicio sobreviva a la caída de una **máquina** completa, el health check activo, los respaldos fuera del computador y HTTPS. Todo eso es el objetivo de AWS.
+Los números salen solo de [EVIDENCIAS.md](../EVIDENCIAS.md).
 
 ## Fases
 
 ```mermaid
 flowchart LR
-    F1["Fase 1<br/>MVP local<br/>✅ hecho"] --> F2["Fase 2<br/>Pulir local<br/>⏳"]
-    F2 --> F3["Fase 3<br/>Preparar AWS<br/>⏳"]
-    F3 --> F4["Fase 4<br/>Construir en AWS<br/>⏳"]
-    F4 --> F5["Fase 5<br/>Probar en AWS<br/>y destruir"]
-    F5 --> F6["Fase 6 (E3)<br/>Mejoras, video<br/>y pitch"]
+    F1["Fase 1<br/>MVP local<br/>✅ hecho"] --> F2["Fase 2<br/>Pulir local<br/>⏳ pendiente"]
+    F2 --> F3["Fase 3<br/>Preparar AWS<br/>✅ hecho"]
+    F3 --> F4["Fase 4<br/>Construir en AWS<br/>✅ hecho"]
+    F4 --> F5["Fase 5<br/>Probar en AWS<br/>y destruir<br/>✅ hecho"]
+    F5 --> F6["Fase 6 (E3)<br/>Video y pitch<br/>⏳ pendiente"]
 ```
 
-### Fase 2 · Pulir lo local (un PR pequeño, ~1 h)
+La Fase 2 se dejó para después de AWS porque no bloquea nada: son mejoras medidas en local que no cambian lo probado en la nube.
 
-| Tarea | Por qué | Responsable |
+### Fase 1 · MVP local: ✅ hecho
+
+| Pieza | Qué es | Evidencia |
 |---|---|---|
-| `desplegar.py levantar` para encender la versión guardada después de un `down`, y corregir el mensaje que hoy sugiere `rollback` | Hoy, tras un `down`, el script obliga a inventar una versión nueva | [asignar] |
-| Quitar `http_503` de `proxy_next_upstream` | Con datos dañados el usuario ve 502 y las instancias quedan fuera hasta 3 s | [asignar] |
-| Fijar `python:3.12-slim` en el `Dockerfile` y `server_tokens off` | Reproducibilidad (hoy instala 3.15) y no mostrar la versión de NGINX | [asignar] |
-| Guardar la evidencia de I08 (`evidencias/I08_rollback_automatico.json`) | Es la única prueba sin archivo | [asignar] |
-| **I06 completa:** alguien que no haya tocado el código despliega siguiendo solo el README | La exige la guía del reto | [asignar] |
+| 2 instancias de la app | `app1` y `app2`, la misma imagen; cada respuesta dice `instancia` y `version_app` | I01 |
+| Proxy NGINX | Único puerto (`127.0.0.1:8080`); reparte y reintenta si una instancia falla | I02, I02b, I03 |
+| Interfaz web | React + Vite de solo lectura, servida por el proxy | I07b |
+| Datos fuera del contenedor | Primero JSON montado en solo lectura; hoy PostgreSQL con volumen | I04, STG01–STG14 |
+| Respaldo y restauración | SHA-256 verificado antes de restaurar; respaldo automático | I05, I05c, I05d, STG05 |
+| Despliegue sin caída y rollback | `desplegar.py`: una instancia a la vez, rollback automático si falla | I07, I07b, I08, STG01–STG04, STG11 |
+| PostgreSQL + microservicio de pedidos | Primario + réplica en caliente; copia en memoria del microservicio | STG06–STG14 |
+| CI en GitHub Actions | `frontend.yml` y `contenedores.yml` (prueba de punta a punta de `despliegue/`) | checks de cada PR |
 
-### Fase 3 · Preparar AWS (antes de crear cualquier recurso)
+### Fase 2 · Pulir lo local: ⏳ pendiente
 
-| Tarea | Detalle |
+Estado verificado en el repo el 27-11-2026:
+
+| Tarea | Por qué | Estado | Responsable |
+|---|---|---|---|
+| Fijar `python:3.12-slim` | Reproducibilidad (`python:3-slim` instalaba 3.15) | ✅ Hecho: `Dockerfile` y `servicios/pedidos/Dockerfile` usan `python:3.12-slim` (D15) | — |
+| Quitar `http_503` de `proxy_next_upstream` | Con datos dañados el usuario ve 502 y las instancias quedan fuera hasta 3 s | ⏳ Pendiente: `despliegue/nginx.conf` todavía lo lista | [asignar] |
+| `server_tokens off` | No mostrar la versión de NGINX | ⏳ Pendiente: no aparece en `despliegue/nginx.conf` | [asignar] |
+| Endurecer contenedores (`cap_drop`, `no-new-privileges`) | Menos privilegios | ⏳ Pendiente: `compose.yaml` solo tiene `read_only` en algunos servicios | [asignar] |
+| `desplegar.py levantar` | Encender la versión guardada tras un `down` | ⏳ Pendiente: el comando no existe en `scripts/desplegar.py` | [asignar] |
+| Guardar la evidencia de I08 | Es la única prueba local sin archivo | ⏳ Pendiente: no hay `evidencias/I08_*` | [asignar] |
+| **I06 completa:** alguien que no haya tocado el código despliega siguiendo solo el README | La exige la guía del reto | ⏳ Parcial (ver EVIDENCIAS.md) | [asignar] |
+
+### Fase 3 · Preparar AWS: ✅ hecho
+
+| Tarea | Estado |
 |---|---|
-| **Alerta de presupuesto** | ✅ Hecha (21-11): `nodo-ruta-mensual`, USD 5 al mes sin contar créditos, avisos al 50 % y al 100 % |
-| **Acceso de GitHub a AWS sin claves** | ✅ OIDC probado (21-11): rol `github-actions-nodo-ruta`, solo `main`. Política de despliegue escrita y validada (`infra/aws/iam/`), **sin aplicar** |
-| **Dónde vive PostgreSQL en AWS** | ✅ Decidido (D13): 2 EC2 + RDS PostgreSQL Single-AZ (`t3.micro` o `t4g.micro`). Sin Multi-AZ en el plan gratuito |
-| Usuarios IAM para el equipo | Nadie trabaja con el usuario raíz; permisos mínimos |
-| Región | ✅ **us-east-2 (Ohio)**: es la única donde la política de la organización permite EC2, CloudFormation y RDS. Todo comando y plantilla usa `--region us-east-2` |
-| **Decidir cómo se sirve la interfaz** | ✅ Decidido (D16, 23-11): CloudFront + S3 (la otra opción era la imagen `nodo-ruta-proxy` en cada EC2). Plantilla `infra/aws/04-front.yaml` **desplegada y probada** (AWS08) |
-| Registro de imágenes | Propuesta: GHCR público, publicado desde GitHub Actions (sin costo y sin secretos) |
-| Etiqueta común | `proyecto=nodo-ruta` en todo, para encontrarlo y borrarlo |
-| Rama `staging` | Su contenido (PostgreSQL + microservicio) se integra a `main`; después se puede borrar la rama |
+| Alerta de presupuesto | ✅ `nodo-ruta-mensual`, USD 5 al mes sin contar créditos, avisos al 50 % y al 100 % |
+| Acceso de GitHub a AWS sin claves | ✅ OIDC: rol `github-actions-nodo-ruta`, solo acepta este repo en `main` |
+| Política de despliegue del rol | ✅ **Aplicada**; versionada en `infra/aws/iam/politica-github-actions.json` |
+| Dónde vive PostgreSQL | ✅ D13: 2 EC2 + RDS PostgreSQL Single-AZ (el plan gratuito no permite Multi-AZ) |
+| Región | ✅ Solo `us-east-2` (una política de la organización bloquea EC2, CloudFormation, RDS, ELB y ECS en las demás) |
+| Cómo se sirve la interfaz | ✅ D16: CloudFront + S3 |
+| Etiqueta común | ✅ `proyecto=nodo-ruta` en todo |
 
-### Fase 4 · Construir en AWS (`infra/aws/`)
+### Fase 4 · Construir en AWS: ✅ hecho
 
-Plantillas de **CloudFormation** en `infra/aws/` para crear y destruir con una pila (D14):
+Lo que se construyó (la lista anterior, con JSON en S3 y GHCR, quedó superada por D13, D15, D16 y D17):
 
-1. **S3** con versiones: `actual/pedidos.json` y `respaldos/`.
-2. **Imagen** construida una sola vez y publicada (GitHub Actions → GHCR).
-3. **Rol IAM** para las EC2: solo lectura de `actual/*` en S3 y escritura de logs.
-4. **2 EC2** en dos zonas, con Docker, la app montando `/data` y una tarea que sincroniza desde S3 cada 10 s con reemplazo atómico.
-5. **ALB** + target group con health check a `/health`. Security groups: las EC2 solo aceptan tráfico del ALB y no tienen SSH (se usa Session Manager).
-6. **CloudWatch Logs** con retención corta.
-7. CloudFront + S3 para la interfaz (D16, `04-front.yaml`; pruebas en AWS08).
+| Pieza | Qué es | Evidencia |
+|---|---|---|
+| `nodo-ruta-red` (`01-red.yaml`) | VPC, 2 subredes públicas y 2 privadas, grupos de seguridad | AWS01 |
+| `nodo-ruta-datos` (`02-datos.yaml`) | RDS PostgreSQL 17 Single-AZ cifrada, bucket S3 de respaldos, contraseña en SSM | AWS02 |
+| `nodo-ruta-computo` (`03-computo.yaml`) | 2 EC2 en dos zonas (app + pedidos en contenedores, sin SSH), ALB con health check a `/health` | AWS03 |
+| `nodo-ruta-front` (`04-front.yaml`) | S3 privado + CloudFront con HTTPS; `/pedidos` y `/health` van al ALB | AWS08 |
+| `scripts/aws_nodo.py` | `desplegar`, `estado`, `probar`, `destruir` y `--simular` (D17) | AWS09, AWS10 |
+| `.github/workflows/aws.yml` | Lo mismo desde GitHub Actions con OIDC, solo desde `main` | AWS09, AWS10 |
+| Diagrama | `docs/arquitectura/aws-final.png` (editable en `aws-final.drawio`) | — |
 
-**Avance (23-11):** plantilla de red `infra/aws/01-red.yaml` escrita, validada y **desplegada** en us-east-2 como pila `nodo-ruta-red` (CREATE_COMPLETE, evidencia AWS01). Instrucciones en `infra/aws/README.md`. **Avance (23-11, rama `feat/infra-datos`):** `infra/aws/02-datos.yaml` (RDS PostgreSQL 17 Single-AZ, bucket S3 de respaldos, contrasena en SSM SecureString) escrita, validada y **desplegada** como pila `nodo-ruta-datos` (CREATE_COMPLETE, evidencia AWS02; RDS consume creditos mientras exista). **Avance (23-11, rama `feat/infra-computo`):** `infra/aws/03-computo.yaml` (2 EC2 por zona, ALB HTTP con health check a `/health` cada 5 s, rol de mínimo privilegio, sin SSH) escrita y **validada** con ValidateTemplate (después desplegada y probada). **Avance (23-11, rama `feat/infra-front`):** D16, `infra/aws/04-front.yaml` (S3 privado + CloudFront), regla de la prefix list en `01-red.yaml`, listener con 403 y reglas en `03-computo.yaml` y `scripts/publicar_front.py`; **desplegadas y probadas** (red y cómputo actualizados sin reemplazar recursos; front en `https://<id>.cloudfront.net`, evidencia AWS08). Carga inicial de la base y respaldo manual a S3 en `despliegue/aws/` y `basedatos/aws/` (D15).
+### Fase 5 · Probar en AWS y destruir: ✅ hecho
 
-**Avance (24-11, rama `feat/despliegue-automatico`):** D17, `scripts/aws_nodo.py` (`desplegar`, `estado`, `probar`, `destruir`, `--simular`) reemplaza los bloques manuales de `infra/aws/README.md` y `PRUEBAS.md`. **Probado solo con lecturas y respuestas simuladas; falta la primera ejecución real** (crear, probar y destruir en una misma sesión, con `--evidencia`). **GitHub Actions aceptado (D17):** `.github/workflows/aws.yml` ejecuta el script con OIDC y la política del rol está versionada en `infra/aws/iam/`, **pero aún no está aplicada** (hay que correr `aws iam put-role-policy`, ver su README) **ni el workflow se ha ejecutado**, y solo correrá desde `main`.
+| ID | Prueba | Resultado (de EVIDENCIAS.md) |
+|---|---|---|
+| AWS01 | Crear la pila de red | Cumple |
+| AWS02 | Crear la pila de datos | Cumple |
+| AWS03 | Reparto entre dos zonas detrás del ALB | Cumple |
+| AWS04 | Caída de una EC2 y recuperación | Cumple: 299 consultas, 5 errores (1,7 %) en una ventana de 2,1 a 9,8 s tras la parada; 0 después; la EC2 volvió sola en 40,6 s |
+| AWS05 | Respaldo a S3 con comprobación | Cumple, ~13 s |
+| AWS06 | Alteración y restauración desde S3, primer intento | **No cumple**: la restauración falló y el servicio quedó en 503 (corregido en `166ca8a`) |
+| AWS06b | Restauración con la corrección | Cumple: primer 200 a los 8,6 s de la orden |
+| AWS07 | Destrucción manual | Cumple, ~9 min (snapshot automático de RDS por verificar) |
+| AWS08 | Interfaz y API por CloudFront | Cumple (HTTP a HTTPS, sin caché en la API) |
+| AWS09 | Despliegue completo desde GitHub Actions | Cumple tras un primer intento fallido (permiso de CloudFront); 4 min 29 s con las pilas de red, datos y cómputo ya creadas |
+| AWS10 | Destrucción desde GitHub Actions | Cumple: todo borrado en 8 min 28 s; la verificación final dio un falso positivo (corregido) |
 
-**Diagrama (24-11):** `docs/arquitectura/aws-final.png` (editable en `aws-final.drawio`) muestra la arquitectura AWS final con íconos oficiales.
+### Fase 6 · Encuentro 3: video y pitch: ⏳ pendiente
 
-> Los puntos 1, 3 y 4 asumían los datos como JSON en S3. Con D13 cambian: S3 solo guarda respaldos, las EC2 corren `app` + `pedidos` sin sincronizar nada y se suma una instancia RDS en subred privada (con su grupo de seguridad). Esta lista se reescribe al empezar las plantillas de CloudFormation.
-
-### Fase 5 · Probar en AWS y destruir
-
-| Prueba | Qué demuestra |
+| Tarea | Estado |
 |---|---|
-| I01–I05 en la nube | Lo mismo que en local, ahora con el ALB y S3 |
-| **Apagar una EC2 completa** | Tolerancia a la caída de una máquina, imposible de demostrar en local |
-| Restaurar una versión anterior en S3 | Respaldo fuera del cómputo; RTO medido, incluido el intervalo de sincronización |
-| Medir errores durante la caída | El ALB no reintenta como NGINX: se reporta lo que salga, tal cual |
-| **Destruir todo** y revisar facturación | Regla de costo cero (lista en `docs/04`) |
+| Grabar el video de la demo | ⏳ Pendiente. Guion en [09-guion-video-aws.md](09-guion-video-aws.md); exige volver a desplegar y destruir el mismo día |
+| Pitch | ✅ Guion escrito en [06-pitch.md](06-pitch.md); ⏳ falta ensayarlo y asignar quién dice cada parte |
+| Mejoras elegidas | ✅ Rollback; ✅ auto-recuperación (`restart: unless-stopped`, medida en AWS04); ✅ interfaz que muestra el estado; ⏳ video |
 
-### Fase 6 · Encuentro 3: mejoras y pitch
+## Probado vs. diseñado
 
-- **Mejoras elegidas:** rollback (✅ hecho), auto-recuperación (en AWS: `restart:` + health check del ALB), página de estado (✅ la interfaz ya muestra el estado) y **video de la demo** (grabar local y AWS antes de destruir).
-- Guion del pitch en `docs/06-pitch.md`, con los números finales de `EVIDENCIAS.md`.
-- Tabla final de **probado vs. diseñado** actualizada.
+| Mecanismo | Dónde | Estado | Evidencia |
+|---|---|---|---|
+| 2 instancias + proxy, reparto y conmutación sin errores | Local | ✅ Probado | I01, I02, I02b, I03 |
+| Datos que sobreviven a recrear un contenedor | Local | ✅ Probado | I04 |
+| Respaldo, alteración y restauración verificada con SHA-256 | Local | ✅ Probado | I05, I05c (157 ms), I05d, STG05 |
+| Despliegue sin caída, rollback manual y automático | Local | ✅ Probado | I07, I07b, I08 (sin archivo de evidencia), STG04, STG11 |
+| PostgreSQL primario + réplica; caída del primario | Local | ✅ Probado | STG07, STG08, STG14 |
+| Caída de ambas bases con copia en memoria | Local | ✅ Probado | STG12 |
+| Repetición por otra persona siguiendo el README del equipo | Local | 🟡 Parcial | I06 |
+| Reparto entre 2 EC2 en dos zonas detrás del ALB | AWS | ✅ Probado | AWS03 |
+| Caída de una EC2: errores acotados y recuperación sola | AWS | ✅ Probado (con 5 errores medidos) | AWS04 |
+| Respaldo a S3 fuera del cómputo y de la base | AWS | ✅ Probado | AWS05 |
+| Restauración desde S3 | AWS | ✅ Probado tras corregir el fallo de AWS06 | AWS06, AWS06b |
+| HTTPS al visitante por CloudFront y API sin caché | AWS | ✅ Probado (CloudFront a ALB va en HTTP) | AWS08 |
+| Despliegue y destrucción automatizados con OIDC, sin claves | AWS | ✅ Probado | AWS09, AWS10 |
+| Rechazo de otras IP y del encabezado falso o ausente en CloudFront y ALB | AWS | 🟡 Solo diseño: no se pudo simular desde la IP permitida | AWS08 |
+| Tolerancia a la caída de la base | AWS | ❌ No cubierta: RDS Single-AZ es un punto único de falla (D13) | — |
+| RDS Multi-AZ | AWS | 🟡 Solo diseño: exige un plan de pago | — |
+| HTTPS propio con dominio, y HTTPS entre CloudFront y el ALB | AWS | 🟡 Solo diseño | — |
+| Autoescalado | AWS | ❌ No implementado | — |
+| Monitoreo y alarmas (CloudWatch) | AWS | ❌ No implementado: solo health check del ALB y el monitor de los scripts | — |
+| Promoción automática de la réplica | Local | ❌ No implementada, a propósito (riesgo de *split-brain*) | — |
+| Caída de una región | — | ❌ Fuera de alcance | — |
