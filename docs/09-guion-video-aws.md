@@ -17,6 +17,8 @@ Lo que imprime, por ejemplo `181.132.209.220/32`, es tu **CIDR**:
 
 Si cambias de red (otra wifi, el celular, el lugar del pitch), la IP cambia y hay que volver a desplegar con la nueva. El paso 1 se puede repetir sin problema y solo actualiza lo necesario.
 
+**Para el pitch o el jurado (acceso desde cualquier IP):** despliega en **modo público** (paso 1, D18). Así solo CloudFront queda abierto a cualquier IP; el balanceador sigue cerrado y tu `/32` sigue siendo obligatorio (es la IP con la que entras directo a él). Destruye todo el mismo día.
+
 ## 1. Levantar todo (fuera de cámara, ~30 min)
 
 Elige **una** de las dos opciones.
@@ -27,6 +29,7 @@ Elige **una** de las dos opciones.
 2. Llena el formulario:
    - **accion:** `desplegar`
    - **cidr:** tu IP con `/32`, la del paso 0
+   - **publico:** `no` para grabar solo tú; `si` para que el jurado abra la URL desde cualquier red (modo público, D18)
    - **version:** déjalo vacío
 3. Dale **Run workflow** y espera ~30 min, hasta que salga ✅ verde.
 4. Abre la ejecución. En el **resumen** al final está la URL `https://xxxx.cloudfront.net`.
@@ -42,6 +45,14 @@ python3 scripts/aws_nodo.py desplegar --evidencia AWS09
 ```
 
 Sin `--cidr`, detecta tu IP solo. Al final imprime la URL de CloudFront.
+
+Modo público (cualquier IP puede abrir la URL de CloudFront; el balanceador sigue cerrado):
+
+```bash
+python3 scripts/aws_nodo.py desplegar --publico --evidencia AWS09
+```
+
+Sin `--publico`, el despliegue vuelve a restringir CloudFront a tu IP. `estado` indica si está PÚBLICO o RESTRINGIDO.
 
 ### Comprobar que todo quedó arriba
 

@@ -6,13 +6,17 @@ a que el balanceador vea sanas las 2 instancias, la prueba de humo y la destrucc
 
 Uso:
   python scripts/aws_nodo.py estado
-  python scripts/aws_nodo.py desplegar [--cidr 203.0.113.7/32] [--version COMMIT] [--permitir-reemplazo] [--evidencia AWS09]
+  python scripts/aws_nodo.py desplegar [--cidr 203.0.113.7/32] [--publico] [--version COMMIT] [--permitir-reemplazo] [--evidencia AWS09]
   python scripts/aws_nodo.py probar [--evidencia AWS09]
   python scripts/aws_nodo.py destruir [--si] [--conservar-secretos] [--evidencia AWS09]
   python scripts/aws_nodo.py --simular desplegar      (solo lecturas; muestra lo que ejecutaría)
 
-En GitHub Actions (.github/workflows/aws.yml) se usa con --cidr, --si y --evidencia; ahí la prueba de
-humo se hace por SSM en las EC2 (el runner no es la IP de CidrAcceso), también con --humo-remoto.
+Con --publico (D18) CloudFront responde a cualquier IP (pitch o jurado); el ALB sigue cerrado a CidrAcceso y
+CloudFront. Sin el flag, un despliegue vuelve a restringir CloudFront a CidrAcceso.
+
+En GitHub Actions (.github/workflows/aws.yml) se usa con --cidr, --si y --evidencia; sin --publico la prueba
+de humo se hace por SSM en las EC2 (el runner no es la IP de CidrAcceso), también con --humo-remoto; con
+--publico se hace por CloudFront desde el propio runner.
 
 Requisitos: AWS CLI v2 con credenciales activas, git, y npm (para construir el front).
 Solo biblioteca estándar; llama al AWS CLI con subprocess (sin bash), así que corre igual en
@@ -566,6 +570,13 @@ def prueba_humo(url):
         socket.getaddrinfo = _getaddrinfo
 
 
+def front_publico():
+    """True si la pila front tiene AccesoPublico=si (False si no existe o no tiene el parámetro)."""
+    p = describir_pila(PILA_FRONT)
+    valores = {x["ParameterKey"]: x.get("ParameterValue") for x in (p or {}).get("Parameters", [])}
+    return valores.get("AccesoPublico") == "si"
+
+
 def en_actions():
     """True dentro de GitHub Actions: el runner no tiene la IP de CidrAcceso, así que CloudFront le da 403."""
     return os.environ.get("GITHUB_ACTIONS") == "true"
@@ -599,10 +610,17 @@ def prueba_humo_remota(url, ids):
             raise Fallo(f"la prueba local por SSM falló en {instancia}")
 
 
-def comprobar_servicio(a):
-    """Prueba de humo por CloudFront o, si no se puede (Actions), por SSM en cada EC2."""
+def comprobar_servicio(a, publico=None):
+    """Prueba de humo por CloudFront o, si no se puede (Actions), por SSM en cada EC2.
+
+    Con CloudFront público (AccesoPublico=si) cualquier IP, incluido el runner, recibe 200: se prueba por CloudFront."""
     url = salidas(PILA_FRONT)["UrlFront"]
-    if getattr(a, "humo_remoto", False) or en_actions():
+    if publico is None:
+        publico = front_publico()
+    if publico:
+        log("   CloudFront es público (AccesoPublico=si): se espera 200 desde esta IP")
+        prueba_humo(url)
+    elif getattr(a, "humo_remoto", False) or en_actions():
         c = salidas(PILA_COMPUTO)
         prueba_humo_remota(url, [c["IdInstanciaA"], c["IdInstanciaB"]])
     else:
@@ -858,6 +876,13 @@ def cmd_estado(a):
     log("== URLs")
     for nombre, clave, texto in ((PILA_FRONT, "UrlFront", "CloudFront (HTTPS)"), (PILA_COMPUTO, "UrlAlb", "ALB directo (HTTP)")):
         log(f"   {texto:<20} {salida_de.get(nombre, {}).get(clave) or '(no disponible)'}")
+    if PILA_FRONT in salida_de:
+        acceso = {x["ParameterKey"]: x.get("ParameterValue") for x in
+                  next(p for p in pilas if p["StackName"] == PILA_FRONT).get("Parameters", [])}.get("AccesoPublico", "no")
+        if acceso == "si":
+            log("   Acceso a CloudFront: PÚBLICO (cualquier IP; el ALB sigue cerrado). Para cerrarlo: desplegar sin --publico, o destruir.")
+        else:
+            log("   Acceso a CloudFront: RESTRINGIDO a CidrAcceso (usa 'desplegar --publico' para abrirlo a cualquier IP).")
     log("== Salud del target group")
     arn = salida_de.get(PILA_COMPUTO, {}).get("ArnGrupoDestino")
     if arn:
@@ -916,7 +941,11 @@ def cmd_desplegar(a):
     with paso("2/7 CidrAcceso"):
         cidr = validar_cidr(a.cidr) if a.cidr else ip_publica() + "/32"
         log(f"   CidrAcceso = {cidr} ({'argumento' if a.cidr else 'IP pública detectada con checkip.amazonaws.com'})")
-        log("   Solo esa IP podrá usar el ALB y CloudFront; si cambia, repite 'desplegar --cidr NUEVA/32'.")
+        if a.publico:
+            log("   MODO PÚBLICO (--publico, D18): CloudFront responde a cualquier IP. El ALB sigue cerrado: solo CloudFront y esa IP entran a él.")
+            log("   Destruye todo al terminar el día: python scripts/aws_nodo.py destruir")
+        else:
+            log("   Solo esa IP podrá usar el ALB y CloudFront; si cambia, repite 'desplegar --cidr NUEVA/32'.")
 
     with paso("3/7 Secretos en SSM"):
         asegurar_secreto(SSM_CLAVE_DB, 12)          # 24 caracteres hex: válidos para RDS
@@ -928,7 +957,7 @@ def cmd_desplegar(a):
         PILA_RED: [("CidrAcceso", cidr)] + ([("PrefixListCloudFront", prefix)] if prefix else []),
         PILA_DATOS: [],
         PILA_COMPUTO: [("VersionGit", commit), ("ClaveOrigen", clave_origen), ("CidrAcceso", cidr)],
-        PILA_FRONT: [("ClaveOrigen", clave_origen), ("CidrAcceso", cidr)],
+        PILA_FRONT: [("ClaveOrigen", clave_origen), ("CidrAcceso", cidr), ("AccesoPublico", "si" if a.publico else "no")],
     }
     for n, (nombre, plantilla, previos) in enumerate(PILAS, 1):
         with paso(f"4.{n}/7 Pila {nombre}"):
@@ -955,8 +984,8 @@ def cmd_desplegar(a):
         if SIMULAR:
             log("   [simular] GET / (200 HTML), /pedidos (200 con 6 pedidos) y /health alternando entre las dos zonas")
         else:
-            url = comprobar_servicio(a)
-            log(f"   Listo: {url}")
+            url = comprobar_servicio(a, publico=a.publico)
+            log(f"   Listo: {url}" + (" (abierta a cualquier IP)" if a.publico else ""))
 
 
 def cmd_probar(a):
@@ -1041,6 +1070,8 @@ def main():
     sub.add_parser("estado", parents=[comun], help="pilas, URLs, salud, parámetros SSM y costo")
     d = sub.add_parser("desplegar", parents=[comun], help="despliega todo (idempotente)")
     d.add_argument("--cidr", help="IP o rango con acceso (por defecto, tu IP pública /32)")
+    d.add_argument("--publico", action="store_true",
+                   help="CloudFront responde a cualquier IP (AccesoPublico=si, D18); el ALB sigue cerrado. Sin el flag se vuelve a restringir a --cidr")
     d.add_argument("--version", help="commit a desplegar (por defecto origin/main)")
     d.add_argument("--permitir-reemplazo", action="store_true",
                    help="acepta cambios que reemplazan recursos (EC2, grupos de seguridad...); por defecto se aborta")

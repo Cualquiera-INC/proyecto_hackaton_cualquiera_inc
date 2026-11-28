@@ -18,9 +18,17 @@ on:
           - probar
           - destruir
       cidr:
-        description: "desplegar: tu IP pública con /32 (ej. 203.0.113.7/32). Es la única que podrá entrar a la app. No se acepta 0.0.0.0/0"
+        description: "desplegar: tu IP pública con /32 (ej. 203.0.113.7/32). Entra directo al ALB (y a CloudFront si publico=no). No se acepta 0.0.0.0/0"
         type: string
         required: false
+      publico:
+        description: "desplegar: si = CloudFront responde a cualquier IP (pitch o jurado; el ALB sigue cerrado, D18). no = solo la IP del campo cidr"
+        type: choice
+        required: false
+        default: "no"
+        options:
+          - "no"
+          - "si"
       version:
         description: "desplegar: commit a desplegar (opcional; por defecto el de main). Debe estar en GitHub"
         type: string
@@ -50,6 +58,7 @@ jobs:
     env:
       ACCION: ${{ inputs.accion }}
       CIDR: ${{ inputs.cidr }}
+      PUBLICO: ${{ inputs.publico }}
       VERSION: ${{ inputs.version }}
       CONFIRMACION: ${{ inputs.confirmacion }}
       EVIDENCIA: GHA${{ github.run_id }}
@@ -75,6 +84,10 @@ jobs:
             done
             if [ "$CIDR" = "0.0.0.0/32" ]; then
               echo "::error::cidr inválido (0.0.0.0). Usa tu IP pública con /32"
+              exit 1
+            fi
+            if [ -n "$PUBLICO" ] && [ "$PUBLICO" != "si" ] && [ "$PUBLICO" != "no" ]; then
+              echo "::error::publico debe ser si o no"
               exit 1
             fi
             if [ -n "$VERSION" ] && ! [[ "$VERSION" =~ ^[0-9a-f]{7,40}$ ]]; then
@@ -126,6 +139,7 @@ jobs:
             desplegar)
               args=(--cidr "$CIDR" --evidencia "$EVIDENCIA")
               if [ -n "$VERSION" ]; then args+=(--version "$VERSION"); fi
+              if [ "$PUBLICO" = "si" ]; then args+=(--publico); fi
               python scripts/aws_nodo.py desplegar "${args[@]}"
               ;;
             probar)
@@ -159,6 +173,7 @@ jobs:
             echo "- Resultado: **${{ steps.ejecutar.outcome }}**"
             echo "- Commit del workflow: \`$GITHUB_SHA\`"
             if [ "$ACCION" = "desplegar" ] && [ -n "$VERSION" ]; then echo "- Versión desplegada: \`$VERSION\`"; fi
+            if [ "$ACCION" = "desplegar" ]; then echo "- Acceso a CloudFront: $([ "$PUBLICO" = "si" ] && echo 'PÚBLICO (cualquier IP)' || echo 'restringido a cidr')"; fi
             url=$(aws cloudformation describe-stacks --stack-name nodo-ruta-front \
               --query "Stacks[0].Outputs[?OutputKey=='UrlFront'].OutputValue" --output text 2>/dev/null || true)
             if [ -n "$url" ] && [ "$url" != "None" ]; then echo "- CloudFront: $url"; else echo "- CloudFront: (no hay pila nodo-ruta-front)"; fi

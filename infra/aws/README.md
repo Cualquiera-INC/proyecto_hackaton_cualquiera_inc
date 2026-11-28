@@ -14,7 +14,7 @@ python scripts/aws_nodo.py destruir                     # pide escribir "destrui
 python scripts/aws_nodo.py --simular desplegar          # solo lecturas: muestra lo que ejecutaria
 ```
 
-Opciones utiles: `desplegar --cidr X.X.X.X/32` (por defecto tu IP publica), `--version COMMIT` (por defecto `origin/main`; debe estar en GitHub porque las EC2 lo clonan), `--permitir-reemplazo`, `--evidencia AWS09` (guarda la bitacora con marcas de tiempo en `evidencias/AWS09_despliegue_<fecha>.txt`; tambien en `probar` y `destruir`) y `destruir --conservar-secretos`.
+Opciones utiles: `desplegar --cidr X.X.X.X/32` (por defecto tu IP publica), `desplegar --publico` (CloudFront responde a cualquier IP; ver mas abajo), `--version COMMIT` (por defecto `origin/main`; debe estar en GitHub porque las EC2 lo clonan), `--permitir-reemplazo`, `--evidencia AWS09` (guarda la bitacora con marcas de tiempo en `evidencias/AWS09_despliegue_<fecha>.txt`; tambien en `probar` y `destruir`) y `destruir --conservar-secretos`.
 
 Que hace `desplegar`, en orden: (1) prechequeos: identidad, git sin cambios pendientes en lo que se despliega y commit publicado en GitHub; (2) `CidrAcceso`; (3) secretos `/nodo-ruta/db/password` y `/nodo-ruta/front/clave-origen` en SSM SecureString, **creados solo si faltan** y nunca impresos; (4) pilas 01, 02, 03, 04; (5) espera a que los 2 destinos esten `healthy` (maximo 15 min); (6) `scripts/publicar_front.py`; (7) prueba de humo por CloudFront (`/` HTML, `/pedidos` con 6 pedidos, `/health` desde las dos zonas). Termina con la duracion de cada paso y el total.
 
@@ -33,15 +33,19 @@ El workflow `.github/workflows/aws.yml` ejecuta este mismo script sin claves gua
 |---|---|
 | `accion` | `estado`, `desplegar`, `probar` o `destruir` |
 | `cidr` | Obligatorio para `desplegar`: **tu IP publica con `/32`** (la ves en https://checkip.amazonaws.com; ej. `203.0.113.7/32`). Es la unica que podra abrir la app por CloudFront o el ALB. Se rechaza `0.0.0.0/0` y cualquier formato distinto. **No es la IP del runner** |
+| `publico` | Solo `desplegar`: `no` (por defecto) deja CloudFront restringido a `cidr`; `si` lo abre a cualquier IP para el pitch (D18). El ALB **no** se abre: sigue admitiendo solo CloudFront y `cidr`. Un despliegue con `no` vuelve a cerrarlo |
 | `version` | Opcional: commit a desplegar (por defecto el de `main`). Debe estar en GitHub, las EC2 lo clonan |
 | `confirmacion` | Para `destruir`: escribir exactamente `destruir` |
 
 - **Cuanto tarda:** `desplegar` ~45 min (RDS ~13 min y CloudFront ~7 min); `destruir` ~10 min; `estado` y `probar`, pocos minutos. El limite del job es 90 min. La sesion de AWS dura **1 hora como maximo** (`MaxSessionDuration` del rol = 3600): si un despliegue pasara de ahi, fallaria por credenciales vencidas; las pilas siguen en AWS, se repite `desplegar` y continua (es idempotente).
 - **Una ejecucion a la vez:** `concurrency: aws-nodo-ruta`, sin cancelar la que esta en curso.
-- **Prueba de humo:** el runner no es tu IP, asi que CloudFront le responde 403 (eso comprueba la restriccion). Por eso, dentro de Actions la comprobacion de `/health` y `/pedidos` se hace por SSM en cada EC2 (`--humo-remoto`, automatico con `GITHUB_ACTIONS`).
+- **Prueba de humo (`publico=no`):** el runner no es tu IP, asi que CloudFront le responde 403 (eso comprueba la restriccion). Por eso, dentro de Actions la comprobacion de `/health` y `/pedidos` se hace por SSM en cada EC2 (`--humo-remoto`, automatico con `GITHUB_ACTIONS`).
+- **Prueba de humo (`publico=si`):** CloudFront responde 200 a cualquier IP, asi que el runner prueba `/`, `/pedidos` y `/health` directamente por CloudFront.
 - **Resultado:** resumen en la pagina de la ejecucion (URL de CloudFront y estado) y la bitacora con marcas de tiempo como artifact `bitacora-aws-<id>` (30 dias).
 - **Cuidado:** el repo es publico, asi que tu IP y el id de cuenta aparecen en los registros y en el artifact. AWS ya oculta el id de cuenta en el registro; la IP no se oculta.
 - `destruir` ya no cuenta como pendientes las instancias `terminated` ni el snapshot automatico de RDS (AWS los limpia solo; ver AWS07): los lista como "resto esperado".
+
+**Modo publico (D18).** `04-front.yaml` tiene el parametro `AccesoPublico` (`si`/`no`, por defecto `no`). Con `si`, la distribucion no asocia la CloudFront Function de IP; `CidrAcceso` sigue siendo obligatorio (/32, tu IP para entrar directo al ALB) y los candados que prohiben `0.0.0.0/0` en red y computo siguen vigentes. Desde terminal: `python scripts/aws_nodo.py desplegar --publico`; `estado` muestra si CloudFront es PUBLICO o RESTRINGIDO. Cambiar el parametro en una pila existente solo toca `FunctionAssociations` (sin interrupcion): no reemplaza la distribucion ni el bucket; el change set del script lo verifica. Riesgos y mitigaciones: D18. Destruye todo el mismo dia. Estado: escrito, **sin probar en AWS**.
 
 Las pruebas de caida de una instancia y de restauracion siguen siendo manuales (PRUEBAS.md). Lo que sigue en este documento son los **pasos manuales, como referencia** de lo que automatiza el script.
 
@@ -287,5 +291,7 @@ python3 scripts/publicar_front.py 2>&1 | tee evidencias/AWS08_publicacion.txt
 ```
 
 **f) Comprobar** con la seccion **AWS08** de [PRUEBAS.md](PRUEBAS.md). Si cambia tu IP, hay que actualizar las **tres** pilas con el nuevo `CidrAcceso` (y la regla de la funcion se actualiza sola con la pila del front).
+
+**Modo publico (D18):** con `AccesoPublico=si` el parametro `CidrAcceso` de esta pila solo se usa en la funcion (que no se asocia); para manual: agrega `ParameterKey=AccesoPublico,ParameterValue=si` a `update-stack` con `UsePreviousValue` en los demas parametros, y `no` para volver a cerrar.
 
 **Limites reconocidos (D16):** el tramo CloudFront -> ALB va en HTTP; el ALB queda abierto a todas las IP de CloudFront (el grupo de seguridad no distingue a cual distribucion) y se mitiga con la clave `X-Origin-Verify` mas la funcion de IP en el borde; la clave es visible para quien pueda leer las reglas del ALB. `SgAlb` queda con 56 de 60 reglas posibles (la prefix list pesa 55): no se le pueden agregar mas reglas sin pedir cuota.
