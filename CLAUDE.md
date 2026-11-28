@@ -23,6 +23,7 @@ Equipo de 6 personas en macOS, Windows y Linux. Repositorio: `Cualquiera-INC/pro
 - `scripts/`: `aws_nodo.py` (AWS), `desplegar.py`, `datos.py`, `verificar_servicio.py`, `monitorear.py`, `ejecutar_local.py`.
 - `docs/arquitectura/`: diagrama AWS final con íconos oficiales (`aws-final.drawio`, `aws-final.png`) y su generador `generar_aws_final.py`.
 - `docs/`: 01 reto, 02 arquitectura, 03 decisiones, 04 seguridad y costos, 05 cómo funciona, 06 pitch, 07 plan y fases, 08 PostgreSQL y microservicio de pedidos, 09 guion del video en AWS.
+- `presentacion/`: slides del pitch (`pitch.html`), guion de ensayo (`guion.html`), esquema común y recursos (logos e íconos AWS en `assets/`).
 - `evidencias/`: el prefijo del archivo es el ID de la prueba (`I05c_…`). `EVIDENCIAS.md` es la única bitácora.
 - `frontend-nodo/`: interfaz web React + Vite de solo lectura. La construye `despliegue/Dockerfile.proxy` y el proxy la sirve en `/` (D11).
 - `.github/workflows/`: `frontend.yml` (lint + build) y `contenedores.yml` (construye la referencia y hace la prueba de punta a punta de `despliegue/`).
