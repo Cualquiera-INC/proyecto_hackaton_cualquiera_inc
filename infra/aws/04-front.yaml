@@ -112,7 +112,7 @@ Resources:
     Type: AWS::CloudFront::Function
     Metadata:
       com.aws.cloudformation.Context:
-        why: Corta en el borde a quien no venga de CidrAcceso (la distribucion es publica por naturaleza). Compara IPv4 con mascara; IPv6 se rechaza. Existe siempre, tambien con AccesoPublico=si (solo se deja de asociar): asi alternar el parametro no crea ni borra la funcion, y una funcion sin asociar no cuesta nada.
+        why: Corta en el borde a quien no venga de CidrAcceso (la distribucion es publica por naturaleza). Compara IPv4 con mascara; IPv6 se rechaza. Existe siempre, tambien con AccesoPublico=si (solo se deja de asociar); asi alternar el parametro no crea ni borra la funcion, y una funcion sin asociar no cuesta nada.
     Properties:
       Name: !Sub "${AWS::StackName}-solo-ip"
       AutoPublish: true
