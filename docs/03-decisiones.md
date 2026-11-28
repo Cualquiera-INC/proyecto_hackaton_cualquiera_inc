@@ -117,7 +117,7 @@ Desplegar en AWS eran ~10 bloques de comandos pegados a mano (contraseña en SSM
 - **Política del rol, versionada y sin aplicar:** `infra/aws/iam/politica-github-actions.json` (bloques explicados en su README). Mínimo privilegio razonable: CloudFormation solo `nodo-ruta-*`, IAM solo roles y perfiles `nodo-ruta-computo-*` con `PassRole` solo a EC2, SSM `/nodo-ruta/*`, `SendCommand` solo a instancias con `proyecto=nodo-ruta`, región us-east-2; sin `*:*` ni `iam:*`. Pasó `ValidatePolicy` sin hallazgos, pero **no se ha ejecutado nunca**: pueden faltar permisos en la primera corrida.
 - **Riesgos que se reconocen:** quien lance el workflow puede crear recursos de pago (se mitiga con `main` solamente y la alerta de presupuesto); la sesión OIDC dura como máximo 1 h (`MaxSessionDuration`), justa para un despliegue de ~45 min; el repo es público, así que la IP de `cidr` queda visible en registros y artifact.
 
-## D18 · Acceso público solo por CloudFront para el pitch: `AccesoPublico` / `--publico` 🟡 (28-11; plantilla y script escritos, **sin desplegar ni probar en AWS**)
+## D18 · Acceso público solo por CloudFront para el pitch: `AccesoPublico` / `--publico` 🟢 (28-11; desplegado y probado desde Actions, AWS11)
 El jurado y el público del pitch entran desde redes que no conocemos, y hasta ahora todo estaba cerrado a una sola IP (`CidrAcceso`). Opciones:
 
 | Opción | A favor | En contra |

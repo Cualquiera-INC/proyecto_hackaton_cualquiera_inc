@@ -232,6 +232,33 @@ svg [data-f]{transform:none;filter:none}
  .cl svg{animation:none!important}.dg .pk,.dg .pk2{display:none}.link:after{display:none}
  .slide.future,.slide.past{transform:none;filter:none}
 }
+
+/* pitch 3 min */
+.hook{font-size:112px;line-height:1.04;font-weight:900;letter-spacing:-3px;max-width:1500px}
+.hook .dead{animation:dead 1.2s ease 3.2s both}
+@keyframes dead{to{color:#ff6b6b;text-shadow:0 0 40px rgba(255,107,107,.55)}}
+.hsub{font-size:36px;line-height:1.35;color:#c4d0e6;max-width:1380px;margin-top:34px}
+.hsub b{color:#fff}
+.actors{display:flex;gap:22px;margin-top:40px}
+.actors .chip{font-family:var(--f);font-size:30px;padding:14px 30px;border-radius:18px}
+.toprow{display:flex;justify-content:space-between;align-items:center;margin-bottom:46px}
+.toprow img.nr{width:104px;height:104px;border-radius:24px;box-shadow:0 0 0 1px rgba(255,255,255,.15),0 20px 60px rgba(0,0,0,.5)}
+.bandx{display:flex;gap:22px;align-items:center;margin-top:10px}
+.bandx .lb{font-size:32px;font-weight:800;margin-right:8px}
+.bandx .chip{font-family:var(--f);font-size:29px;padding:13px 26px;border-radius:18px}
+.s3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:4px}
+.s3 .st{padding:20px 30px 18px}
+.s3 .st b{display:block;font-size:76px;font-weight:900;line-height:1;letter-spacing:-2px}
+.s3 .st span{display:block;font-size:26px;line-height:1.25;color:var(--mu);margin-top:6px}
+.s3 .st .chip{font-size:20px;padding:2px 12px;margin-top:8px}
+.limit{margin-top:22px;font-size:28px;color:#ffe0a0;padding:14px 26px;border-radius:16px;background:rgba(255,176,32,.1);border:1px dashed rgba(255,176,32,.6);display:inline-block}
+.qrcard{position:absolute;right:140px;top:100px;width:620px;z-index:5}
+.qrbox{background:#fff;border-radius:30px;padding:30px;box-shadow:0 30px 90px rgba(0,0,0,.55),0 0 0 3px rgba(26,168,240,.5)}
+.qrbox svg{display:block;width:560px;height:560px}
+.qrurl{margin-top:14px;text-align:center;font-family:var(--m);font-size:25px;font-weight:700;color:#0a1a33;word-break:break-all}
+.phr{font-size:62px;line-height:1.12;font-weight:800;letter-spacing:-1.5px;margin-top:30px}
+.phr div{margin-top:6px}
+.thx{font-size:60px;font-weight:300;margin-top:30px}.thx b{font-weight:800}
 </style></head><body>
 <div id="stage"><svg width="0" height="0" style="position:absolute"><defs><symbol id="cd" viewBox="0 0 400 160"><g fill="currentColor"><ellipse cx="200" cy="122" rx="196" ry="34"/><circle cx="118" cy="92" r="52"/><circle cx="208" cy="64" r="68"/><circle cx="292" cy="94" r="48"/></g></symbol></defs></svg>
 <div class="bk" style="left:-260px;top:-200px;width:700px;height:700px;background:#F07A22"></div>
@@ -244,55 +271,19 @@ svg [data-f]{transform:none;filter:none}
 <div id="village"></div><div id="fog"></div>
 <div class="cl" id="cl3"><svg viewBox="0 0 4800 420" preserveAspectRatio="none"><use href="#cd" x="-200" y="160" width="1200" height="480"/><use href="#cd" x="600" y="220" width="1360" height="544"/><use href="#cd" x="1500" y="140" width="1200" height="480"/><use href="#cd" x="2400" y="210" width="1400" height="560"/><use href="#cd" x="3300" y="150" width="1200" height="480"/><use href="#cd" x="4100" y="220" width="1320" height="528"/></svg></div>
 <img id="logoS" src="assets/logo-estudia.png" alt="Estud-IA">
-<section class="slide cover" data-hero="1" data-titulo="Portada: Nodo Ruta" data-tiempo="0:10" data-notas="Saludo y contexto: reto 16 de Estud-IA, Nube e infraestructura, Capa 2. Presentar al equipo Cualquiera INC. Quién habla: [asignar].">
-<div class="a" style="--i:0"><div class="glass"><img src="assets/logo-estudia.png" width="820" alt="Estud-IA"></div></div>
-<div style="margin-top:56px"><div class="title-xl a" style="--i:2"><span class="ac">Nodo Ruta</span></div>
-<div class="tag a" style="--i:4">Que la consulta de entregas <b style="font-weight:800;color:#fff">no se caiga</b></div>
-<div class="meta a" style="--i:6"><b>Equipo Cualquiera INC</b> &nbsp;·&nbsp; Reto 16 &nbsp;·&nbsp; Estud-IA Nube e infraestructura, Capa 2</div></div>
-<img class="a" style="--i:5;position:absolute;right:140px;top:90px;width:120px;height:120px;border-radius:26px;box-shadow:0 0 0 1px rgba(255,255,255,.15),0 20px 60px rgba(0,0,0,.5)" src="assets/logo-nodo-ruta.png" alt="Nodo Ruta">
-<img class="a alc" style="--i:7;position:absolute;right:140px;bottom:104px;z-index:6" src="assets/logo-alcaldia.png" alt="Alcaldía de Medellín, Distrito de Ciencia, Tecnología e Innovación">
+
+
+<section class="slide" data-hero="1" data-titulo="Hook y problema" data-tiempo="0:30" data-notas="HOOK (0:00-0:08, mirando al público, sin leer): Levanten la mano si alguna vez se les cayó el único servidor justo cuando más lo necesitaban. Pausa. Y ahora la pregunta de verdad: ¿qué pasa si el único servidor se apaga a mitad del día? (0:08-0:30) Nodo Ruta es una empresa ficticia de distribución urbana. Consulta sus entregas en UNA sola instancia, con los datos adentro de la app y cambios a mano. Si cae, Operaciones queda a ciegas y nadie sabe cuánto tarda en volver. Lo viven tres actores: Operaciones, el responsable técnico y Coordinación logística. Eso es lo que resolvimos. Quién habla: [asignar].">
+<div class="toprow a" style="--i:0"><img src="assets/logo-estudia.png" width="330" alt="Estud-IA"><img class="nr" src="assets/logo-nodo-ruta.png" alt="Nodo Ruta"></div>
+<div class="kick a" style="--i:1">Nodo Ruta · Reto 16</div>
+<h1 class="hook a" style="--i:2">¿Qué pasa si el único servidor <span class="dead">se apaga</span> a mitad del día?</h1>
+<div class="hsub a" style="--i:4"><b>Nodo Ruta</b> (empresa ficticia) consulta sus entregas en <b>una sola instancia</b>, con los datos adentro y cambios a mano. Si cae, operaciones queda a ciegas y <b>nadie sabe cuánto tarda en volver</b>.</div>
+<div class="actors a" style="--i:6"><span class="chip o">Operaciones</span><span class="chip">Responsable técnico</span><span class="chip m">Coordinación logística</span></div>
 </section>
-<section class="slide" data-auto="2600" data-titulo="El problema" data-tiempo="0:15" data-notas="Una sola instancia, datos dentro de la app, cambios a mano. Si la única instancia cae, operaciones se queda sin consultar entregas y nadie sabe cuánto tarda en volver ni si los datos que vuelven son los correctos. El servidor se apaga solo a los pocos segundos.">
-<div class="kick a" style="--i:0">El problema</div><h1 class="h1 a" style="--i:1">Si cae la única instancia,<br>la consulta se queda <span class="ac">en blanco</span></h1>
-<div class="pw a" id="pw" style="--i:3"><div class="win card"><div class="bar"><i></i><i></i><i></i>&nbsp; consulta de entregas</div><div class="rows"><s></s><s></s><s></s><s></s><s></s><s></s></div><div class="blank">Sin respuesta<small>nadie sabe cuánto tarda en volver</small></div></div>
-<div class="link"></div><svg class="srv" width="320" height="400" viewBox="0 0 320 400"><rect class="body" x="30" y="20" width="260" height="360" rx="26" fill="#0f1a33" stroke-width="4"/>
-<rect x="58" y="52" width="204" height="78" rx="14" fill="#16244a" stroke="rgba(150,185,255,.25)"/><circle class="led" cx="90" cy="91" r="10" style="animation-delay:0s"/><rect x="118" y="84" width="110" height="14" rx="7" fill="rgba(150,185,255,.25)"/><rect x="58" y="152" width="204" height="78" rx="14" fill="#16244a" stroke="rgba(150,185,255,.25)"/><circle class="led" cx="90" cy="191" r="10" style="animation-delay:0.3s"/><rect x="118" y="184" width="110" height="14" rx="7" fill="rgba(150,185,255,.25)"/><rect x="58" y="252" width="204" height="78" rx="14" fill="#16244a" stroke="rgba(150,185,255,.25)"/><circle class="led" cx="90" cy="291" r="10" style="animation-delay:0.6s"/><rect x="118" y="284" width="110" height="14" rx="7" fill="rgba(150,185,255,.25)"/>
-<g class="pw-ico" stroke="#ff6b6b" stroke-width="10" stroke-linecap="round" fill="none"><path d="M187 168A42 42 0 1 1 133 168"/><path d="M160 150V198"/></g></svg></div>
-<div class="cons a" style="--i:5"><span class="chip o">1 sola instancia</span><span class="chip m">Datos dentro de la app</span><span class="chip">Cambios a mano</span></div>
-</section>
-<section class="slide" data-titulo="Quién lo vive" data-tiempo="0:20" data-notas="Tres actores: Operaciones sufre la caída; el responsable técnico opera la solución y es quien más cambia; coordinación logística necesita saber el estado y los límites.">
-<div class="kick a" style="--i:0">Quién lo vive</div><h2 class="h2 a" style="--i:1">Tres personas, <span class="ac2">una misma consulta</span></h2>
-<div class="g3">
-<div class="who card a" style="--c:#F07A22;--i:3"><svg viewBox="0 0 104 104" fill="none" stroke="#F07A22" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="12" y="18" width="80" height="52" rx="8"/><path d="M36 88h32M52 70v18"/><path d="M30 44l14 10 14-18 16 14"/></svg><h3>Operaciones</h3><div class="r">Sufre la caída</div><p>Consulta entregas; si el servicio cae, busca información por otros medios.</p></div>
-<div class="who card a" style="--c:#8CC63F;--i:4"><svg viewBox="0 0 104 104" fill="none" stroke="#8CC63F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M24 30l24 22-24 22"/><path d="M56 78h28"/><rect x="8" y="12" width="88" height="80" rx="12"/></svg><h3>Responsable técnico</h3><div class="r">Opera la solución · quien más cambia</div><p>Publica versiones y atiende incidentes; hoy reinicia y busca una copia.</p></div>
-<div class="who card a" style="--c:#C83CC8;--i:5"><svg viewBox="0 0 104 104" fill="none" stroke="#C83CC8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><rect x="22" y="14" width="60" height="78" rx="10"/><path d="M38 10h28v14H38z"/><path d="M36 48h32M36 62h32M36 76h18"/></svg><h3>Coordinación logística</h3><div class="r">Necesita estado y límites</div><p>Quiere saber si el servicio funciona y qué límites tiene.</p></div>
-</div></section>
-<section class="slide" data-titulo="Qué necesitaba el negocio" data-tiempo="0:25" data-notas="No pidió cinco nueves. Pidió tres cosas que se pueden medir: que la caída de un servidor no se note, datos correctos y recuperación en un tiempo conocido, medido con scripts y no estimado.">
-<div class="kick a" style="--i:0">Qué necesitaba el negocio</div><h2 class="h2 a" style="--i:1">No pidió “cinco nueves”.<br><span class="ac">Pidió tres cosas medibles.</span></h2>
-<div class="g3" style="margin-top:50px">
-<div class="need card a" style="--c:#1AA8F0;--i:3"><div class="n">1</div><h3>La caída de un servidor no se nota</h3><p>Las consultas siguen funcionando, o se nota muy poco.</p></div>
-<div class="need card a" style="--c:#8CC63F;--i:4"><div class="n">2</div><h3>Datos correctos</h3><p>Detectar un dato dañado y recuperarlo desde una copia verificada.</p></div>
-<div class="need card a" style="--c:#F07A22;--i:5"><div class="n">3</div><h3>Recuperación en un tiempo conocido</h3><p>Medido con scripts, no estimado.</p></div>
-</div></section>
-<section class="slide" data-titulo="La solución local" data-tiempo="0:20" data-notas="En local: dos instancias detrás de NGINX, el microservicio de pedidos, PostgreSQL con réplica en caliente y respaldo con pg_dump verificado con SHA-256. Aclarar: dos contenedores en un mismo computador dan tolerancia a la caída de una instancia, nada más.">
-<div class="kick a" style="--i:0">La solución local</div><div class="dgtop"><h2 class="h2 a" style="--i:1">Dos instancias detrás de <span class="ac2">NGINX</span></h2><span class="chip a" style="--i:2">Docker Compose · 127.0.0.1:8080</span></div>
-<svg class="dg a" style="--i:3" viewBox="0 0 1640 640" height="640"><defs><marker id="ma" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7fa6e6"/></marker></defs>
-<path class="ln" marker-end="url(#ma)" d="M125,280 H228"/>
-<g data-f="1"><path class="ln" marker-end="url(#ma)" d="M440,280 H500 V145 H558"/><path class="ln" marker-end="url(#ma)" d="M440,280 H500 V415 H558"/></g>
-<g data-f="2"><path class="ln" marker-end="url(#ma)" d="M770,145 H878"/><path class="ln" marker-end="url(#ma)" d="M770,415 H878"/><path class="ln" marker-end="url(#ma)" d="M1090,145 H1238"/><path class="ln" marker-end="url(#ma)" d="M1090,415 H1150 V365 H1238"/></g>
-<g data-f="2"><circle class="pk" r="9"><animateMotion dur="5s" begin="0s" repeatCount="indefinite" path="M70,280 H500 V145 H880 H1240"/></circle><circle class="pk2" r="9"><animateMotion dur="5s" begin="2.5s" repeatCount="indefinite" path="M70,280 H500 V415 H1150 V365 H1240"/></circle></g>
-<g><circle cx="70" cy="248" r="22" fill="none" stroke="#9fb0cc" stroke-width="5"/><path d="M26 318c0-34 20-46 44-46s44 12 44 46" fill="none" stroke="#9fb0cc" stroke-width="5"/><text x="70" y="362" text-anchor="middle" class="tm" style="font-size:24px">Operaciones</text></g>
-<g><rect class="box" x="230" y="215" width="210" height="130" rx="20"/><text class="tb" x="335" y="278" text-anchor="middle" style="font-size:32px">NGINX</text><text class="tm" x="335" y="310" text-anchor="middle">punto de acceso</text></g>
-<g data-f="1"><rect class="box" x="560" y="90" width="210" height="110" rx="20"/><text class="tb" x="665" y="143" text-anchor="middle" style="font-size:32px">app1</text><text class="tm" x="665" y="175" text-anchor="middle">X-Instance-Id</text><rect class="box" x="560" y="360" width="210" height="110" rx="20"/><text class="tb" x="665" y="413" text-anchor="middle" style="font-size:32px">app2</text><text class="tm" x="665" y="445" text-anchor="middle">X-Instance-Id</text></g>
-<g data-f="2"><rect class="box" x="880" y="90" width="210" height="110" rx="20"/><text class="tb" x="985" y="143" text-anchor="middle" style="font-size:32px">pedidos1</text><text class="tm" x="985" y="175" text-anchor="middle">microservicio</text><rect class="box" x="880" y="360" width="210" height="110" rx="20"/><text class="tb" x="985" y="413" text-anchor="middle" style="font-size:32px">pedidos2</text><text class="tm" x="985" y="445" text-anchor="middle">microservicio</text>
-<rect x="1210" y="30" width="400" height="450" rx="26" fill="rgba(106,61,240,.08)" stroke="#8a6bff" stroke-width="3" stroke-dasharray="12 9"/><text x="1232" y="68" class="tb" style="font-size:26px;fill:#b7a5ff">PostgreSQL</text>
-<rect class="box" x="1240" y="100" width="340" height="110" rx="20"/><text class="tb" x="1410" y="153" text-anchor="middle" style="font-size:32px">Primario</text><text class="tm" x="1410" y="185" text-anchor="middle">escritura</text><rect class="box" x="1240" y="310" width="340" height="110" rx="20"/><text class="tb" x="1410" y="363" text-anchor="middle" style="font-size:32px">Réplica</text><text class="tm" x="1410" y="395" text-anchor="middle">lectura en vivo</text>
-<path class="ln" marker-end="url(#ma)" d="M1410,212 V308"/><text class="tl" x="1428" y="268">réplica en caliente</text></g>
-<g data-f="3"><path class="ln dash" marker-end="url(#ma)" d="M1410,482 V548" style="stroke:#F07A22"/><rect x="1210" y="552" width="400" height="84" rx="20" fill="#2a1a0c" stroke="#F07A22" stroke-width="2.5"/><text x="1410" y="587" text-anchor="middle" class="tb" style="font-size:28px">Respaldo</text><text x="1410" y="618" text-anchor="middle" class="tm">pg_dump + SHA-256</text></g>
-</svg></section>
-<section class="slide" data-titulo="La solución en AWS" data-tiempo="0:35" data-notas="En AWS: CloudFront con HTTPS, ALB, dos EC2 en us-east-2a y us-east-2b, RDS PostgreSQL Single-AZ, respaldos en S3 y Systems Manager sin SSH. Lo desplegamos con CloudFormation. Decir claro que la base es Single-AZ: punto único de falla.">
-<div class="kick a" style="--i:0">La solución en AWS</div><div class="dgtop"><h2 class="h2 a" style="--i:1">La misma idea, con piezas de <span class="ac">nube</span></h2><span class="chip o a" style="--i:2">us-east-2 · Ohio</span></div>
-<svg class="dg a" style="--i:3" viewBox="0 0 1640 660" height="660"><defs><marker id="mb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7fa6e6"/></marker></defs>
+<section class="slide" data-steps="2200" data-titulo="La solución" data-tiempo="0:45" data-notas="(0:30-1:15) Esta es la solución, en AWS región us-east-2. El usuario entra por CloudFront con HTTPS; la interfaz sale de S3 y las consultas pasan por el balanceador (ALB) a DOS servidores EC2, uno en cada zona (us-east-2a y us-east-2b). Los datos viven en PostgreSQL (RDS) en subred privada, fuera de los servidores. Los respaldos van a S3 con pg_dump y suma SHA-256, para poder verificarlos. Y todo es código: GitHub Actions entra con OIDC, sin claves guardadas, y CloudFormation crea 4 pilas. Un botón crea (unos 16 minutos desde cero, suma de pasos, AWS09) y otro destruye (8 min 28 s, AWS10). Decir claro: la base es una sola (RDS Single-AZ, D13).">
+<div class="kick a" style="--i:0">La solución · AWS us-east-2</div>
+<div class="dgtop" style="margin-bottom:6px"><h2 class="h2 a" style="--i:1;font-size:64px">Dos servidores, dos zonas, <span class="ac">todo como código</span></h2></div>
+<svg class="dg a" style="--i:3;width:1500px;height:auto;margin-top:0" viewBox="0 0 1640 660"><defs><marker id="mb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7fa6e6"/></marker></defs>
 <path class="ln" marker-end="url(#mb)" d="M104,327 H228"/>
 <g data-f="1"><path class="ln" marker-end="url(#mb)" d="M272,283 V152"/><path class="ln" marker-end="url(#mb)" d="M316,327 H536"/><text class="tl" x="326" y="312" style="font-size:.85em">/pedidos · /health</text><text class="tl" x="290" y="228">“/” interfaz</text></g>
 <g data-f="2"><rect x="480" y="108" width="770" height="494" rx="22" fill="rgba(140,90,255,.07)" stroke="#8c5aff" stroke-width="3"/>
@@ -310,31 +301,19 @@ svg [data-f]{transform:none;filter:none}
 <g data-f="2"><image href="assets/aws-icons/vpc.svg" x="494" y="120" width="44" height="44"/><text x="548" y="152" class="tl" style="font-weight:700;fill:#c7b3ff">VPC</text>
 <image href="assets/aws-icons/ec2.svg" x="830" y="200" width="84" height="84"/><text x="786" y="318" style="font-size:22px">EC2 A</text><image href="assets/aws-icons/ec2.svg" x="830" y="420" width="84" height="84"/><text x="786" y="548" style="font-size:22px">EC2 B</text>
 <image href="assets/aws-icons/rds.svg" x="1080" y="285" width="84" height="84"/><text x="1122" y="410" text-anchor="middle">RDS PostgreSQL</text><text x="1122" y="438" text-anchor="middle" style="fill:#ffb020;font-weight:700;font-size:22px">Single-AZ</text></g>
-<g data-f="3"><image href="assets/aws-icons/s3.svg" x="1440" y="200" width="84" height="84"/><text x="1482" y="308" text-anchor="middle">S3 respaldos</text><text x="1482" y="336" text-anchor="middle" class="tm">versiones</text>
+<g data-f="3"><image href="assets/aws-icons/s3.svg" x="1440" y="200" width="84" height="84"/><text x="1482" y="308" text-anchor="middle">S3 respaldos</text><text x="1482" y="336" text-anchor="middle" class="tm">pg_dump + SHA-256</text>
 <image href="assets/aws-icons/systems_manager.svg" x="1440" y="420" width="84" height="84"/><text x="1482" y="528" text-anchor="middle">Systems Manager</text></g>
 <g data-f="4"><rect x="0" y="528" width="176" height="64" rx="14" fill="#161b2b" stroke="#6b7a99" stroke-width="2"/><text x="88" y="568" text-anchor="middle" style="font-size:22px;font-weight:700">GitHub Actions</text>
 <path class="ln" marker-end="url(#mb)" d="M178,560 H214"/><image href="assets/aws-icons/identity_and_access_management.svg" x="220" y="524" width="72" height="72"/><text x="256" y="632" text-anchor="middle" style="font-size:22px">IAM · OIDC</text>
 <path class="ln" marker-end="url(#mb)" d="M294,560 H374"/><image href="assets/aws-icons/cloudformation.svg" x="380" y="524" width="72" height="72"/><text x="416" y="632" text-anchor="middle" style="font-size:22px">CloudFormation</text>
 <path class="ln dash" marker-end="url(#mb)" d="M454,560 H476"/></g>
-</svg></section>
-<section class="slide" data-titulo="Todo es código" data-tiempo="0:20" data-notas="Cuatro pilas de CloudFormation: red, datos, cómputo y front. GitHub Actions entra a AWS con OIDC, sin claves guardadas. Un botón crea y otro destruye. Desde cero, unos 16 minutos (AWS09, suma de pasos); destruir toma 8 min 28 s (AWS10).">
-<div class="kick a" style="--i:0">Todo es código</div><h2 class="h2 a" style="--i:1">Un botón para <span class="ac">crear</span>, otro para <span class="ac2">destruir</span></h2>
-<div class="flow a" style="--i:3"><div class="nd card"><div>GitHub Actions<small>solo rama main</small></div></div><div class="ar"></div>
-<div class="nd card"><img src="assets/aws-icons/identity_and_access_management.svg" alt="">OIDC<small>sin claves</small></div><div class="ar"></div>
-<div class="nd card"><img src="assets/aws-icons/cloudformation.svg" alt="">CloudFormation<small>4 pilas</small></div></div>
-<div class="stacks a" style="--i:5">
-<div class="stack card"><img src="assets/aws-icons/vpc.svg" alt=""><b>Red</b><code>nodo-ruta-red</code></div>
-<div class="stack card"><img src="assets/aws-icons/rds.svg" alt=""><b>Datos</b><code>nodo-ruta-datos</code></div>
-<div class="stack card"><img src="assets/aws-icons/ec2.svg" alt=""><b>Cómputo</b><code>nodo-ruta-computo</code></div>
-<div class="stack card"><img src="assets/aws-icons/cloudfront.svg" alt=""><b>Front</b><code>nodo-ruta-front</code></div></div>
-<div class="bars a" style="--i:7">
-<div class="bar"><div class="bt" style="color:#ffa763">Crear</div><div class="tr"><div class="fl" style="--w:100%;background:linear-gradient(90deg,#F07A22,#ff5fa8)">~16 min desde cero · AWS09</div></div></div>
-<div class="bar"><div class="bt" style="color:#7fd2ff">Destruir</div><div class="tr"><div class="fl" style="--w:53%;background:linear-gradient(90deg,#1AA8F0,#8a6bff)">8 min 28 s · AWS10</div></div></div>
-<div class="note">AWS09: ~16 min es la suma de pasos; la ejecución con red, datos y cómputo ya creados tardó 4 min 29 s.</div></div>
+</svg>
+<div class="bandx" data-f="5"><span class="lb">Un botón crea, otro destruye:</span><span class="chip o">Crear ~16 min desde cero · AWS09</span><span class="chip">Destruir 8 min 28 s · AWS10</span></div>
 </section>
-<section class="slide" data-titulo="Caída de un servidor (AWS04)" data-tiempo="0:35" data-notas="AWS04 es el momento de la demo en vivo: se cuenta lo que se ve en la línea de tiempo. Se detiene una EC2 con el monitor corriendo. 299 consultas, 5 errores (1,7 %), todos entre 2,1 y 9,8 s después de la parada; después, 0 errores. La EC2 volvió sola a los 40,6 s. Explicar: el ALB no reintenta en otra instancia hasta que su health check (2 por 5 s) saca la caída.">
-<div class="kick a" style="--i:0">Caída de un servidor · AWS04</div><h2 class="h2 a" style="--i:1">Se apaga una EC2. <span class="ac">¿Qué ve el usuario?</span></h2>
-<svg class="tl a" style="--i:3" viewBox="0 0 1640 470" height="470"><defs><marker id="mc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9fb0cc"/></marker></defs>
+<section class="slide" data-steps="2400" data-titulo="La prueba (medido, no estimado)" data-tiempo="1:05" data-notas="(1:15-2:20) Aquí está lo que importa: medido, no estimado. Prueba AWS04: con el monitor corriendo se apaga la EC2 B. De 299 consultas hubo 5 errores (1,7 %), todos entre 2,1 y 9,8 segundos después de apagarla, mientras el balanceador se da cuenta. Después, cero errores, y la EC2 vuelve sola a los 40,6 segundos. Sin cambiar nada a mano. Segunda cifra, AWS06b: alteramos los datos a propósito, restauramos desde S3 y volvió en 8,6 s, con los 6 pedidos iguales. Tercera, I07: actualizar la versión sin caída, 0 errores en 708 consultas. Y en local, I05c: 157 ms restaurando datos. Cierre honesto: la base en AWS es una sola (RDS Single-AZ, D13); y lo decimos.">
+<div class="kick a" style="--i:0">La prueba · medido, no estimado</div>
+<h2 class="h2 a" style="--i:1;font-size:64px;margin-bottom:4px">Se apaga una EC2. <span class="ac">¿Qué ve el usuario?</span></h2>
+<svg class="tl a" style="--i:3;width:1400px;height:auto;margin-top:0" viewBox="0 0 1640 470"><defs><marker id="mc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9fb0cc"/></marker></defs>
 <g class="ec2s"><image href="assets/aws-icons/ec2.svg" x="1380" y="20" width="84" height="84"/><text x="1422" y="130" text-anchor="middle" style="font-size:22px">EC2 B</text></g>
 <g><image href="assets/aws-icons/ec2.svg" x="1500" y="20" width="84" height="84"/><text x="1542" y="130" text-anchor="middle" style="font-size:22px">EC2 A</text></g>
 <g data-f="1"><text x="60" y="58" style="font-size:30px;font-weight:800;fill:#ff8a8a">t = 0 · se detiene EC2 B</text></g>
@@ -347,68 +326,94 @@ svg [data-f]{transform:none;filter:none}
 <g data-f="3"><text x="910" y="256" text-anchor="middle" style="font-size:40px;font-weight:800;fill:#b4e36f">0 errores</text></g>
 <g data-f="4"><circle cx="1440.4" cy="300" r="16" fill="#8CC63F"/><text x="1440.4" y="388" text-anchor="middle" style="font-size:30px;font-weight:800;fill:#b4e36f">40,6 s · vuelve sola</text></g>
 </svg>
-<div class="stats">
-<div class="stat card" data-f="2"><b class="ac">1,7 %</b><span>de errores,<br>en ~8 s</span></div>
-<div class="stat card" data-f="3"><b style="color:#b4e36f">0</b><span>errores<br>después</span></div>
-<div class="stat card" data-f="4"><b class="ac2">40,6 s</b><span>la EC2 vuelve<br>sola</span></div></div>
+<div class="s3">
+<div class="st card" data-f="5"><b class="ac2">8,6 s</b><span>en restaurar los datos desde S3</span><span class="chip">AWS06b</span></div>
+<div class="st card" data-f="6"><b style="color:#b4e36f">0 errores</b><span>en 708 consultas al actualizar la versión</span><span class="chip l">I07</span></div>
+<div class="st card" data-f="7"><b class="ac">157 ms</b><span>restaurando datos en local</span><span class="chip o">I05c</span></div></div>
+<div class="limit" data-f="8">Límite honesto: la base en AWS es una sola (RDS Single-AZ, D13).</div>
 </section>
-<section class="slide" data-titulo="Los números" data-tiempo="0:30" data-notas="Cada cifra sale de un script con marcas de tiempo y lleva su ID en EVIDENCIAS.md. Local: 0 errores en caída de app1, 157 ms para recuperar datos, 708 consultas sin errores en un despliegue, rollback en 4,2 s. AWS: restaurar desde S3 en 8,6 s; crear ~16 min; destruir 8 min 28 s.">
-<div class="kick a" style="--i:0">Los números medidos</div><h2 class="h2 a" style="--i:1">Medido, <span class="ac">no estimado</span></h2>
-<div class="g4">
-<div class="num card a" style="--c:#1AA8F0;--i:2"><div class="top"><span class="chip ">I02</span><em>Local</em></div><div class="v"><b class="c" data-to="0" data-dec="0">0</b><small>errores</small></div><p>Cae app1: 10 de 10 consultas con 200</p></div>
-<div class="num card a" style="--c:#1AA8F0;--i:3"><div class="top"><span class="chip ">I05c</span><em>Local</em></div><div class="v"><b class="c" data-to="157" data-dec="0">157</b><small>ms</small></div><p>Primer 200 correcto tras restaurar datos alterados</p></div>
-<div class="num card a" style="--c:#1AA8F0;--i:4"><div class="top"><span class="chip ">I07</span><em>Local</em></div><div class="v"><b class="c" data-to="0" data-dec="0">0</b><small>errores</small></div><p>en <b class="c" data-to="708" data-dec="0">708</b> consultas · versión nueva sin caída</p></div>
-<div class="num card a" style="--c:#1AA8F0;--i:5"><div class="top"><span class="chip ">I08</span><em>Local</em></div><div class="v"><b class="c" data-to="4.2" data-dec="1">4,2</b><small>s</small></div><p>Rollback automático de versión rota</p></div>
-<div class="num card a" style="--c:#1AA8F0;--i:6"><div class="top"><span class="chip ">STG08</span><em>Local</em></div><div class="v"><b class="c" data-to="0" data-dec="0">0</b><small>errores</small></div><p>en <b class="c" data-to="418" data-dec="0">418</b> consultas · cae el primario de PostgreSQL</p></div>
-<div class="num card a" style="--c:#F07A22;--i:7"><div class="top"><span class="chip o">AWS06b</span><em>AWS</em></div><div class="v"><b class="c" data-to="8.6" data-dec="1">8,6</b><small>s</small></div><p>Primer 200 tras restaurar desde S3</p></div>
-<div class="num card a" style="--c:#F07A22;--i:8"><div class="top"><span class="chip o">AWS09</span><em>AWS</em></div><div class="v">~<b class="c" data-to="16" data-dec="0">16</b><small>min</small></div><p>Crear todo desde cero con Actions (suma de pasos)</p></div>
-<div class="num card a" style="--c:#F07A22;--i:9"><div class="top"><span class="chip o">AWS10</span><em>AWS</em></div><div class="v"><b class="c" data-to="8" data-dec="0">8</b><small>min</small><b class="c" data-to="28" data-dec="0">28</b><small>s</small></div><p>Destruir todo desde Actions</p></div>
-</div></section>
-<section class="slide" data-titulo="Seguridad y costos" data-tiempo="0:30" data-notas="Sin claves guardadas: GitHub entra con OIDC y el rol solo acepta este repositorio en main. Secretos en SSM, sin SSH. Filtro por IP. La política solo permite máquinas micro. Alerta de presupuesto de USD 5 al mes. El costo NO lo medimos: la referencia de unos USD 2 al día es de lista y sin verificar; por eso se destruye el mismo día.">
-<div class="kick a" style="--i:0">Seguridad y costos</div><h2 class="h2 a" style="--i:1">Sin claves, sin SSH, <span class="ac">sin sorpresas</span></h2>
-<div class="g4b">
-<div class="sec card a" style="--i:2"><img src="assets/aws-icons/identity_and_access_management.svg" alt=""><h3>IAM</h3><ul><li>OIDC, sin claves guardadas</li><li>Rol solo para este repo en main</li></ul></div>
-<div class="sec card a" style="--i:3"><img src="assets/aws-icons/systems_manager.svg" alt=""><h3>Systems Manager</h3><ul><li>Secretos en SSM</li><li>Sin SSH: Session Manager</li></ul></div>
-<div class="sec card a" style="--i:4"><img src="assets/aws-icons/vpc.svg" alt=""><h3>VPC</h3><ul><li>EC2 solo acepta tráfico del ALB</li><li>RDS sin acceso público</li><li>Filtro por IP</li></ul></div>
-<div class="sec card a" style="--i:5"><img src="assets/aws-icons/budgets.svg" alt=""><h3>Budgets</h3><ul><li>Solo máquinas micro</li><li>Alerta de USD 5 al mes</li><li>Destruir al terminar</li></ul></div>
-</div>
-<div class="costb card a" style="--i:7"><span class="chip o" style="font-size:22px">Costo</span><div><b>No medido.</b> Referencia de lista: ~USD 2 al día con todo encendido, sin verificar en la facturación (docs/09).</div></div>
+<section class="slide" data-hero="1" data-titulo="Pruébenlo + cierre" data-tiempo="0:40" data-notas="(2:20-3:00) Ahora ustedes: saquen el celular y escaneen el QR. Está en vivo en este momento, en dos zonas de AWS (la URL cambia en cada despliegue nuevo: confirmar antes de salir que el enlace responde). Cierre, tres frases: tolera la caída de un servidor; datos que se verifican; tiempos medidos. Gracias, preguntas. Quién habla: [asignar].">
+<div class="kick a" style="--i:0">Pruébenlo</div>
+<h2 class="h2 a" style="--i:1;font-size:70px;max-width:1100px">Escaneen: <span class="ac">está en vivo</span></h2>
+<div class="sub a" style="--i:2;margin-top:14px;max-width:1000px">Ahora mismo, en dos zonas de AWS.</div>
+<div class="phr a" style="--i:4"><div>Tolera la caída de <span class="ac2">un servidor</span>.</div><div>Datos que <span class="ac">se verifican</span>.</div><div>Tiempos <span style="color:#b4e36f">medidos</span>.</div></div>
+<div class="thx a" style="--i:6"><b>Gracias</b> · Preguntas</div>
+<div class="qrcard a" style="--i:3"><div class="qrbox"><div id="qr"></div><div class="qrurl" id="qrurl"></div></div></div>
+<div class="logos a" style="--i:7"><div class="l1"><img src="assets/logo-estudia.png" width="230" alt="Estud-IA"><img class="nr" src="assets/logo-nodo-ruta.png" alt="Nodo Ruta"></div><img class="alc" src="assets/logo-alcaldia.png" alt="Alcaldía de Medellín, Distrito de Ciencia, Tecnología e Innovación"></div>
 </section>
-<section class="slide" data-titulo="Límites honestos" data-tiempo="0:40" data-notas="La base en AWS es un punto único de falla: RDS Single-AZ, porque el plan gratuito no permite Multi-AZ (D13). Durante la caída de un servidor hay errores: 5, el 1,7 % (AWS04). Registramos los fallos tal cual: AWS06, el primer AWS09 y el falso positivo de AWS10. Solo diseño: Multi-AZ, dominio propio, alarmas y autoescalado.">
-<div class="kick a" style="--i:0">Límites honestos</div><h2 class="h2 a" style="--i:1">Lo que <span class="ac">no</span> cubrimos</h2>
-<div class="lim"><div class="lc">
-<div class="li card a" style="--c:#FF6B6B;--i:2"><div class="ic">!</div><div><h4>La base en AWS es un punto único de falla</h4><p>RDS Single-AZ: el plan gratuito no permite Multi-AZ (D13)</p></div></div>
-<div class="li card a" style="--c:#FFB020;--i:3"><div class="ic">5</div><div><h4>Hay errores durante la caída</h4><p>5 errores, 1,7 % (AWS04)</p></div></div>
-<div class="li card a" style="--c:#FFB020;--i:4"><div class="ic">×</div><div><h4>Registramos los fallos tal cual</h4><p>AWS06, el primer AWS09 y el falso positivo de AWS10</p></div></div>
-<div class="li card a" style="--c:#1AA8F0;--i:5"><div class="ic">2</div><div><h4>En local: tolerancia a la caída de una instancia</h4><p>Las dos copias corren en el mismo computador</p></div></div>
-</div><div class="dis card a" style="--i:6"><h3>Solo diseño o pendiente</h3><p class="s">No probado todavía</p><div class="chips"><span>RDS Multi-AZ</span><span>HTTPS con dominio propio</span><span>Alarmas de monitoreo</span><span>Autoescalado</span></div></div></div>
-</section>
-<section class="slide" data-titulo="Probado vs. diseñado" data-tiempo="Se muestra rápido o se salta" data-notas="Mostrar rápido o saltar. Verde: probado con evidencia. Ámbar: solo diseño o parcial. Rojo: no cubierto o fuera de alcance. Fuente: docs/07, sección Probado vs. diseñado.">
-<div class="kick a" style="--i:0">Probado vs. diseñado</div><h2 class="h2 a" style="--i:1">Cada cosa en su <span class="ac">color</span></h2>
-<div class="pv">
-<div class="pc card a" style="--c:#8CC63F;--i:2"><h3>Probado</h3><div class="s">con evidencia medida</div><div class="two"><div><h4>Local</h4><ul><li><span>2 instancias + proxy</span><i>I02</i></li><li><span>Datos que persisten</span><i>I04</i></li><li><span>Respaldo y restauración</span><i>I05c</i></li><li><span>Despliegue y rollback</span><i>I07 · I08</i></li><li><span>Réplica PostgreSQL</span><i>STG08</i></li></ul></div><div><h4>AWS</h4><ul><li><span>Reparto en 2 zonas</span><i>AWS03</i></li><li><span>Caída de una EC2</span><i>AWS04</i></li><li><span>Respaldo y restauración S3</span><i>AWS05 · AWS06b</i></li><li><span>HTTPS en CloudFront</span><i>AWS08</i></li><li><span>Actions con OIDC</span><i>AWS09 · AWS10</i></li></ul></div></div></div>
-<div class="pc card a" style="--c:#FFB020;--i:3"><h3>Solo diseño</h3><div class="s">o parcial</div><ul><li><span>Rechazo de otras IP</span><i>AWS08</i></li><li><span>RDS Multi-AZ</span><i></i></li><li><span>HTTPS propio con dominio</span><i></i></li><li><span>Repetición por otra persona</span><i>I06</i></li></ul></div>
-<div class="pc card a" style="--c:#FF6B6B;--i:4"><h3>No cubierto</h3><div class="s">o fuera de alcance</div><ul><li><span>Caída de la base en AWS</span><i>D13</i></li><li><span>Autoescalado</span><i></i></li><li><span>Alarmas CloudWatch</span><i></i></li><li><span>Promoción automática de réplica</span><i></i></li><li><span>Caída de una región</span><i></i></li></ul></div>
-</div></section>
-<section class="slide" data-hero="1" data-titulo="Cierre" data-tiempo="0:20" data-notas="Cierre: entregamos un servicio que tolera la caída de un servidor, datos que se pueden verificar y restaurar, y tiempos medidos. Próximos pasos: Multi-AZ para la base, HTTPS con dominio, alarmas y un health check más rápido. Gracias, preguntas.">
-<div class="kick a" style="--i:0">Cierre</div><div class="phrase a" style="--i:1">Tolera la caída de un servidor.<br><span class="ac">Datos que se verifican.</span><br><span class="ac2">Tiempos medidos.</span></div>
-<div class="next a" style="--i:3"><span class="chip">Multi-AZ para la base</span><span class="chip">HTTPS con dominio</span><span class="chip">Alarmas</span><span class="chip">Health check más rápido</span></div>
-<div class="thanks a" style="--i:4"><b>Gracias</b> · Preguntas</div>
-<div class="logos a" style="--i:5"><div class="l1"><div class="glass"><img src="assets/logo-estudia.png" width="640" alt="Estud-IA"></div><img class="nr" src="assets/logo-nodo-ruta.png" alt="Nodo Ruta"></div><img class="alc" src="assets/logo-alcaldia.png" alt="Alcaldía de Medellín"></div>
-</section>
-<section class="slide" data-respaldo="1" data-titulo="Respaldo: preguntas del jurado" data-tiempo="" data-notas="Respaldo: las 10 preguntas probables con respuesta corta y su evidencia. Fuente: docs/06-pitch.md.">
-<div class="kick a" style="--i:0">Respaldo · preguntas del jurado</div><div class="qa"><div class="q card a" style="--i:0"><h4><b>01</b>¿Por qué no Multi-AZ?</h4><p>El plan gratuito de RDS solo permite Single-AZ y la regla es cero costos. La base es punto único de falla y lo decimos.</p><span class="chip">D13</span></div><div class="q card a" style="--i:1"><h4><b>02</b>¿Por qué no ECS ni Kubernetes?</h4><p>El reto premia un MVP medido; con 2 servicios bastan 2 EC2 detrás de un ALB.</p><span class="chip">D13 · D15</span></div><div class="q card a" style="--i:1"><h4><b>03</b>¿Qué pasa si cae la base?</h4><p>Local: se lee la réplica y hubo 0 errores. En AWS no hay réplica: solo la copia en memoria cubre caídas cortas.</p><span class="chip">STG08 · STG12 · D13</span></div><div class="q card a" style="--i:2"><h4><b>04</b>¿Cuánto cuesta?</h4><p>No lo medimos. Referencia de lista ~USD 2 al día, sin verificar; se destruye al terminar; alerta de USD 5 al mes.</p><span class="chip">docs/09 · AWS10</span></div><div class="q card a" style="--i:2"><h4><b>05</b>¿Por qué 5 errores en la caída?</h4><p>El ALB no reintenta en otra instancia hasta que su health check (2 × 5 s) saca la EC2 caída. Errores entre 2,1 y 9,8 s.</p><span class="chip">AWS04</span></div><div class="q card a" style="--i:3"><h4><b>06</b>¿Cómo evitan entrar directo al ALB?</h4><p>Solo acepta CloudFront y exige un encabezado secreto. Es mitigación; el rechazo de otras IP es diseño, no probado.</p><span class="chip">AWS08 · D16</span></div><div class="q card a" style="--i:3"><h4><b>07</b>¿Cómo saben que el respaldo sirve?</h4><p>Se verifica el SHA-256 y el índice con pg_restore --list; AWS06b restauró 6 pedidos.</p><span class="chip">AWS05 · AWS06b</span></div><div class="q card a" style="--i:4"><h4><b>08</b>¿Qué falló y qué aprendieron?</h4><p>AWS06 falló por un defecto del script de restauración; ensayar antes de necesitarla lo descubrió.</p><span class="chip">AWS06 · AWS06b</span></div><div class="q card a" style="--i:4"><h4><b>09</b>¿Se puede repetir?</h4><p>Sí: un comando o un botón en Actions, y destruir con otro.</p><span class="chip">AWS09 · AWS10</span></div><div class="q card a" style="--i:5"><h4><b>10</b>¿Ya no se cae nunca?</h4><p>No lo prometemos: tolera la caída de una instancia o servidor, con errores medidos y la base como punto único en AWS.</p><span class="chip">EVIDENCIAS.md</span></div></div></section>
-<section class="slide" data-respaldo="1" data-titulo="Respaldo: diagrama oficial" data-tiempo="" data-notas="Respaldo: diagrama oficial de AWS. Clic sobre la imagen para acercar; mover el ratón para recorrerla; otro clic para volver.">
-<div class="kick a" style="--i:0">Respaldo · diagrama oficial</div><div class="zoomw a" id="zw" data-noclick="1" style="--i:2"><img src="assets/aws-final.png" alt="Arquitectura AWS final de Nodo Ruta"></div></section>
+
 <div id="hint">Flechas o espacio: avanzar &nbsp;·&nbsp; O: vista general &nbsp;·&nbsp; N: notas &nbsp;·&nbsp; F: pantalla completa</div>
 <div id="num"></div><div id="prog"><i></i></div></div>
 <div id="notes"></div><div id="ov"></div><div id="blk"></div>
+
 <script>
 (function(){
+/* ENLACE DEL QR: unico lugar. Se puede sobrescribir con ?url=https://... */
+var QR_URL='https://d2t4p68czj96l8.cloudfront.net';
+var uq=/[?&]url=([^&#]+)/.exec(location.search);if(uq){try{QR_URL=decodeURIComponent(uq[1])}catch(e){}}
+
+/* ===== Generador de QR (JS puro, sin dependencias): modo byte, correccion M, mascara por penalizacion. Algoritmo publico (tipo Nayuki). ===== */
+function qrMatrix(text){
+ var bytes=Array.prototype.slice.call(new TextEncoder().encode(text));
+ var ECC=[-1,10,16,26,18,24,16,18,22,22,26,30,22,22,24,24,28,28,26,26,26,26,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28];
+ var NB=[-1,1,1,1,2,2,4,4,4,5,5,5,8,9,9,10,10,11,13,14,16,17,17,18,20,21,23,25,26,28,29,31,33,35,37,38,40,43,45,47,49];
+ function raw(v){var r=(16*v+128)*v+64;if(v>=2){var n=Math.floor(v/7)+2;r-=(25*n-10)*n-55;if(v>=7)r-=36}return r}
+ var ver,cap;
+ for(ver=1;;ver++){if(ver>40)throw new Error('Texto demasiado largo para el QR');cap=Math.floor(raw(ver)/8)-ECC[ver]*NB[ver];if(4+(ver<10?8:16)+8*bytes.length<=cap*8)break}
+ var bits=[];function put(v,n){for(var i=n-1;i>=0;i--)bits.push((v>>>i)&1)}
+ put(4,4);put(bytes.length,ver<10?8:16);bytes.forEach(function(b){put(b,8)});
+ put(0,Math.min(4,cap*8-bits.length));put(0,(8-bits.length%8)%8);
+ for(var pd=0xEC;bits.length<cap*8;pd^=0xEC^0x11)put(pd,8);
+ var data=[];for(var i=0;i<bits.length;i+=8){var b=0;for(var j=0;j<8;j++)b=(b<<1)|bits[i+j];data.push(b)}
+ function mul(x,y){var z=0;for(var i=7;i>=0;i--){z=(z<<1)^((z>>>7)*0x11D);z^=((y>>>i)&1)*x}return z}
+ var el=ECC[ver],nb=NB[ver];
+ var div=[];for(i=0;i<el-1;i++)div.push(0);div.push(1);
+ var root=1;for(i=0;i<el;i++){for(j=0;j<div.length;j++){div[j]=mul(div[j],root);if(j+1<div.length)div[j]^=div[j+1]}root=mul(root,2)}
+ function rem(d){var r=[];for(var i=0;i<el;i++)r.push(0);d.forEach(function(b){var f=b^r.shift();r.push(0);div.forEach(function(c,i){r[i]^=mul(c,f)})});return r}
+ var rawCw=Math.floor(raw(ver)/8),nShort=nb-rawCw%nb,shortLen=Math.floor(rawCw/nb),blocks=[],k=0;
+ for(i=0;i<nb;i++){var dat=data.slice(k,k+shortLen-el+(i<nShort?0:1));k+=dat.length;var ec=rem(dat);if(i<nShort)dat.push(0);blocks.push(dat.concat(ec))}
+ var all=[];for(i=0;i<blocks[0].length;i++)blocks.forEach(function(bl,j){if(i!==shortLen-el||j>=nShort)all.push(bl[i])});
+ var size=ver*4+17,m=[],fn=[];
+ for(i=0;i<size;i++){m.push([]);fn.push([]);for(j=0;j<size;j++){m[i].push(false);fn[i].push(false)}}
+ function set(x,y,v){m[y][x]=v;fn[y][x]=true}
+ function bit(x,i){return((x>>>i)&1)!==0}
+ for(i=0;i<size;i++){set(6,i,i%2===0);set(i,6,i%2===0)}
+ function finder(cx,cy){for(var dy=-4;dy<=4;dy++)for(var dx=-4;dx<=4;dx++){var d=Math.max(Math.abs(dx),Math.abs(dy)),x=cx+dx,y=cy+dy;if(x>=0&&x<size&&y>=0&&y<size)set(x,y,d!==2&&d!==4)}}
+ finder(3,3);finder(size-4,3);finder(3,size-4);
+ var pos=[];if(ver>1){var na=Math.floor(ver/7)+2,step=ver===32?26:Math.ceil((ver*4+4)/(na*2-2))*2;pos=[6];for(var p=size-7;pos.length<na;p-=step)pos.splice(1,0,p)}
+ for(i=0;i<pos.length;i++)for(j=0;j<pos.length;j++){if((i===0&&j===0)||(i===0&&j===pos.length-1)||(i===pos.length-1&&j===0))continue;
+  for(var dy=-2;dy<=2;dy++)for(var dx=-2;dx<=2;dx++)set(pos[i]+dx,pos[j]+dy,Math.max(Math.abs(dx),Math.abs(dy))!==1)}
+ function fmt(mask){var d=(0<<3)|mask,r=d;for(var i=0;i<10;i++)r=(r<<1)^((r>>>9)*0x537);var b=((d<<10)|r)^0x5412;
+  for(i=0;i<=5;i++)set(8,i,bit(b,i));set(8,7,bit(b,6));set(8,8,bit(b,7));set(7,8,bit(b,8));for(i=9;i<15;i++)set(14-i,8,bit(b,i));
+  for(i=0;i<8;i++)set(size-1-i,8,bit(b,i));for(i=8;i<15;i++)set(8,size-15+i,bit(b,i));set(8,size-8,true)}
+ fmt(0);
+ if(ver>=7){var r=ver;for(i=0;i<12;i++)r=(r<<1)^((r>>>11)*0x1F25);var vb=(ver<<12)|r;for(i=0;i<18;i++){var c=bit(vb,i),a=size-11+i%3,bb=Math.floor(i/3);set(a,bb,c);set(bb,a,c)}}
+ var q=0;for(var right=size-1;right>=1;right-=2){if(right===6)right=5;for(var vert=0;vert<size;vert++)for(j=0;j<2;j++){var x=right-j,up=((right+1)&2)===0,y=up?size-1-vert:vert;if(!fn[y][x]&&q<all.length*8){m[y][x]=bit(all[q>>>3],7-(q&7));q++}}}
+ function mask(t){for(var y=0;y<size;y++)for(var x=0;x<size;x++){if(fn[y][x])continue;var inv;
+  switch(t){case 0:inv=(x+y)%2===0;break;case 1:inv=y%2===0;break;case 2:inv=x%3===0;break;case 3:inv=(x+y)%3===0;break;case 4:inv=(Math.floor(x/3)+Math.floor(y/2))%2===0;break;case 5:inv=x*y%2+x*y%3===0;break;case 6:inv=(x*y%2+x*y%3)%2===0;break;default:inv=((x+y)%2+x*y%3)%2===0}
+  if(inv)m[y][x]=!m[y][x]}}
+ function count(s,pt){var n=0,i=-1;while((i=s.indexOf(pt,i+1))>=0)n++;return n}
+ function pen(){var p=0,dark=0,x,y,i;
+  function ln(get){var run=1,pv=get(0),s='';for(var i=0;i<size;i++){var c=get(i);s+=c?'1':'0';if(i>0){if(c===pv)run++;else{if(run>=5)p+=3+run-5;run=1;pv=c}}}if(run>=5)p+=3+run-5;
+   s='0000'+s+'0000';p+=40*(count(s,'10111010000')+count(s,'00001011101'))}
+  for(y=0;y<size;y++)ln(function(i){return m[y][i]});
+  for(x=0;x<size;x++)ln(function(i){return m[i][x]});
+  for(y=0;y<size;y++)for(x=0;x<size;x++){if(m[y][x])dark++;if(x<size-1&&y<size-1&&m[y][x]===m[y][x+1]&&m[y][x]===m[y+1][x]&&m[y][x]===m[y+1][x+1])p+=3}
+  var tot=size*size;p+=(Math.ceil(Math.abs(dark*20-tot*10)/tot)-1)*10;return p}
+ var best=0,bp=1e9;for(var t=0;t<8;t++){mask(t);fmt(t);var s=pen();if(s<bp){bp=s;best=t}mask(t)}
+ mask(best);fmt(best);
+ return m;
+}
+function qrSvg(text,px){var m=qrMatrix(text),n=m.length,z=4,d='';
+ for(var y=0;y<n;y++)for(var x=0;x<n;x++)if(m[y][x])d+='M'+(x+z)+' '+(y+z)+'h1v1h-1z';
+ var t=n+2*z;return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+t+' '+t+'" width="'+px+'" height="'+px+'" shape-rendering="crispEdges" role="img" aria-label="Codigo QR con el enlace del servicio en vivo"><rect width="'+t+'" height="'+t+'" fill="#fff"/><path d="'+d+'" fill="#000"/></svg>'}
+
 var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 var stage=document.getElementById('stage'),slides=[].slice.call(document.querySelectorAll('.slide')),N=slides.length,M=slides.filter(function(x){return !x.hasAttribute('data-respaldo')}).length,R=N-M,cur=-1,step=0,timers=[];
 function fit(){var s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';stage.style.left=((innerWidth-1920*s)/2)+'px';stage.style.top=((innerHeight-1080*s)/2)+'px';}
 addEventListener('resize',fit);fit();
+/* QR */
+(function(){var h=document.getElementById('qr');if(h)h.innerHTML=qrSvg(QR_URL,560);var u=document.getElementById('qrurl');if(u)u.textContent=QR_URL.replace(/^https?:\/\//,'')})();
 /* pueblo */
 (function(){var seed=11;function r(){seed=(seed*16807)%2147483647;return seed/2147483647}
 var W=1920,H=330,o='<svg viewBox="0 0 1920 330" width="1920" height="330" preserveAspectRatio="none">';
@@ -449,11 +454,12 @@ var s=slides[i];cur=i;step=(st==null)?((prev>i)?maxStep(s):0):Math.min(st,maxSte
 /* reinicia animaciones de entrada */ void s.offsetWidth;s.classList.add('active');applyStep();
 stage.classList.toggle('hero',!!s.dataset.hero);
 document.getElementById('prog').firstChild.style.width=((i+1)/N*100)+'%';
-document.getElementById('num').innerHTML='<b>'+(i<M?pad(i+1):'R'+(i-M+1))+'</b> / '+(i<M?M:'R'+R);
+document.getElementById('num').innerHTML='<b>'+(i+1)+'</b> / '+N;
 parallax(i);
 slides.forEach(function(x,j){if(j!==i)counters(x,false)});counters(s,true);
 var pw=document.getElementById('pw');if(pw){pw.classList.remove('off');if(s.dataset.auto&&!reduce&&!/still/.test(location.search))timers.push(setTimeout(function(){pw.classList.add('off')},+s.dataset.auto));else if(s.dataset.auto)pw.classList.add('off');}
 var z=document.getElementById('zw');if(z)z.classList.remove('z');
+var ms=+s.dataset.steps||0,mx=maxStep(s);if(ms&&!st){if(reduce||/still/.test(location.search)){step=mx;applyStep()}else for(var q=1;q<=mx;q++)(function(q){timers.push(setTimeout(function(){if(cur===i&&step<q){step=q;applyStep();hashStep()}},700+q*ms))})(q)}
 notes();try{history.replaceState(null,'','#'+(i+1)+(step?'.'+step:''))}catch(e){}
 [].forEach.call(document.querySelectorAll('#ov .it'),function(e,j){e.classList.toggle('cur',j===i)});}
 function next(){var m=maxStep(slides[cur]);if(step<m){step++;applyStep();hashStep()}else if(cur<N-1)go(cur+1)}
@@ -475,8 +481,6 @@ else if(k==='b'||k==='B'||k==='.'){document.getElementById('blk').classList.togg
 document.addEventListener('click',function(e){if(!e.target.closest('#stage')||e.target.closest('[data-noclick],a,button'))return;if(ov.classList.contains('on'))return;(e.clientX<innerWidth*.2)?prev():next()});
 var tx=null,ty=0;document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
 document.addEventListener('touchend',function(e){if(tx===null)return;var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev()}});
-var zw=document.getElementById('zw');zw.addEventListener('click',function(){zw.classList.toggle('z')});
-zw.addEventListener('mousemove',function(e){var b=zw.getBoundingClientRect();zw.firstElementChild.style.transformOrigin=((e.clientX-b.left)/b.width*100)+'% '+((e.clientY-b.top)/b.height*100)+'%'});
 function fromHash(){var m=/^#(\d+)(?:\.(\d+))?/.exec(location.hash);if(m){go(+m[1]-1,m[2]?+m[2]:0)}}
 addEventListener('hashchange',function(){var m=/^#(\d+)(?:\.(\d+))?/.exec(location.hash);if(m&&(+m[1]-1!==cur||(+(m[2]||0))!==step))go(+m[1]-1,+(m[2]||0))});
 if(/^#\d+/.test(location.hash))fromHash();else go(0);

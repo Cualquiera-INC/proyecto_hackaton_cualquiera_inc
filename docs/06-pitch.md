@@ -1,125 +1,70 @@
 # 06 · Pitch final: Nodo Ruta
 
-> Versión del 27-11-2026. Cada número sale de [EVIDENCIAS.md](../EVIDENCIAS.md) y lleva su ID. Lo que no está medido se dice como tal. Quién habla en cada parte queda como [asignar] hasta que el equipo lo defina.
+> Versión del 28-11-2026 (pitch de 3 minutos, 4 slides). Cada número sale de [EVIDENCIAS.md](../EVIDENCIAS.md) y lleva su ID. Lo que no está medido se dice como tal. Quién habla en cada parte queda como [asignar] hasta que el equipo lo defina.
 
-**Presentación y guion:** las slides están en [`presentacion/pitch.html`](../presentacion/pitch.html) y el guion para ensayar en [`presentacion/guion.html`](../presentacion/guion.html); se abren con doble clic y funcionan sin internet. El esquema común está en [`presentacion/ESQUEMA.md`](../presentacion/ESQUEMA.md).
+**Presentación y guion:** las slides están en [`presentacion/pitch.html`](../presentacion/pitch.html) y el guion para ensayar en [`presentacion/guion.html`](../presentacion/guion.html); se abren con doble clic y funcionan sin internet (salvo el QR, que apunta a la URL en vivo). El esquema común está en [`presentacion/ESQUEMA.md`](../presentacion/ESQUEMA.md).
 
 ## Duración
 
-La guía del reto (`recursos-reto/GUIA_ESTUDIANTE.md`) no fija la duración del pitch ni da criterios de evaluación. Usamos **5 minutos** (objetivo), sin video: en el pitch no se proyecta ningún video y la evidencia en vivo se cuenta con la slide de AWS04. El video de la demo (`docs/09-guion-video-aws.md`) queda como material opcional aparte. Si la organización confirma otro tiempo, se ajusta la columna de minutos.
+El pitch dura **3:00** y tiene **4 slides**, sin video y sin slides de respaldo (decisión del equipo del 28-11-2026; ver [ESQUEMA.md](../presentacion/ESQUEMA.md)). La versión larga (13 slides, 5 minutos) queda en el historial de git (commit 6282709). Ritmo: 140 a 150 palabras por minuto, unas 427 palabras en total (~142 por minuto). El ritmo real se mide con el cronómetro del guion.
 
-| # | Sección | Tiempo | Quién |
-|---|---|---|---|
-| 1 | El problema y quién lo vive | 0:45 | [asignar] |
-| 2 | Qué necesitaba el negocio | 0:25 | [asignar] |
-| 3 | La solución: local y AWS | 1:15 | [asignar] |
-| 4 | La demo (sin video: slide AWS04) | 0:35 | [asignar] |
-| 5 | Los números medidos | 0:30 | [asignar] |
-| 6 | Seguridad y costos | 0:30 | [asignar] |
-| 7 | Límites honestos | 0:40 | [asignar] |
-| 8 | Cierre y próximos pasos | 0:20 | [asignar] |
-| | **Total** | **5:00** | |
+| # | Sección | Tiempo | Palabras | Quién |
+|---|---|---|---|---|
+| 1 | Hook y problema | 0:30 | 72 | [asignar] |
+| 2 | La solución | 0:45 | 105 | [asignar] |
+| 3 | La prueba (medido, no estimado) | 1:05 | 160 | [asignar] |
+| 4 | Pruébenlo + cierre | 0:40 | 90 | [asignar] |
+| | **Total** | **3:00** | **427** | |
 
-## 1. El problema (0:45)
+## Hook de apertura (primeros 5 a 8 segundos)
 
-Nodo Ruta es una empresa ficticia de distribución urbana con un servicio web de consulta de entregas que corre en **una sola instancia**, con los datos dentro de la app. Lo viven tres actores:
+Escena ilustrativa, sin cifras ni hechos inventados del caso (Nodo Ruta es ficticia). Se elige uno:
 
-- **Operaciones** consulta entregas; si el servicio cae, busca información por otros medios.
-- **El responsable técnico** publica versiones y atiende incidentes; hoy reinicia y busca una copia.
-- **Coordinación logística** necesita saber si el servicio funciona y qué límites tiene.
+- **Principal:** "Media mañana. Los camiones están en la calle y el único servidor se apaga. ¿Qué ve operaciones? Nada."
+- **Alternativa A:** "Si hoy se apaga el único servidor de su empresa, ¿cuánto tardan en volver? En Nodo Ruta nadie lo sabía. Nosotros lo medimos."
+- **Alternativa B:** "Levanten la mano si alguna vez un servicio se cayó y nadie sabía cuánto iba a tardar en volver. A Nodo Ruta le podía pasar. Hoy les mostramos cuánto tarda, con números."
 
-> "Si la única instancia cae, operaciones se queda sin consultar entregas. Y nadie sabe cuánto tarda en volver ni si los datos que vuelven son los correctos."
+Si se usa una alternativa, se sigue desde "Nodo Ruta, una empresa ficticia…".
 
-## 2. Qué necesitaba el negocio (0:25)
+## 1. Hook y problema (0:30)
 
-No pidió "cinco nueves". Pidió tres cosas que se pueden medir:
+**En pantalla:** Pregunta grande: "¿Qué pasa si el único servidor se apaga a mitad del día?" + una línea del problema + 3 chips (Operaciones · Responsable técnico · Coordinación logística) + logos Estud-IA y Nodo Ruta.
 
-1. Que la caída de un servidor **no se note** o se note poco.
-2. **Datos correctos**: detectar un dato dañado y recuperarlo desde una copia verificada.
-3. Recuperación en un **tiempo conocido**, medido con scripts y no estimado.
+> Media mañana. Los camiones están en la calle y el único servidor se apaga. ¿Qué ve operaciones? Nada. Esto le podía pasar a Nodo Ruta, una empresa ficticia de distribución: consulta sus entregas en una sola instancia, con los datos adentro y los cambios a mano. Si cae, operaciones queda a ciegas y nadie sabe cuánto tarda en volver. Somos el equipo Cualquiera INC, y esto es lo que construimos y medimos.
 
-> "Nos preguntamos: cuando algo falla, ¿operaciones sigue consultando, y el responsable técnico recupera la versión correcta en un tiempo que podemos decir en voz alta? Y lo medimos."
+Evidencia: Escena ilustrativa, sin cifras. El caso (Nodo Ruta) es ficticio..
 
-## 3. La solución: local y AWS (1:15)
+## 2. La solución (0:45)
 
-Diagrama de AWS: ![Arquitectura AWS final](arquitectura/aws-final.png)
+**En pantalla:** Diagrama AWS animado: Usuario → CloudFront (HTTPS) → S3 front / ALB → EC2 A (us-east-2a) y EC2 B (us-east-2b) → RDS PostgreSQL (subred privada); S3 respaldos (pg_dump + SHA-256); GitHub Actions → OIDC → CloudFormation (4 pilas). Franja: "un botón crea, otro destruye".
 
-| | Local (Docker Compose) | AWS (us-east-2, CloudFormation) |
-|---|---|---|
-| Punto de acceso | NGINX en `127.0.0.1:8080` | CloudFront (HTTPS) hacia un ALB |
-| Instancias | `app1` y `app2` + microservicio `pedidos1/2` | 2 EC2 en dos zonas (`us-east-2a` y `us-east-2b`) |
-| Datos | PostgreSQL primario + réplica | RDS PostgreSQL Single-AZ |
-| Respaldo | `pg_dump` con SHA-256 | `pg_dump` a S3 con SHA-256 y versiones |
-| Despliegue | `scripts/desplegar.py` con rollback | `scripts/aws_nodo.py` o GitHub Actions (4 pilas) |
+> Esta es la solución, en AWS, y todo es código. El visitante entra por CloudFront, con HTTPS. Detrás hay un balanceador y dos servidores en dos zonas distintas: us-east-2a y us-east-2b. Los datos viven aparte, en una base PostgreSQL administrada, y los respaldos van a S3 con una huella SHA-256 para verificarlos. Los servidores no tienen puerto SSH y la contraseña de la base no está en el repositorio. Todo se crea desde GitHub Actions, sin claves guardadas, con cuatro pilas de CloudFormation. Un botón crea, en unos 16 minutos; otro destruye, en 8 minutos con 28 segundos. Creamos para probar y destruimos al terminar.
 
-> "En local, dos instancias detrás de NGINX, con la base de datos aparte, respaldo verificado y despliegue sin caída. En AWS, lo mismo con piezas de nube: dos servidores en dos zonas detrás de un balanceador, base de datos administrada, respaldos en S3 y la interfaz por CloudFront con HTTPS. Todo es código: se levanta y se destruye con un comando."
+Evidencia: AWS03 AWS05 AWS09 AWS10 D13 D17.
 
-Importante: en local, dos contenedores en un mismo computador dan **tolerancia a la caída de una instancia**, nada más: si se apaga el computador, se cae todo. La caída de una máquina completa solo se pudo probar en AWS.
+## 3. La prueba (medido, no estimado) (1:05)
 
-## 4. La demo (0:35)
+**En pantalla:** Línea de tiempo AWS04 animada: se apaga EC2 B → 5 errores de 299 (1,7 %) entre 2,1 y 9,8 s → 0 errores → vuelve sola a los 40,6 s. Abajo 3 cifras: AWS06b 8,6 s · I07 0 errores en 708 consultas · I05c 157 ms. Línea de límite: la base en AWS es una sola (D13).
 
-**En el pitch no se proyecta video.** La evidencia en vivo se cuenta con la slide de AWS04 (línea de tiempo animada, 0:35): se apagó la EC2 B con el monitor corriendo; 299 consultas, 5 errores (1,7 %) entre 2,1 y 9,8 s después de la parada, luego 0 errores; la EC2 volvió sola en 40,6 s. El ALB no reintenta en otra instancia hasta que su health check (2 x 5 s) la saca.
+> Ahora, la prueba: medida, no estimada. Con el monitor corriendo, apagamos uno de los dos servidores. Hicimos 299 consultas. Hubo 5 errores, un 1,7 por ciento, entre 2,1 y 9,8 segundos después de la parada. Después, cero errores, y el servidor volvió solo a los 40,6 segundos, sin que nadie lo tocara. Esos errores existen porque el balanceador tarda en sacar al servidor caído, y lo decimos nosotros, antes de que lo pregunten. ¿Y los datos? Restauramos desde S3: la primera respuesta correcta llegó en 8,6 segundos. Y no salió a la primera: el primer intento falló por un defecto del script; lo descubrimos ensayando, lo corregimos y lo repetimos. Al actualizar la versión en local, 708 consultas sin un solo error. Y al restaurar datos alterados en local, 157 milisegundos. Cada cifra tiene su identificador en la bitácora. Un límite honesto: en AWS la base de datos es una sola, un punto único de falla. Multi-AZ es solo diseño.
 
-El video de la demo (`docs/09-guion-video-aws.md`) queda como material opcional aparte, por si el jurado lo pide. Escenas de ese guion (≈ 5 min completos):
+Evidencia: AWS04 AWS06b I07 I05c D13.
 
-1. Despliegue desde GitHub Actions (OIDC, sin claves).
-2. La interfaz por HTTPS, con el campo `instancia` alternando entre `us-east-2a` y `us-east-2b`.
-3. Las 4 pilas, los 2 destinos `healthy`, RDS y S3 en la consola.
-4. `aws_nodo.py estado`.
-5. Se detiene una EC2 en vivo con el monitor corriendo.
-6. Destrucción de todo.
+## 4. Pruébenlo + cierre (0:40)
 
-> "Aquí vemos la consulta repartiéndose entre dos zonas. Ahora detenemos un servidor y miramos qué ve un usuario: unos pocos errores en los primeros segundos y después nada, hasta que el servidor vuelve solo."
+**En pantalla:** QR grande a la URL en vivo, con la URL escrita debajo: "Escaneen: está en vivo ahora, en dos zonas de AWS". Frase de cierre y "Gracias · Preguntas". Logos Estud-IA, Nodo Ruta y Alcaldía de Medellín.
 
-## 5. Los números medidos (0:30)
+> Pero no tienen que creernos: escaneen el código QR. Si no abre, la dirección está escrita debajo. No es un video ni una maqueta: es el mismo servicio de la prueba, en vivo ahora mismo, en dos zonas de AWS. Durante las preguntas, ábranla y recarguen: verán qué servidor los atiende. Y pídannos cualquier número: todos tienen su ID en la bitácora. Nos llevamos tres frases. Tolera la caída de un servidor. Datos que se verifican. Tiempos medidos. Una nube que se mide deja de ser una promesa. Gracias. Preguntas.
 
-| ID | Qué se probó | Resultado medido |
-|---|---|---|
-| I02 | Caída de app1 (local) | 10 de 10 consultas con 200, 0 errores; una consulta tardó 1015 ms por el reintento de NGINX |
-| I05c | Datos alterados y restauración (local) | Restauración en 110 ms; primer 200 correcto a los 157 ms; el reparto entre las dos instancias tarda hasta 5 s más |
-| I07 | Versión nueva sin caída y rollback (local) | 708 consultas, 0 errores; despliegue en 11,8 s y rollback en 9,4 s |
-| I08 | Versión rota, rollback automático (local) | Revertida en 4,2 s; 345 consultas, 0 errores. Falta guardar el archivo de evidencia |
-| STG08 | Caída del primario de PostgreSQL (local) | 418 consultas, 0 errores (la réplica se lee en vivo) |
-| AWS04 | Caída de una EC2 (AWS) | 299 consultas, **5 errores (1,7 %)**, todos entre 2,1 s y 9,8 s tras la parada; después 0 errores; la EC2 volvió sola en 40,6 s |
-| AWS06b | Restauración desde S3 (AWS) | Primer 200 a los 8,6 s de la orden, con datos `datos-v1` y 6 pedidos |
-| AWS09 | Despliegue desde GitHub Actions (AWS) | Ejecución exitosa en 4 min 29 s con red, datos y cómputo ya creados; desde cero, ~16 min (suma de pasos) |
-| AWS10 | Destrucción desde GitHub Actions (AWS) | Todo borrado en 8 min 28 s |
+Evidencia: D18 EVIDENCIAS.md.
 
-> "El servidor local recuperó los datos en menos de un segundo. En AWS, una caída de servidor costó cinco errores en unos diez segundos y volvió solo en 40 segundos. Restaurar desde S3 tardó 8,6 segundos. Levantar toda la infraestructura desde cero toma unos 16 minutos y destruirla, 8."
+## Enlace del QR
 
-## 6. Seguridad y costos (0:30)
+URL en vivo (despliegue público del 28-11-2026, D18): https://d2t4p68czj96l8.cloudfront.net. Cambia en cada despliegue nuevo desde cero: se confirma antes de subir al escenario y, si cambió, se abre `pitch.html?url=NUEVA_URL`. Si el QR no abre, se dice la dirección en voz alta.
 
-| Control | Cómo |
-|---|---|
-| GitHub entra a AWS sin claves | OIDC; el rol `github-actions-nodo-ruta` solo acepta este repositorio en la rama `main` (AWS09, AWS10) |
-| Secretos fuera del repositorio | La contraseña de la base vive en SSM Parameter Store (SecureString) |
-| Sin SSH | Las EC2 no tienen puerto 22; se administran con Session Manager (SSM) |
-| Exposición mínima | Las EC2 solo aceptan tráfico del ALB; RDS solo de las EC2 y sin acceso público |
-| Filtro por IP | CloudFront y el ALB solo dejan entrar a la IP del integrante (`CidrAcceso`) |
-| Topes de costo en la política | El rol solo puede lanzar EC2 `t3.micro` o `t4g.micro` y RDS `db.t4g.micro` o `db.t3.micro` (`infra/aws/iam/politica-github-actions.json`) |
-| Presupuesto | Alerta `nodo-ruta-mensual` de USD 5 al mes, con avisos al 50 % y al 100 % (docs/07) |
-| Destruir al terminar | AWS10: todo borrado y verificado |
+Importante: dos contenedores en un mismo computador dan **tolerancia a la caída de una instancia**, nada más. La caída de una máquina completa solo se pudo probar en AWS, y allí la base de datos es un punto único de falla (D13, Multi-AZ es solo diseño).
 
-**Costo:** no medimos el costo en AWS. `docs/04-seguridad-y-costos.md` lista los factores sin cifras, y `docs/09-guion-video-aws.md` da una referencia aproximada de USD 2 al día de créditos con todo encendido (precios de lista, sin verificar en la facturación). Por eso se destruye el mismo día.
-
-> "Sin claves guardadas, sin SSH, con acceso limitado por IP y con tope de tamaño de máquinas en la política. El costo lo controlamos creando para probar y destruyendo al terminar."
-
-## 7. Límites honestos (0:40)
-
-- **La base en AWS es un punto único de falla.** RDS Single-AZ, porque el plan gratuito no permite Multi-AZ (D13). Multi-AZ es solo diseño.
-- **Hay errores durante la caída de un servidor.** AWS04: 5 errores (1,7 %) en una ventana de ~8 s, porque el ALB no reintenta en la otra instancia hasta que su health check saca a la caída.
-- **Registramos los fallos tal cual.** AWS06: la restauración falló y el servicio quedó en 503; el incidente completo duró ~8,5 min por un defecto del script, corregido y repetido en AWS06b. El primer intento de AWS09 también falló (faltaba un permiso de CloudFront). AWS10 terminó en fallo por un falso positivo de la verificación final, ya corregido.
-- **Solo diseño, no probado:** el rechazo de otras IP en CloudFront y el ALB, HTTPS propio con dominio (de CloudFront al ALB va en HTTP), autoescalado y alarmas de monitoreo.
-- **En local solo hay tolerancia a la caída de una instancia:** las dos copias corren en el mismo computador.
-- I06 sigue parcial: falta que alguien despliegue siguiendo solo el README.
-
-> "Lo que no cubrimos: si cae la base de datos en AWS, el servicio depende de ella. Y cuando cae un servidor, hay unos segundos con errores. Preferimos decirlo y mostrar el número."
-
-## 8. Cierre y próximos pasos (0:20)
-
-> "Entregamos un servicio que tolera la caída de un servidor, datos que se pueden verificar y restaurar, y tiempos medidos. Lo que sigue: Multi-AZ para la base, HTTPS con dominio, alarmas y reducir los errores de la caída con un health check más rápido."
-
-Próximos pasos: Multi-AZ en RDS (con plan de pago), dominio y certificado, alarmas, health check más agresivo o sacar la instancia del target group antes de una parada planificada (mejora indicada en AWS04), y cerrar los pendientes de la Fase 2 de [07-plan-y-fases.md](07-plan-y-fases.md).
+l
 
 ## Preguntas probables del jurado
 

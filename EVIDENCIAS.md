@@ -356,6 +356,20 @@ La ejecución terminó en **FALLO** por un **falso positivo** en la verificació
 Corrección (rama `fix/verificacion-destruir`): antes de marcar un ARN como pendiente, `aws_nodo.py` pregunta al servicio dueño con una llamada de lectura. Si responde NotFound, cuenta como resto del índice y no como fallo.
 **CUMPLE** (destrucción completa). La verificación quedó corregida para las próximas ejecuciones.
 
+## AWS11 — Despliegue en modo público desde GitHub Actions (D18)
+Qué queremos comprobar: que con `publico=si` CloudFront responde a cualquier IP mientras el ALB sigue cerrado a CloudFront (`X-Origin-Verify`) y a `CidrAcceso`.
+Pasos: Actions → "AWS Nodo Ruta" → `desplegar` con `cidr` = IP del equipo /32 y `publico` = `si`, desde cero (28-11-2026).
+
+| Ejecución | Resultado | Causa |
+|---|---|---|
+| 46152688964 | **FALLO** a los 12 min 10 s | Red, datos y cómputo creados; `nodo-ruta-front` rechazada: `Template format error: YAML not well-formed (line 115, column 221)`. Un texto del Metadata tenía `): ` sin comillas. La plantilla no se validó antes porque la sesión local de AWS había vencido |
+| 46153909695 | **FALLO** a los 18 s, sin cambios | El arreglo (PR #28) creó un commit nuevo; el script detectó que reemplazaría Ec2A y Ec2B y abortó sin aplicar nada (candado esperado) |
+| 46154175711 | **ÉXITO** en 4 min 06 s | Mismo commit de la app que ya corría (`--version 26f2912`): red, datos y cómputo sin cambios; front creado en 3 min 38 s |
+
+Prueba de humo de la ejecución exitosa, **desde el runner de GitHub (IP distinta a `CidrAcceso`)**: `/` 200 text/html, `/pedidos` 200 con 6 pedidos, `/health` alternando `us-east-2a` y `us-east-2b`. Desde la red del equipo, `/` también responde 200.
+**CUMPLE**: CloudFront público, ALB sin cambios (los `Rules` de red y cómputo siguen prohibiendo `0.0.0.0/0`). No se probó el rechazo directo al ALB desde una IP ajena.
+Aprendizaje: validar la sintaxis YAML de las plantillas antes de subir (ahora con Psych de Ruby), aunque no haya sesión de AWS.
+
 # Cierre
 
 Qué funciona realmente (probado en local):
