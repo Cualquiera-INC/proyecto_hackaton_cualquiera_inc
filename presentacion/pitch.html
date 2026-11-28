@@ -136,17 +136,6 @@ svg [data-f]{transform:none;filter:none}
 .active .bar .fl{width:var(--w)}
 .note{font-size:24px;color:var(--mu);margin-top:16px}
 /* demo */
-.demo{display:grid;grid-template-columns:960px 1fr;gap:50px;margin-top:40px;align-items:start}
-.vid{width:960px;height:540px;border-radius:28px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;overflow:hidden;
- background:radial-gradient(500px 300px at 30% 20%,rgba(106,61,240,.35),transparent),radial-gradient(500px 300px at 80% 90%,rgba(240,122,34,.28),transparent),#0a1020;border:2px dashed rgba(255,176,32,.55)}
-.play{width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,var(--or),var(--mg));display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 14px rgba(240,122,34,.15),0 0 70px rgba(240,122,34,.5);animation:pulse 2.4s ease-in-out infinite}
-@keyframes pulse{50%{transform:scale(1.07)}}
-.play:after{content:"";margin-left:12px;border-left:50px solid #fff;border-top:30px solid transparent;border-bottom:30px solid transparent}
-.esc{list-style:none;display:grid;gap:14px;counter-reset:s}
-.esc li{counter-increment:s;display:flex;gap:20px;align-items:center;padding:16px 24px;font-size:29px;line-height:1.2;border-radius:20px;font-weight:600}
-.esc li:before{content:counter(s);flex:none;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--vi));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px}
-.esc li.hot{border-color:rgba(255,107,107,.7);box-shadow:0 0 40px rgba(255,107,107,.2)}
-.esc li.hot:before{background:linear-gradient(135deg,var(--or),#ff4d4d)}
 /* aws04 */
 .tl{display:block;width:1640px;margin-top:6px}
 .tl text{font-family:var(--f);fill:#e6eefb;font-size:24px}
@@ -210,7 +199,7 @@ svg [data-f]{transform:none;filter:none}
 .thanks{font-size:64px;font-weight:300;margin-top:36px}
 .thanks b{font-weight:800}
 .logos{position:absolute;left:140px;right:140px;bottom:90px;display:flex;align-items:flex-end;justify-content:space-between;z-index:5}
-.logos .l1{display:flex;gap:30px;align-items:center}
+.logos .l1{display:flex;gap:30px;align-items:center;padding:20px 30px;margin-left:-30px;border-radius:28px;background:rgba(7,11,20,.78);backdrop-filter:blur(10px);box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .logos .nr{width:110px;height:110px;border-radius:24px;box-shadow:0 0 0 1px rgba(255,255,255,.14)}
 .alc{width:118px;border-radius:14px;opacity:.88;margin-bottom:46px}
 /* respaldo */
@@ -240,7 +229,7 @@ svg [data-f]{transform:none;filter:none}
 #blk{position:fixed;inset:0;background:#000;z-index:80;display:none}#blk.on{display:block}
 @media (prefers-reduced-motion:reduce){
  *,*:before,*:after{animation-duration:.01s!important;animation-iteration-count:1!important;transition-duration:.01s!important;transition-delay:0s!important}
- .cl svg{animation:none!important}.play{animation:none!important}.dg .pk,.dg .pk2{display:none}.link:after{display:none}
+ .cl svg{animation:none!important}.dg .pk,.dg .pk2{display:none}.link:after{display:none}
  .slide.future,.slide.past{transform:none;filter:none}
 }
 </style></head><body>
@@ -254,9 +243,9 @@ svg [data-f]{transform:none;filter:none}
 <canvas id="wave" width="1920" height="1080"></canvas>
 <div id="village"></div><div id="fog"></div>
 <div class="cl" id="cl3"><svg viewBox="0 0 4800 420" preserveAspectRatio="none"><use href="#cd" x="-200" y="160" width="1200" height="480"/><use href="#cd" x="600" y="220" width="1360" height="544"/><use href="#cd" x="1500" y="140" width="1200" height="480"/><use href="#cd" x="2400" y="210" width="1400" height="560"/><use href="#cd" x="3300" y="150" width="1200" height="480"/><use href="#cd" x="4100" y="220" width="1320" height="528"/></svg></div>
-<img id="logoS" src="assets/logo-estudia-transparente.png" alt="Estud-IA">
+<img id="logoS" src="assets/logo-estudia.png" alt="Estud-IA">
 <section class="slide cover" data-hero="1" data-titulo="Portada: Nodo Ruta" data-tiempo="0:10" data-notas="Saludo y contexto: reto 16 de Estud-IA, Nube e infraestructura, Capa 2. Presentar al equipo Cualquiera INC. Quién habla: [asignar].">
-<div class="a" style="--i:0"><div class="glass"><img src="assets/logo-estudia-transparente.png" width="820" alt="Estud-IA"></div></div>
+<div class="a" style="--i:0"><div class="glass"><img src="assets/logo-estudia.png" width="820" alt="Estud-IA"></div></div>
 <div style="margin-top:56px"><div class="title-xl a" style="--i:2"><span class="ac">Nodo Ruta</span></div>
 <div class="tag a" style="--i:4">Que la consulta de entregas <b style="font-weight:800;color:#fff">no se caiga</b></div>
 <div class="meta a" style="--i:6"><b>Equipo Cualquiera INC</b> &nbsp;·&nbsp; Reto 16 &nbsp;·&nbsp; Estud-IA Nube e infraestructura, Capa 2</div></div>
@@ -301,7 +290,7 @@ svg [data-f]{transform:none;filter:none}
 <path class="ln" marker-end="url(#ma)" d="M1410,212 V308"/><text class="tl" x="1428" y="268">réplica en caliente</text></g>
 <g data-f="3"><path class="ln dash" marker-end="url(#ma)" d="M1410,482 V548" style="stroke:#F07A22"/><rect x="1210" y="552" width="400" height="84" rx="20" fill="#2a1a0c" stroke="#F07A22" stroke-width="2.5"/><text x="1410" y="587" text-anchor="middle" class="tb" style="font-size:28px">Respaldo</text><text x="1410" y="618" text-anchor="middle" class="tm">pg_dump + SHA-256</text></g>
 </svg></section>
-<section class="slide" data-titulo="La solución en AWS" data-tiempo="0:30" data-notas="En AWS: CloudFront con HTTPS, ALB, dos EC2 en us-east-2a y us-east-2b, RDS PostgreSQL Single-AZ, respaldos en S3 y Systems Manager sin SSH. Lo desplegamos con CloudFormation. Decir claro que la base es Single-AZ: punto único de falla.">
+<section class="slide" data-titulo="La solución en AWS" data-tiempo="0:35" data-notas="En AWS: CloudFront con HTTPS, ALB, dos EC2 en us-east-2a y us-east-2b, RDS PostgreSQL Single-AZ, respaldos en S3 y Systems Manager sin SSH. Lo desplegamos con CloudFormation. Decir claro que la base es Single-AZ: punto único de falla.">
 <div class="kick a" style="--i:0">La solución en AWS</div><div class="dgtop"><h2 class="h2 a" style="--i:1">La misma idea, con piezas de <span class="ac">nube</span></h2><span class="chip o a" style="--i:2">us-east-2 · Ohio</span></div>
 <svg class="dg a" style="--i:3" viewBox="0 0 1640 660" height="660"><defs><marker id="mb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#7fa6e6"/></marker></defs>
 <path class="ln" marker-end="url(#mb)" d="M104,327 H228"/>
@@ -343,17 +332,7 @@ svg [data-f]{transform:none;filter:none}
 <div class="bar"><div class="bt" style="color:#7fd2ff">Destruir</div><div class="tr"><div class="fl" style="--w:53%;background:linear-gradient(90deg,#1AA8F0,#8a6bff)">8 min 28 s · AWS10</div></div></div>
 <div class="note">AWS09: ~16 min es la suma de pasos; la ejecución con red, datos y cómputo ya creados tardó 4 min 29 s.</div></div>
 </section>
-<section class="slide" data-titulo="Demo" data-tiempo="0:40" data-notas="Video de la demo [pendiente de grabar; guion en docs/09-guion-video-aws.md]. Mostrar un resumen de unos 40 s: Actions en verde, la interfaz alternando entre us-east-2a y us-east-2b, la consola y la caída de un servidor en vivo.">
-<div class="kick a" style="--i:0">Demo</div><h2 class="h2 a" style="--i:1">Verlo funcionar, <span class="ac">en vivo</span></h2>
-<div class="demo"><div class="vid a" style="--i:3"><div class="play"></div><div style="font-size:30px;font-weight:700">Video de la demo</div><div class="mark" style="font-size:26px">[enlace del video]</div><div style="font-size:22px;color:#8fa0bd">Pendiente de grabar · guion en docs/09</div></div>
-<ol class="esc">
-<li class="card a" style="--i:4">Despliegue desde GitHub Actions en verde</li>
-<li class="card a" style="--i:5">Interfaz por HTTPS alternando us&#8209;east&#8209;2a y us&#8209;east&#8209;2b</li>
-<li class="card a" style="--i:6">Las 4 pilas, 2 destinos sanos, RDS y S3 en consola</li>
-<li class="card a" style="--i:7">Estado desde la terminal con aws_nodo.py</li>
-<li class="card hot a" style="--i:8">Caída de un servidor en vivo, con el monitor corriendo</li>
-<li class="card a" style="--i:9">Destrucción de todo</li></ol></div></section>
-<section class="slide" data-titulo="Caída de un servidor (AWS04)" data-tiempo="0:20" data-notas="AWS04: se detiene una EC2 con el monitor corriendo. 299 consultas, 5 errores (1,7 %), todos entre 2,1 y 9,8 s después de la parada; después, 0 errores. La EC2 volvió sola a los 40,6 s. Explicar: el ALB no reintenta en otra instancia hasta que su health check (2 por 5 s) saca la caída.">
+<section class="slide" data-titulo="Caída de un servidor (AWS04)" data-tiempo="0:35" data-notas="AWS04 es el momento de la demo en vivo: se cuenta lo que se ve en la línea de tiempo. Se detiene una EC2 con el monitor corriendo. 299 consultas, 5 errores (1,7 %), todos entre 2,1 y 9,8 s después de la parada; después, 0 errores. La EC2 volvió sola a los 40,6 s. Explicar: el ALB no reintenta en otra instancia hasta que su health check (2 por 5 s) saca la caída.">
 <div class="kick a" style="--i:0">Caída de un servidor · AWS04</div><h2 class="h2 a" style="--i:1">Se apaga una EC2. <span class="ac">¿Qué ve el usuario?</span></h2>
 <svg class="tl a" style="--i:3" viewBox="0 0 1640 470" height="470"><defs><marker id="mc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9fb0cc"/></marker></defs>
 <g class="ec2s"><image href="assets/aws-icons/ec2.svg" x="1380" y="20" width="84" height="84"/><text x="1422" y="130" text-anchor="middle" style="font-size:22px">EC2 B</text></g>
@@ -373,7 +352,7 @@ svg [data-f]{transform:none;filter:none}
 <div class="stat card" data-f="3"><b style="color:#b4e36f">0</b><span>errores<br>después</span></div>
 <div class="stat card" data-f="4"><b class="ac2">40,6 s</b><span>la EC2 vuelve<br>sola</span></div></div>
 </section>
-<section class="slide" data-titulo="Los números" data-tiempo="0:20" data-notas="Cada cifra sale de un script con marcas de tiempo y lleva su ID en EVIDENCIAS.md. Local: 0 errores en caída de app1, 157 ms para recuperar datos, 708 consultas sin errores en un despliegue, rollback en 4,2 s. AWS: restaurar desde S3 en 8,6 s; crear ~16 min; destruir 8 min 28 s.">
+<section class="slide" data-titulo="Los números" data-tiempo="0:30" data-notas="Cada cifra sale de un script con marcas de tiempo y lleva su ID en EVIDENCIAS.md. Local: 0 errores en caída de app1, 157 ms para recuperar datos, 708 consultas sin errores en un despliegue, rollback en 4,2 s. AWS: restaurar desde S3 en 8,6 s; crear ~16 min; destruir 8 min 28 s.">
 <div class="kick a" style="--i:0">Los números medidos</div><h2 class="h2 a" style="--i:1">Medido, <span class="ac">no estimado</span></h2>
 <div class="g4">
 <div class="num card a" style="--c:#1AA8F0;--i:2"><div class="top"><span class="chip ">I02</span><em>Local</em></div><div class="v"><b class="c" data-to="0" data-dec="0">0</b><small>errores</small></div><p>Cae app1: 10 de 10 consultas con 200</p></div>
@@ -395,7 +374,7 @@ svg [data-f]{transform:none;filter:none}
 </div>
 <div class="costb card a" style="--i:7"><span class="chip o" style="font-size:22px">Costo</span><div><b>No medido.</b> Referencia de lista: ~USD 2 al día con todo encendido, sin verificar en la facturación (docs/09).</div></div>
 </section>
-<section class="slide" data-titulo="Límites honestos" data-tiempo="0:30" data-notas="La base en AWS es un punto único de falla: RDS Single-AZ, porque el plan gratuito no permite Multi-AZ (D13). Durante la caída de un servidor hay errores: 5, el 1,7 % (AWS04). Registramos los fallos tal cual: AWS06, el primer AWS09 y el falso positivo de AWS10. Solo diseño: Multi-AZ, dominio propio, alarmas y autoescalado.">
+<section class="slide" data-titulo="Límites honestos" data-tiempo="0:40" data-notas="La base en AWS es un punto único de falla: RDS Single-AZ, porque el plan gratuito no permite Multi-AZ (D13). Durante la caída de un servidor hay errores: 5, el 1,7 % (AWS04). Registramos los fallos tal cual: AWS06, el primer AWS09 y el falso positivo de AWS10. Solo diseño: Multi-AZ, dominio propio, alarmas y autoescalado.">
 <div class="kick a" style="--i:0">Límites honestos</div><h2 class="h2 a" style="--i:1">Lo que <span class="ac">no</span> cubrimos</h2>
 <div class="lim"><div class="lc">
 <div class="li card a" style="--c:#FF6B6B;--i:2"><div class="ic">!</div><div><h4>La base en AWS es un punto único de falla</h4><p>RDS Single-AZ: el plan gratuito no permite Multi-AZ (D13)</p></div></div>
@@ -415,11 +394,11 @@ svg [data-f]{transform:none;filter:none}
 <div class="kick a" style="--i:0">Cierre</div><div class="phrase a" style="--i:1">Tolera la caída de un servidor.<br><span class="ac">Datos que se verifican.</span><br><span class="ac2">Tiempos medidos.</span></div>
 <div class="next a" style="--i:3"><span class="chip">Multi-AZ para la base</span><span class="chip">HTTPS con dominio</span><span class="chip">Alarmas</span><span class="chip">Health check más rápido</span></div>
 <div class="thanks a" style="--i:4"><b>Gracias</b> · Preguntas</div>
-<div class="logos a" style="--i:5"><div class="l1"><div class="glass"><img src="assets/logo-estudia-transparente.png" width="640" alt="Estud-IA"></div><img class="nr" src="assets/logo-nodo-ruta.png" alt="Nodo Ruta"></div><img class="alc" src="assets/logo-alcaldia.png" alt="Alcaldía de Medellín"></div>
+<div class="logos a" style="--i:5"><div class="l1"><div class="glass"><img src="assets/logo-estudia.png" width="640" alt="Estud-IA"></div><img class="nr" src="assets/logo-nodo-ruta.png" alt="Nodo Ruta"></div><img class="alc" src="assets/logo-alcaldia.png" alt="Alcaldía de Medellín"></div>
 </section>
-<section class="slide" data-titulo="Respaldo: preguntas del jurado" data-tiempo="" data-notas="Respaldo: las 10 preguntas probables con respuesta corta y su evidencia. Fuente: docs/06-pitch.md.">
+<section class="slide" data-respaldo="1" data-titulo="Respaldo: preguntas del jurado" data-tiempo="" data-notas="Respaldo: las 10 preguntas probables con respuesta corta y su evidencia. Fuente: docs/06-pitch.md.">
 <div class="kick a" style="--i:0">Respaldo · preguntas del jurado</div><div class="qa"><div class="q card a" style="--i:0"><h4><b>01</b>¿Por qué no Multi-AZ?</h4><p>El plan gratuito de RDS solo permite Single-AZ y la regla es cero costos. La base es punto único de falla y lo decimos.</p><span class="chip">D13</span></div><div class="q card a" style="--i:1"><h4><b>02</b>¿Por qué no ECS ni Kubernetes?</h4><p>El reto premia un MVP medido; con 2 servicios bastan 2 EC2 detrás de un ALB.</p><span class="chip">D13 · D15</span></div><div class="q card a" style="--i:1"><h4><b>03</b>¿Qué pasa si cae la base?</h4><p>Local: se lee la réplica y hubo 0 errores. En AWS no hay réplica: solo la copia en memoria cubre caídas cortas.</p><span class="chip">STG08 · STG12 · D13</span></div><div class="q card a" style="--i:2"><h4><b>04</b>¿Cuánto cuesta?</h4><p>No lo medimos. Referencia de lista ~USD 2 al día, sin verificar; se destruye al terminar; alerta de USD 5 al mes.</p><span class="chip">docs/09 · AWS10</span></div><div class="q card a" style="--i:2"><h4><b>05</b>¿Por qué 5 errores en la caída?</h4><p>El ALB no reintenta en otra instancia hasta que su health check (2 × 5 s) saca la EC2 caída. Errores entre 2,1 y 9,8 s.</p><span class="chip">AWS04</span></div><div class="q card a" style="--i:3"><h4><b>06</b>¿Cómo evitan entrar directo al ALB?</h4><p>Solo acepta CloudFront y exige un encabezado secreto. Es mitigación; el rechazo de otras IP es diseño, no probado.</p><span class="chip">AWS08 · D16</span></div><div class="q card a" style="--i:3"><h4><b>07</b>¿Cómo saben que el respaldo sirve?</h4><p>Se verifica el SHA-256 y el índice con pg_restore --list; AWS06b restauró 6 pedidos.</p><span class="chip">AWS05 · AWS06b</span></div><div class="q card a" style="--i:4"><h4><b>08</b>¿Qué falló y qué aprendieron?</h4><p>AWS06 falló por un defecto del script de restauración; ensayar antes de necesitarla lo descubrió.</p><span class="chip">AWS06 · AWS06b</span></div><div class="q card a" style="--i:4"><h4><b>09</b>¿Se puede repetir?</h4><p>Sí: un comando o un botón en Actions, y destruir con otro.</p><span class="chip">AWS09 · AWS10</span></div><div class="q card a" style="--i:5"><h4><b>10</b>¿Ya no se cae nunca?</h4><p>No lo prometemos: tolera la caída de una instancia o servidor, con errores medidos y la base como punto único en AWS.</p><span class="chip">EVIDENCIAS.md</span></div></div></section>
-<section class="slide" data-titulo="Respaldo: diagrama oficial" data-tiempo="" data-notas="Respaldo: diagrama oficial de AWS. Clic sobre la imagen para acercar; mover el ratón para recorrerla; otro clic para volver.">
+<section class="slide" data-respaldo="1" data-titulo="Respaldo: diagrama oficial" data-tiempo="" data-notas="Respaldo: diagrama oficial de AWS. Clic sobre la imagen para acercar; mover el ratón para recorrerla; otro clic para volver.">
 <div class="kick a" style="--i:0">Respaldo · diagrama oficial</div><div class="zoomw a" id="zw" data-noclick="1" style="--i:2"><img src="assets/aws-final.png" alt="Arquitectura AWS final de Nodo Ruta"></div></section>
 <div id="hint">Flechas o espacio: avanzar &nbsp;·&nbsp; O: vista general &nbsp;·&nbsp; N: notas &nbsp;·&nbsp; F: pantalla completa</div>
 <div id="num"></div><div id="prog"><i></i></div></div>
@@ -427,7 +406,7 @@ svg [data-f]{transform:none;filter:none}
 <script>
 (function(){
 var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-var stage=document.getElementById('stage'),slides=[].slice.call(document.querySelectorAll('.slide')),N=slides.length,cur=-1,step=0,timers=[];
+var stage=document.getElementById('stage'),slides=[].slice.call(document.querySelectorAll('.slide')),N=slides.length,M=slides.filter(function(x){return !x.hasAttribute('data-respaldo')}).length,R=N-M,cur=-1,step=0,timers=[];
 function fit(){var s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform='scale('+s+')';stage.style.left=((innerWidth-1920*s)/2)+'px';stage.style.top=((innerHeight-1080*s)/2)+'px';}
 addEventListener('resize',fit);fit();
 /* pueblo */
@@ -470,7 +449,7 @@ var s=slides[i];cur=i;step=(st==null)?((prev>i)?maxStep(s):0):Math.min(st,maxSte
 /* reinicia animaciones de entrada */ void s.offsetWidth;s.classList.add('active');applyStep();
 stage.classList.toggle('hero',!!s.dataset.hero);
 document.getElementById('prog').firstChild.style.width=((i+1)/N*100)+'%';
-document.getElementById('num').innerHTML='<b>'+(i<14?pad(i+1):'R'+(i-13))+'</b> / '+(i<14?'14':'R2');
+document.getElementById('num').innerHTML='<b>'+(i<M?pad(i+1):'R'+(i-M+1))+'</b> / '+(i<M?M:'R'+R);
 parallax(i);
 slides.forEach(function(x,j){if(j!==i)counters(x,false)});counters(s,true);
 var pw=document.getElementById('pw');if(pw){pw.classList.remove('off');if(s.dataset.auto&&!reduce&&!/still/.test(location.search))timers.push(setTimeout(function(){pw.classList.add('off')},+s.dataset.auto));else if(s.dataset.auto)pw.classList.add('off');}
@@ -481,9 +460,9 @@ function next(){var m=maxStep(slides[cur]);if(step<m){step++;applyStep();hashSte
 function prev(){if(step>0){step--;applyStep();hashStep()}else if(cur>0)go(cur-1)}
 function hashStep(){try{history.replaceState(null,'','#'+(cur+1)+(step?'.'+step:''))}catch(e){}}
 /* notas y vista general */
-var nt=document.getElementById('notes');function notes(){var s=slides[cur];nt.innerHTML='<h5>Notas del orador · '+(cur<14?'slide '+(cur+1):'respaldo R'+(cur-13))+(s.dataset.tiempo?' · '+s.dataset.tiempo:'')+'</h5>'+s.dataset.notas}
+var nt=document.getElementById('notes');function notes(){var s=slides[cur];nt.innerHTML='<h5>Notas del orador · '+(cur<M?'slide '+(cur+1):'respaldo R'+(cur-M+1))+(s.dataset.tiempo?' · '+s.dataset.tiempo:'')+'</h5>'+s.dataset.notas}
 var ov=document.getElementById('ov');
-ov.innerHTML='<div class="grid">'+slides.map(function(s,j){return '<div class="it" data-j="'+j+'"><b>'+(j<14?pad(j+1):'R'+(j-13))+(s.dataset.tiempo?' · '+s.dataset.tiempo:'')+'</b><span>'+s.dataset.titulo+'</span><small>Clic para ir</small></div>'}).join('')+'</div>';
+ov.innerHTML='<div class="grid">'+slides.map(function(s,j){return '<div class="it" data-j="'+j+'"><b>'+(j<M?pad(j+1):'R'+(j-M+1))+(s.dataset.tiempo?' · '+s.dataset.tiempo:'')+'</b><span>'+s.dataset.titulo+'</span><small>Clic para ir</small></div>'}).join('')+'</div>';
 ov.addEventListener('click',function(e){var it=e.target.closest('.it');if(it){go(+it.dataset.j);ov.classList.remove('on')}else ov.classList.remove('on')});
 document.addEventListener('keydown',function(e){if(e.ctrlKey||e.metaKey||e.altKey)return;var k=e.key;
 if(k==='ArrowRight'||k==='PageDown'||k==='Enter'||(k===' '&&!e.shiftKey)||k==='ArrowDown'){e.preventDefault();ov.classList.contains('on')||next()}
